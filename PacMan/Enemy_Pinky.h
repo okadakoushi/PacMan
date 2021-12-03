@@ -10,7 +10,7 @@ private:
 	const Vector2 SCATTER_POINT = { 200.0f, 48.0f };
 
 public:
-	Enemy_Pinky(SceneBase* sceneBase, PacMan* pacManPtr);
+	Enemy_Pinky(SceneBase* sceneBase, PacMan* pacManPtr, Vector2 StartPos);
 
 public:
 	void Init() override;

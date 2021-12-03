@@ -5,7 +5,7 @@
 class Enemy_POKEY : public EnemyBase
 {
 public:
-	Enemy_POKEY(SceneBase* sceneBase, PacMan* pacManPtr);
+	Enemy_POKEY(SceneBase* sceneBase, PacMan* pacManPtr, Vector2 StartPos);
 
 public:
 	void Init() override;

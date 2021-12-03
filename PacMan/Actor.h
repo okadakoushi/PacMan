@@ -19,6 +19,7 @@ public:
 protected:
 	Sprite				m_spirte;												//スプライト。
 	Vector2				m_position = { SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 };	//位置。
+	Vector2				m_fix;
 	//Vector2			m_scale;												//拡大。
 	Vector2				m_spriteSize = { 24,24 };								//スプライトのサイズ。
 	float				m_rotation = 0.0f;										//回転。

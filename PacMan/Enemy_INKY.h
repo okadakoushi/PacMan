@@ -7,7 +7,7 @@ class Enemy_BLINKY;
 class Enemy_INKY : public EnemyBase
 {
 public:
-	Enemy_INKY(SceneBase* sceneBase, PacMan* pacManPtr, Enemy_BLINKY* blinkyPtr);
+	Enemy_INKY(SceneBase* sceneBase, PacMan* pacManPtr, Enemy_BLINKY* blinkyPtr, Vector2 StartPos);
 
 public:
 	void Init() override;

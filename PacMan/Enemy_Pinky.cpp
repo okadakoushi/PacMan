@@ -2,13 +2,14 @@
 #include "Enemy_Pinky.h"
 #include "PacMan.h"
 
-Enemy_Pinky::Enemy_Pinky(SceneBase* sceneBase, PacMan* pacManPtr) : EnemyBase(sceneBase, "Enemy", 1, pacManPtr)
+Enemy_Pinky::Enemy_Pinky(SceneBase* sceneBase, PacMan* pacManPtr, Vector2 StartPos) : EnemyBase(sceneBase, "Enemy", 1, pacManPtr, StartPos)
 {
 
 }
 
 void Enemy_Pinky::Init()
 {
+	__super::Init();
 	LoadDivGraph("Assets/speedy_div.bmp", EnemyBase::AnimationNum, 4, 4, 24, 24, m_drawHandle);
 }
 

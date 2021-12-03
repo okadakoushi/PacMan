@@ -4,7 +4,7 @@
 #include "Enemy_BLINKY.h"
 #include "Actor.h"
 
-Enemy_INKY::Enemy_INKY(SceneBase* sceneBase, PacMan* pacManPtr, Enemy_BLINKY* blinkyPtr) : EnemyBase(sceneBase, "Enemy", 1, pacManPtr)
+Enemy_INKY::Enemy_INKY(SceneBase* sceneBase, PacMan* pacManPtr, Enemy_BLINKY* blinkyPtr, Vector2 StartPos) : EnemyBase(sceneBase, "Enemy", 1, pacManPtr, StartPos)
 {
 	m_packManPtr = pacManPtr;
 	m_blinkyPtr = blinkyPtr;
@@ -12,6 +12,7 @@ Enemy_INKY::Enemy_INKY(SceneBase* sceneBase, PacMan* pacManPtr, Enemy_BLINKY* bl
 
 void Enemy_INKY::Init()
 {
+	__super::Init();
 	LoadDivGraph("Assets/bashful_div.bmp", EnemyBase::AnimationNum, 4, 4, 24, 24, m_drawHandle);
 }
 

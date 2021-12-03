@@ -2,13 +2,14 @@
 #include "Enemy_POKEY.h"
 #include "PacMan.h"
 
-Enemy_POKEY::Enemy_POKEY(SceneBase* sceneBase, PacMan* pacManPtr) : EnemyBase(sceneBase, "Enemy", 1, pacManPtr)
+Enemy_POKEY::Enemy_POKEY(SceneBase* sceneBase, PacMan* pacManPtr, Vector2 StartPos) : EnemyBase(sceneBase, "Enemy", 1, pacManPtr, StartPos)
 {
 	m_packManPtr = pacManPtr;
 }
 
 void Enemy_POKEY::Init()
 {
+	__super::Init();
 	LoadDivGraph("Assets/pokey_div.bmp", EnemyBase::AnimationNum, 4, 4, 24, 24, m_drawHandle);
 }
 

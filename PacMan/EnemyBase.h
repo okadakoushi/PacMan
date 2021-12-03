@@ -40,6 +40,7 @@ protected:
 	const float			TWEEK_MOVE_SPEED	= 1.0f;		//いじけ時移動速度。
 	const float			RETURN_PRISON_SPEED = 6.0f;		//牢獄帰還時のスピード。
 	const float			GETOUT_PRISON_SPEED = 1.0f;		//牢獄から出る用のスピード。
+	const Vector2		START_POINT;					//初期位置。
 	const Vector2		PRISON_FRONT = { 504, 288 };	//牢獄の前。
 
 	//ptr.
@@ -58,9 +59,13 @@ protected:
 	bool				m_isArrive = true;			//wayPointに到着してる？
 	Vector2				m_direction = { 0, -1 };	//方向。
 	Vector2				m_target = {504, 374};		//ターゲットの位置。
-	Vector2				m_nextWayPoint;				//次のwayPoint。
+	Vector2				m_nextWayPoint = START_POINT;				//次のwayPoint。
 	float				m_currentMoveSpeed = STANDARD_MOVE_SPEED;
 	EnemyState			m_currentState = InPrisonMode;
+
+	//test移動
+	int					m_restMovePixcel = 0;
+
 
 	//いじけモード用。
 	Sprite				m_tweekSprite;				//いじけモードのスプライト。
@@ -71,9 +76,9 @@ protected:
 
 
 public:
-	EnemyBase(SceneBase* sceneBase, const char* tag, int prio, PacMan* packPtr);
+	EnemyBase(SceneBase* sceneBase, const char* tag, int prio, PacMan* packPtr, Vector2 startPos);
 public:
-	virtual void Init() override {};
+	virtual void Init() override;
 	virtual void Update() override;
 	virtual void Draw() override;
 	virtual void OnCollision(Actor* actor) override {};

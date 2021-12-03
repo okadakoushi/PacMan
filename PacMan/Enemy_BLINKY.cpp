@@ -2,12 +2,14 @@
 #include "Enemy_BLINKY.h"
 #include "PacMan.h"
 
-Enemy_BLINKY::Enemy_BLINKY(SceneBase* sceneBase, PacMan* pacManPtr) : EnemyBase(sceneBase, "Enemy", 1, pacManPtr) 
+Enemy_BLINKY::Enemy_BLINKY(SceneBase* sceneBase, PacMan* pacManPtr, Vector2 StartPos) : EnemyBase(sceneBase, "Enemy", 1, pacManPtr, StartPos)
 {
+
 }
 
 void Enemy_BLINKY::Init()
 {
+	__super::Init();
 	LoadDivGraph("Assets/shadow_div.png", EnemyBase::AnimationNum, 4, 4, 24, 24, m_drawHandle);
 }
 

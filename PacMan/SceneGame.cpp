@@ -139,31 +139,27 @@ void SceneGame::CreateStage()
 void SceneGame::CreateEnemy()
 {
 	//Blinky.
-	Enemy_BLINKY* enemy_blinky = new Enemy_BLINKY(this, m_pacMan);
+	Enemy_BLINKY* enemy_blinky = new Enemy_BLINKY(this, m_pacMan, BLINKY_START_POS);
 	enemy_blinky->Init();
 	enemy_blinky->ChangeCurrentState(EnemyBase::ScatterMode);
-	enemy_blinky->SetPosition(BLINKY_START_POS);
 	m_enemyList.push_back(enemy_blinky);
 
 	//Pinky.
-	Enemy_Pinky* enemy_pinky = new Enemy_Pinky(this, m_pacMan);
+	Enemy_Pinky* enemy_pinky = new Enemy_Pinky(this, m_pacMan, PINKY_START_POS);
 	enemy_pinky->Init();
 	enemy_pinky->ChangeCurrentState(EnemyBase::InPrisonMode);
-	enemy_pinky->SetPosition(PINKY_START_POS);
 	m_enemyList.push_back(enemy_pinky);
 
 	//INKY.
-	Enemy_INKY* enemy_inky = new Enemy_INKY(this, m_pacMan, enemy_blinky);
+	Enemy_INKY* enemy_inky = new Enemy_INKY(this, m_pacMan, enemy_blinky, INKY_START_POS);
 	enemy_inky->Init();
 	enemy_inky->ChangeCurrentState(EnemyBase::InPrisonMode);
-	enemy_inky->SetPosition(INKY_START_POS);
 	m_enemyList.push_back(enemy_inky);
 
 	//Clyde.
-	Enemy_POKEY* enemy_pokey = new Enemy_POKEY(this, m_pacMan);
+	Enemy_POKEY* enemy_pokey = new Enemy_POKEY(this, m_pacMan, CLYDE_START_POS);
 	enemy_pokey->Init();
 	enemy_pokey->ChangeCurrentState(EnemyBase::InPrisonMode);
-	enemy_pokey->SetPosition(CLYDE_START_POS);
 	m_enemyList.push_back(enemy_pokey);
 
 	for (auto* enemy : m_enemyList)

@@ -2,70 +2,75 @@
 #include "EnemyBase.h"
 #include "PacMan.h"
 
-EnemyBase::EnemyBase(SceneBase* sceneBase, const char* tag, int prio, PacMan* packPtr) : 
+EnemyBase::EnemyBase(SceneBase* sceneBase, const char* tag, int prio, PacMan* packPtr, Vector2 startPos) : 
 	Actor(sceneBase, tag, prio, RectCollision::EnCollisionType_Dynamic),
-	m_packManPtr(packPtr) 
+	m_packManPtr(packPtr),
+	START_POINT(startPos)
 {
-	//tweekSpriteは共通のため、ここで初期化しておく。
-	//m_tweekSprite.Init("Assets/weak.bmp");
 	m_sceneGame = dynamic_cast<SceneGame*>(sceneBase);
+}
+
+void EnemyBase::Init()
+{
+	m_position = START_POINT;
 }
 
 void EnemyBase::Update()
 {	
-	if (m_isArrive) {
 
-		if ((int)m_position.x % 24 + 12 != 0 || (int)m_position.y % 24 != 0)
-		{
-			m_position = { floor(m_position.x / 24) * 24 + 12, floor(m_position.y / 24) * 24 };
-		}
 
-		if (m_currentState != TweekMode)
-		{
-			//ウェイポイントを検索する。
-			WayPointSerch();
-		}
-		else
-		{
-			if (!m_callTweekEvent)
-			{
-				//いじけモード時、移動パラメーターを変更する。
-				m_direction *= -1;
-				m_callTweekEvent = true;
-				m_currentMoveSpeed = TWEEK_MOVE_SPEED;
-			}
-
-			//いじけモード用の移動。
-			WayPointSerchForTweekMode();
-
-			//いじけモードが終了しているか。
-			if (m_tweekTimer > TWEEK_TIME)
-			{
-				m_currentState = ChaseMode;
-				m_currentMoveSpeed = STANDARD_MOVE_SPEED;
-				m_tweekTimer = 0.0f;
-				m_callTweekEvent = false;
-			}
-		}
-
-		//方向を計算。
-		m_direction = (GetPositionIndex(m_nextWayPoint) - GetPositionIndex(GetPosition())).Normalized();
-		m_isArrive = false;
-	}
-
-	//次のwayPointまで移動させる。
-	m_position += m_direction * m_currentMoveSpeed;
-
-	if (m_nextWayPoint == m_position)
-	{
-		//到着している。
-		m_isArrive = true;
-	}
 
 	if (m_currentState == TweekMode)
 	{
+
+		if (!m_callTweekEvent)
+		{
+			//いじけモード時のイベントを呼び出し。
+			m_direction *= -1;
+			m_callTweekEvent = true;
+			m_currentMoveSpeed = TWEEK_MOVE_SPEED;
+			//反転した分、残り移動可能ピクセルも変更。
+			m_restMovePixcel = SPRITE_SIZE - m_restMovePixcel;
+		}
+
+		//タイマーを加算。
 		m_tweekTimer += GameTime()->GetDeltaTime();
+
+		if (m_tweekTimer > TWEEK_TIME)
+		{
+			//いじけモードが終了している。
+			m_currentState = ChaseMode;
+			m_currentMoveSpeed = STANDARD_MOVE_SPEED;
+			m_tweekTimer = 0.0f;
+			m_callTweekEvent = false;
+		}
+
 	}
+
+	if (m_restMovePixcel <= 0)
+	{
+		//指定pix分移動したので次のwayPointを計算する。
+		if (m_currentState == TweekMode)
+		{
+			//いじけモード時の移動を実行。
+			WayPointSerchForTweekMode();
+		}
+		else
+		{
+			//通常移動を実行。
+			WayPointSerch();
+		}
+		//次のwayPointが更新されたため、進行方向も更新。
+		m_direction = (m_nextWayPoint - m_position).Normalized();
+		//残り移動ピクセルを初期化。
+		m_restMovePixcel = SPRITE_SIZE;
+	}
+	
+	//残りの移動可能量を計算。これを行わないと移動量を変更した際の位置が不正になる(グリッド真ん中で止まらない）。
+	float move = std::clamp(m_currentMoveSpeed, 0.0f, (float)m_restMovePixcel);
+	m_position += m_direction * move;
+	//移動した分引く。
+	m_restMovePixcel -= move;
 
 	AnimationUpdate();
 }
@@ -110,6 +115,8 @@ void EnemyBase::Death()
 
 std::vector<Vector2> EnemyBase::CanMoveNextWayPoint()
 {
+
+
 	//どれか4点。
 	const Vector2 NEXT_POSITION_LIST[4] = { {1,0}, {-1,0}, {0,1}, {0,-1} };
 	Vector2 inverseDir = m_direction * -1;

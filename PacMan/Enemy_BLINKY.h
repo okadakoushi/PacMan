@@ -13,7 +13,7 @@ private:
 	const Vector2 SCATTER_POINT = { 800.0f, 48.0f };
 
 public:
-	Enemy_BLINKY(SceneBase* sceneBase, PacMan* pacManPtr);
+	Enemy_BLINKY(SceneBase* sceneBase, PacMan* pacManPtr, Vector2 StartPos);
 
 public:
 	void Init() override;
