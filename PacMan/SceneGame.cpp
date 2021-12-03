@@ -83,7 +83,7 @@ void SceneGame::CreateStage()
 				Cookie* cookie = new Cookie(this);
 				cookie->Init();
 				cookie->SetPosition(PlaceObjectPos);
-				m_leftCookieCount++;
+				//m_leftCookieCount++;
 				continue;
 			}
 
@@ -138,34 +138,23 @@ void SceneGame::CreateStage()
 
 void SceneGame::CreateEnemy()
 {
-	//Blinky.
-	Enemy_BLINKY* enemy_blinky = new Enemy_BLINKY(this, m_pacMan, BLINKY_START_POS);
-	enemy_blinky->Init();
-	enemy_blinky->ChangeCurrentState(EnemyBase::ScatterMode);
+	Enemy_BLINKY* enemy_blinky = new Enemy_BLINKY(this, m_pacMan, ENEMY_START_POS[0]);
 	m_enemyList.push_back(enemy_blinky);
-
-	//Pinky.
-	Enemy_Pinky* enemy_pinky = new Enemy_Pinky(this, m_pacMan, PINKY_START_POS);
-	enemy_pinky->Init();
-	enemy_pinky->ChangeCurrentState(EnemyBase::InPrisonMode);
+	Enemy_Pinky* enemy_pinky = new Enemy_Pinky(this, m_pacMan, ENEMY_START_POS[1]);
 	m_enemyList.push_back(enemy_pinky);
-
-	//INKY.
-	Enemy_INKY* enemy_inky = new Enemy_INKY(this, m_pacMan, enemy_blinky, INKY_START_POS);
-	enemy_inky->Init();
-	enemy_inky->ChangeCurrentState(EnemyBase::InPrisonMode);
+	Enemy_INKY* enemy_inky = new Enemy_INKY(this, m_pacMan, enemy_blinky, ENEMY_START_POS[2]);
 	m_enemyList.push_back(enemy_inky);
-
-	//Clyde.
-	Enemy_POKEY* enemy_pokey = new Enemy_POKEY(this, m_pacMan, CLYDE_START_POS);
-	enemy_pokey->Init();
-	enemy_pokey->ChangeCurrentState(EnemyBase::InPrisonMode);
+	Enemy_POKEY* enemy_pokey = new Enemy_POKEY(this, m_pacMan, ENEMY_START_POS[3]);
 	m_enemyList.push_back(enemy_pokey);
 
 	for (auto* enemy : m_enemyList)
 	{
+		enemy->Init();
+		enemy->ChangeCurrentState(EnemyBase::InPrisonMode);
 		enemy->SetExcutionFlag(Actor::EnExcutionFlagType_Draw);
 	}
+	//ブリンキーは最初から外。
+	enemy_blinky->ChangeCurrentState(EnemyBase::ScatterMode);
 
 }
 
@@ -174,10 +163,13 @@ void SceneGame::Update()
 	//基底のUpdate呼び出し。
 	__super::Update();
 
-	//UI.
-	m_playerUI->Update(m_score, m_lifePoint);
-
 	m_sceneStartDeltaTime += GameTime()->GetDeltaTime();
+
+	if (m_leftCookieCount == 0)
+	{
+		NextRound();
+		return;
+	}
 
 	if (m_sceneStartDeltaTime > CHARACTER_SPAWN_TIME && m_pacMan == nullptr)
 	{
@@ -189,6 +181,9 @@ void SceneGame::Update()
 		//敵。
 		CreateEnemy();
 	}
+
+	//UI.
+	m_playerUI->Update(m_score, m_lifePoint);
 
 	if (m_sceneStartDeltaTime < START_GAME_TIME)
 	{
@@ -258,11 +253,7 @@ void SceneGame::Update()
 
 	m_enemyChaseTimer += GameTime()->GetDeltaTime();
 
-	if (m_leftCookieCount == 0)
-	{
-		m_sceneManagerPtr->ChangeScene(SceneID::EnSceneID_Game);
-		NextRound();
-	}
+
 }
 
 void SceneGame::PlayerDeadEvent()
@@ -301,19 +292,12 @@ void SceneGame::PlayerDeadEvent()
 
 void SceneGame::EnemyEvent()
 {
-	//waitTimeが終了しているため、牢獄から出る。
-	//bitTable(0000→牢屋からでたEnemyは1) : enemy[]。
-	if (m_sceneStartDeltaTime >= PINKY_WAIT_TIME && m_enemyList[1]->GetCurrentState() == EnemyBase::InPrisonMode)
+	for (int i = 1; i < m_enemyList.size(); i++)
 	{
-		m_enemyList[1]->ChangeCurrentState(EnemyBase::GetOutPrisonMode);
-	}
-	else if (m_sceneStartDeltaTime >= INKY_WAIT_TIME && m_enemyList[2]->GetCurrentState() == EnemyBase::InPrisonMode)
-	{
-		m_enemyList[2]->ChangeCurrentState(EnemyBase::GetOutPrisonMode);
-	}
-	else if (m_sceneStartDeltaTime >= CLYDE_WAIT_TIME && m_enemyList[3]->GetCurrentState() == EnemyBase::InPrisonMode)
-	{
-		m_enemyList[3]->ChangeCurrentState(EnemyBase::GetOutPrisonMode);
+		if (m_sceneStartDeltaTime >= ENEMY_WAIT_TIME[i - 1] && m_enemyList[i]->GetCurrentState() == EnemyBase::InPrisonMode)
+		{
+			m_enemyList[i]->ChangeCurrentState(EnemyBase::GetOutPrisonMode);
+		}
 	}
 
 	//タイマーに応じて、Chase/Scatterを切り替え。
@@ -340,7 +324,7 @@ void SceneGame::EnemyEvent()
 			m_enemyList[i]->SetDeadEvent(true);
 			//スコアも更新。
 			m_currentEatScore *= 2;
-			m_score +=m_currentEatScore;
+			m_score += m_currentEatScore;
 		}
 	}
 
@@ -367,7 +351,46 @@ void SceneGame::EnemyEvent()
 
 void SceneGame::NextRound()
 {
-	delete this;
+	//パラメーターをリセット。
+	delete m_pacMan;
+	m_pacMan = nullptr;
+	for (auto* enemy : m_enemyList)
+	{
+		enemy->SetExcutionFlag(Actor::EnExcutionFlagType_Dead);
+	}
+	m_enemyList.clear();
+
+	//ラウンド進行で使用するライフを追加しておく。
+	m_lifePoint++;
+
+	m_nextStageTimer += GameTime()->GetDeltaTime();
+	
+	if (++m_colorTriggerFrame > COLOR_TRIGGER_FRAME)
+	{
+		SetDrawBright(255 * m_colorTriggerFlag, 255 * m_colorTriggerFlag, 255 * m_colorTriggerFlag);
+		m_colorTriggerFlag ^= true;
+		m_colorTriggerFrame = 0;
+	}
+
+	if (m_nextStageTimer > BLINKING_TIME)
+	{
+		SetDrawBright(255, 255, 255);
+		for (auto* actor : m_actorList)
+		{
+			actor->SetExcutionFlag(Actor::EnExcutionFlagType_Dead);
+		}
+	}
+	
+	if(m_nextStageTimer > NEXT_STAGE_TIME)
+	{
+		m_nextStageTimer = 0;
+		m_sceneStartDeltaTime = 0.0f;
+		m_enemyChaseTimer = 0.0f;
+		m_eatingWaitTimer = 0.0f;
+		CreateStage();
+	}
+
+
 }
 
 void SceneGame::FruitEvent()

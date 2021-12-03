@@ -7,6 +7,7 @@
 class Actor : public Object
 {
 public:
+
 	enum ExcutionFlagType
 	{
 		EnExcutionFlagType_NotActive	= 0b0000,	//アクティブではない。
@@ -29,6 +30,7 @@ protected:
 
 private:
 	size_t				m_hash = -1;											//ハッシュ。
+
 
 public:
 	/// <summary>

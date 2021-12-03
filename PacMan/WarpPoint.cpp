@@ -20,11 +20,12 @@ void WarpPoint::OnCollision(Actor* actor)
 	Vector2 fix = m_position - CENTER_POSITION;
 	float direction = std::clamp(fix.x, -1.0f, 1.0f);
 	float xLen = abs(fix.x);
-	xLen = (xLen / 24) * 24;
-	if (xLen < actor->GetPosition().x - CENTER_POSITION.x)
+	xLen = ((xLen / SPRITE_SIZE) * SPRITE_SIZE) * -direction;
+	if (direction < 0)
 	{
-		actor->SetPosition({ xLen * direction, actor->GetPosition().y });
+		xLen -= SPRITE_SIZE * 2;
 	}
+	actor->SetPosition({ xLen + CENTER_POSITION.x, actor->GetPosition().y });
 }
 
 void WarpPoint::Draw()

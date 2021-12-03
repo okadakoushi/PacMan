@@ -17,7 +17,10 @@ void EnemyBase::Init()
 
 void EnemyBase::Update()
 {	
-
+	if ((m_nextWayPoint - m_position).Length() > SPRITE_SIZE)
+	{
+		m_restMovePixcel = 0;
+	}
 
 
 	if (m_currentState == TweekMode)
@@ -115,8 +118,6 @@ void EnemyBase::Death()
 
 std::vector<Vector2> EnemyBase::CanMoveNextWayPoint()
 {
-
-
 	//Ç«ÇÍÇ©4ì_ÅB
 	const Vector2 NEXT_POSITION_LIST[4] = { {1,0}, {-1,0}, {0,1}, {0,-1} };
 	Vector2 inverseDir = m_direction * -1;

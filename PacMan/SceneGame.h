@@ -45,10 +45,6 @@ private:
 	int m_lifePoint = 3;								//残機数。
 	int m_score = 0;									//得点。
 
-
-	Sprite m_readySprite;
-	int m_drawHandle = 0;
-
 	//インスタンスのptr記憶。
 	SceneManager* m_sceneManager = nullptr;				//SceneManager。
 	PacMan* m_pacMan			 = nullptr;				//PacMan。
@@ -79,7 +75,6 @@ private:
 	char m_scoreBuffer[12];								//スコア用のバッファー。
 
 	//EnemyState切り替え用パラメーター。
-	float m_sceneStartDeltaTime = 0.0f;					//シーンが始まってからの時間。
 	float m_enemyChaseTimer = 0.0f;						//敵キャラの追跡、散開を切り替える用のタイマー。
 	float m_eatingWaitTimer = 0.0f;						//食べる演出を待った時間。
 	Vector2 m_frontPrison = {504, 288};					//牢屋の前。
@@ -93,15 +88,35 @@ private:
 	//ゲーム進行用。
 	const float CHARACTER_SPAWN_TIME = 3.0f;					//キャラクターを生成する
 	const float START_GAME_TIME = CHARACTER_SPAWN_TIME + 1.5f;	//ゲームを開始する。
-	const float PINKY_WAIT_TIME = START_GAME_TIME + 1.0f;		//PINKY出撃。
-	const float INKY_WAIT_TIME	= START_GAME_TIME + 5.0f;		//INKY出撃。
-	const float CLYDE_WAIT_TIME = START_GAME_TIME + 9.0f;		//CLYDE出撃。
+	const float BLINKING_TIME = 1.5f;							//点滅時間。
+	const float NEXT_STAGE_TIME = BLINKING_TIME + 1.0f;			//次ステージ。
 
-	//初期位置。
-	const Vector2 BLINKY_START_POS		= { CENTER_POSITION.x - SPRITE_SIZE, CENTER_POSITION.y - SPRITE_SIZE * 4.0f };
-	const Vector2 PINKY_START_POS		= { CENTER_POSITION.x, CENTER_POSITION.y - SPRITE_SIZE * 2.0f };
-	const Vector2 INKY_START_POS		= { CENTER_POSITION.x - SPRITE_SIZE * 3, CENTER_POSITION.y - SPRITE_SIZE * 1.0f };
-	const Vector2 CLYDE_START_POS		= { CENTER_POSITION.x + SPRITE_SIZE * 2, CENTER_POSITION.y - SPRITE_SIZE * 1.0f };
+	//timer
+	float m_sceneStartDeltaTime = 0.0f;					//シーンが始まってからの時間。
+	float m_nextStageTimer = 0.0f;
+
+	//Ready
+	Sprite m_readySprite;
+	int m_drawHandle = 0;
+	//Stage
+	const int COLOR_TRIGGER_FRAME = 5;
+	int m_colorTriggerFrame = 0;
+	bool m_colorTriggerFlag = false;
+
+	//敵のwaitTime
+	const float ENEMY_WAIT_TIME[3] = {
+		START_GAME_TIME + 1.0f,		//PINKY出撃。
+		START_GAME_TIME + 5.0f,		//INKY出撃。
+		START_GAME_TIME + 9.0f		//CLYDE出撃。
+	};
+
+	//敵の初期位置。
+	const Vector2 ENEMY_START_POS[4] = {
+		{ CENTER_POSITION.x - SPRITE_SIZE, CENTER_POSITION.y - SPRITE_SIZE * 4.0f },
+		{ CENTER_POSITION.x, CENTER_POSITION.y - SPRITE_SIZE * 2.0f },
+		{ CENTER_POSITION.x - SPRITE_SIZE * 3, CENTER_POSITION.y - SPRITE_SIZE * 1.0f },
+		{ CENTER_POSITION.x + SPRITE_SIZE * 2, CENTER_POSITION.y - SPRITE_SIZE * 1.0f }
+	};
 
 public:
 	SceneGame(SceneManager* sceneManager);

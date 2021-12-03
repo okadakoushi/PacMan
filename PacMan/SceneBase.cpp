@@ -29,9 +29,13 @@ void SceneBase::Update()
 	{
 		if (actor->GetActorExcutionFlag() & Actor::EnExcutionFlagType_Dead)
 		{
-			m_actorList.erase(std::find(m_actorList.begin(), m_actorList.end(), actor));
-			delete actor;
-			actor = nullptr;
+			auto it = std::find(m_actorList.begin(), m_actorList.end(), actor);
+			if (it != m_actorList.end())
+			{
+				m_actorList.erase(it);
+				delete actor;
+				actor = nullptr;
+			}
 		}
 	}
 }
@@ -79,6 +83,11 @@ void SceneBase::UnRegistActor(Actor* actor)
 
 void SceneBase::CheckHitActorCollision()
 {	
+	if (m_actorList.size() == 0)
+	{
+		return;
+	}
+
 	for (int i = 0; i < m_actorList.size() - 1; i++)
 	{
 		for (int j = i + 1; j < m_actorList.size(); j++)
