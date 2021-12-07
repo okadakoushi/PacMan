@@ -19,7 +19,7 @@ RectCollision::RectCollision(CollisionType colType) :
 
 bool RectCollision::CheckHitAABB(Actor* actor, Actor* serchActor)
 {
-	return CheckHitAABB(actor->GetPosition(), actor->GetSpriteSize(), serchActor->GetPosition(), serchActor->GetSpriteSize());
+	return CheckHitAABB(actor->GetPosition(), actor->GetCollision().GetCollisionSize(), serchActor->GetPosition(), actor->GetCollision().GetCollisionSize());
 }
 
 bool RectCollision::CheckHitAABB(const Vector2& actorPos, const Vector2& actorSize, const Vector2& serchActorPos, const Vector2& serchActorSize)

@@ -62,10 +62,10 @@ protected:
 	Vector2				m_nextWayPoint = START_POINT;				//次のwayPoint。
 	float				m_currentMoveSpeed = STANDARD_MOVE_SPEED;
 	EnemyState			m_currentState = InPrisonMode;
+	EnemyState			m_fontState;
 
-	//test移動
+	//残りの移動可能ピクセル。
 	int					m_restMovePixcel = 0;
-
 
 	//いじけモード用。
 	Sprite				m_tweekSprite;				//いじけモードのスプライト。
@@ -73,6 +73,9 @@ protected:
 	bool				m_callTweekEvent = false;	//いじけモード用イベントを呼び出したか。
 	bool				m_callDeadEvent = false;	//死亡用イベント
 	int					m_nearEndTweekFrame = 2;
+
+	//Sound
+	int m_returnPrisonSE = 0;
 
 
 public:
@@ -88,6 +91,11 @@ public:
 	/// </summary>
 	/// <param name="actor"></param>
 	void HitEffect(Actor* actor);
+
+	/// <summary>
+	/// 反転処理。
+	/// </summary>
+	void Turning();
 	
 	/// <summary>
 	/// 現在のステートを取得。
@@ -96,6 +104,11 @@ public:
 	EnemyState GetCurrentState()
 	{
 		return m_currentState;
+	}
+
+	void SetFrontState(EnemyState state)
+	{
+		m_fontState = state;
 	}
 
 	/// <summary>

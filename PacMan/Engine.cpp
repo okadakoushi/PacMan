@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Engine.h"
 #include "SceneManager.h"
+#include "SoundManager.h"
 
 Engine::Engine()
 {
@@ -39,6 +40,8 @@ void Engine::ExcuteEngine()
 
 		//シーンマネージャー更新。
 		m_sceneManager.Update();
+		//サウンドマネージャー更新。
+		GameSound()->Update();
 
 		//デバッグ用のラインを描画。
 #ifdef DEBUG

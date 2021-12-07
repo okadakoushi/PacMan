@@ -28,6 +28,10 @@ SceneGame::SceneGame(SceneManager* sceneManager) : SceneBase(sceneManager)
 {
 }
 
+SceneGame::~SceneGame()
+{
+}
+
 void SceneGame::Init()
 {
 	//スコア初期化。
@@ -43,7 +47,15 @@ void SceneGame::Init()
 
 	//ステージを生成。
 	LoadStage();
-	CreateStage();	
+	CreateStage();
+
+	//サウンドロード。
+	m_openingBGM = GameSound()->Load("Assets/sound/opening_song.ogg");
+	m_standardModeSound = GameSound()->Load("Assets/sound/siren.ogg");
+	m_eatingEnemySE = GameSound()->Load("Assets/sound/eatghost.ogg");
+	m_powerModeSE = GameSound()->Load("Assets/sound/power_pellet.wav");
+
+	GameSound()->Play(m_openingBGM);
 }
 
 void SceneGame::LoadStage()
@@ -55,6 +67,7 @@ void SceneGame::LoadStage()
 
 void SceneGame::CreateStage()
 {
+	//中央からブロック単位でどれくらい離れているか。
 	int centerIndexX = STAGE_TABLE_WIDTH / 2;
 	int centerIndexY = STAGE_TABLE_HEIGHT / 2;
 
@@ -83,51 +96,43 @@ void SceneGame::CreateStage()
 				Cookie* cookie = new Cookie(this);
 				cookie->Init();
 				cookie->SetPosition(PlaceObjectPos);
-				//m_leftCookieCount++;
-				continue;
+				m_restCookieCount++;
 			}
-
-			if (m_stageTable[i][j] == EnPlaceObjectType_PowerCookie)
+			else if (m_stageTable[i][j] == EnPlaceObjectType_PowerCookie)
 			{
 				PowerCookie* pCookie = new PowerCookie(this);
 				pCookie->Init();
 				pCookie->SetPosition(PlaceObjectPos);
-				m_leftCookieCount++;
-				continue;
+				m_restCookieCount++;
 			}
-
-			if (m_stageTable[i][j] == EnPlaceObjectType_WarpPoint)
+			else if (m_stageTable[i][j] == EnPlaceObjectType_WarpPoint)
 			{
 				WarpPoint* warp = new WarpPoint(this);
 				warp->Init();
 				warp->SetPosition(PlaceObjectPos);
-				continue;
 			}
-
-			if (m_stageTable[i][j] == EnPlaceObjectType_Gate)
+			else if (m_stageTable[i][j] == EnPlaceObjectType_Gate)
 			{
 				//wallについては名称を変更する。
 				Gate* gate = new Gate(this);
 				gate->Init();
 				gate->SetPosition(PlaceObjectPos);
 				m_obstacleList.push_back(gate);
-				continue;
 			}
-
-
-
-			//ここまできたオブジェクトはすべて壁。
-			Wall* wall = new Wall(this);
-			wall->SetPosition(PlaceObjectPos);
-			//ファイルパスをマップチップIDより割り出してくる。
-			//str格納用。
-			char str[64];
-			//ObjectIDからファイルパスに変換する。LevelObject<行>-<列>.png
-			sprintf(str, "Assets/LevelObjects/LevelObjects%d-%d.png", m_stageTable[i][j] % 15, (m_stageTable[i][j] / 15) % 3);
-			wall->SetFilePath(str);
-			m_obstacleList.push_back(wall);
-			wall->Init();
-
+			else
+			{
+				//ここまできたオブジェクトはすべて壁。
+				Wall* wall = new Wall(this);
+				wall->SetPosition(PlaceObjectPos);
+				//ファイルパスをマップチップIDより割り出してくる。
+				//str格納用。
+				char str[64];
+				//ObjectIDからファイルパスに変換する。LevelObject<行>-<列>.png
+				sprintf(str, "Assets/LevelObjects/LevelObjects%d-%d.png", m_stageTable[i][j] % 15, (m_stageTable[i][j] / 15) % 3);
+				wall->SetFilePath(str);
+				m_obstacleList.push_back(wall);
+				wall->Init();
+			}
 		}
 	}
 
@@ -165,7 +170,7 @@ void SceneGame::Update()
 
 	m_sceneStartDeltaTime += GameTime()->GetDeltaTime();
 
-	if (m_leftCookieCount == 0)
+	if (m_restCookieCount == 0)
 	{
 		NextRound();
 		return;
@@ -173,6 +178,7 @@ void SceneGame::Update()
 
 	if (m_sceneStartDeltaTime > CHARACTER_SPAWN_TIME && m_pacMan == nullptr)
 	{
+		//opening
 		//キャラクターを生成。
 		m_pacMan = new PacMan(this);
 		m_pacMan->Init();
@@ -209,6 +215,9 @@ void SceneGame::Update()
 
 	if (m_isCallDeadEventFlags)
 	{
+		StopSoundMem(m_standardModeSound);
+		GameSound()->Play(m_eatingEnemySE);
+
 		//エネミー捕食演出。
 		m_eatingWaitTimer += GameTime()->GetDeltaTime();
 
@@ -264,7 +273,6 @@ void SceneGame::PlayerDeadEvent()
 		m_enemyList[i]->SetExcutionFlag(Actor::EnExcutionFlagType_Dead);
 		m_enemyList.erase(m_enemyList.begin() + i);
 	}
-	
 
 	if (m_pacMan->PlayDeadAnim())
 	{
@@ -314,7 +322,12 @@ void SceneGame::EnemyEvent()
 		if (m_enemyList[i]->GetCurrentState() == EnemyBase::ChaseMode || m_enemyList[i]->GetCurrentState() == EnemyBase::ScatterMode)
 		{
 			//毎フレームEnemyをChase/Scatterモードに変更。
+			EnemyBase::EnemyState frontFrameState = m_enemyList[i]->GetCurrentState();
 			m_enemyList[i]->ChangeCurrentState(m_isChaseToChageStateTimeAndMoveState[m_isChaseMode].second);
+			if (frontFrameState != m_enemyList[i]->GetCurrentState())
+			{
+				m_enemyList[i]->Turning();
+			}
 		}
 
 		if (m_enemyList[i]->GetCurrentState() == EnemyBase::ReturnPrisonMode && !m_enemyList[i]->IsCallDeadEvent())
@@ -326,6 +339,7 @@ void SceneGame::EnemyEvent()
 			m_currentEatScore *= 2;
 			m_score += m_currentEatScore;
 		}
+
 	}
 
 
@@ -338,6 +352,7 @@ void SceneGame::EnemyEvent()
 			if (enemy->GetCurrentState() != EnemyBase::ReturnPrisonMode)
 			{
 				//すべての敵をいじけモードにする。
+				enemy->SetFrontState(enemy->GetCurrentState());
 				enemy->ChangeCurrentState(EnemyBase::TweekMode);
 			}
 		}
@@ -345,8 +360,6 @@ void SceneGame::EnemyEvent()
 		m_pacMan->SetPowerMode(false);
 		m_currentEatScore = 100;
 	}
-
-	
 }
 
 void SceneGame::NextRound()
@@ -399,7 +412,7 @@ void SceneGame::FruitEvent()
 	if (m_fruit == nullptr)
 	{
 		//フルーツが出現していない。
-		if (m_leftCookieCount == 84 || m_leftCookieCount == 167)
+		if (m_restCookieCount == 84 || m_restCookieCount == 167)
 		{
 			//フルーツが出現。		
 			m_fruit = new Fruit(this);

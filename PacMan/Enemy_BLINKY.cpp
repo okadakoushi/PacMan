@@ -7,6 +7,10 @@ Enemy_BLINKY::Enemy_BLINKY(SceneBase* sceneBase, PacMan* pacManPtr, Vector2 Star
 
 }
 
+Enemy_BLINKY::~Enemy_BLINKY()
+{
+}
+
 void Enemy_BLINKY::Init()
 {
 	__super::Init();

@@ -6,11 +6,16 @@ Fruit::Fruit(SceneBase* sceneBase) : ItemBase(sceneBase, "Fruit", 0)
 {
 }
 
+Fruit::~Fruit()
+{
+}
+
 void Fruit::Init()
 {
 	m_spirte.Init("Assets/fruit.bmp");
 	m_score = FRUIT_SCORE;
 	m_spriteSize = { 36,36 };
+	GameSound()->Load("Assets/sound/eatpill.ogg");
 }
 
 void Fruit::Draw()
@@ -29,6 +34,7 @@ void Fruit::HitEffect(Actor* actor)
 		if (pacMan != nullptr) 
 		{
 			m_actorExcutionFlag = Actor::EnExcutionFlagType_Dead;
+			GameSound()->Play(m_eatFruitSound);
 		}
 	}
 }
