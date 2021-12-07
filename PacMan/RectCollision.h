@@ -17,7 +17,6 @@ private:
 
 	const CollisionType m_collisionType;							//コリジョンタイプ
 	const int m_collisibleBitTable;									//衝突可能なビットテーブル。
-	Vector2	m_collisionSize = { SPRITE_SIZE, SPRITE_SIZE };			//コリジョンのサイズ。
 
 public:
 	RectCollision(CollisionType colType);
@@ -48,24 +47,6 @@ public:
 	int GetCollisionPossibleTable()
 	{
 		return m_collisibleBitTable;
-	}
-
-	/// <summary>
-	/// コリジョンサイズを設定。
-	/// </summary>
-	/// <param name="size"></param>
-	void SetCollisionSize(Vector2 size)
-	{
-		m_collisionSize = size;
-	}
-
-	/// <summary>
-	/// コリジョンサイズを取得。
-	/// </summary>
-	/// <returns>コリジョンサイズを取得。</returns>
-	Vector2 GetCollisionSize()
-	{
-		return m_collisionSize;
 	}
 	
 private:

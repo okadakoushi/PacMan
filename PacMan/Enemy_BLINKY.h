@@ -14,11 +14,10 @@ private:
 
 public:
 	Enemy_BLINKY(SceneBase* sceneBase, PacMan* pacManPtr, Vector2 StartPos);
-	~Enemy_BLINKY();
+
 public:
-	virtual void Init() override;
-	virtual void OnCollision(Actor* actor)override {};
-	virtual void Update() override;
-	virtual void Draw() override;
+	void Init() override;
+	void Update() override;
+	void Draw() override;
 };
 

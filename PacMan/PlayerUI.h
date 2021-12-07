@@ -15,7 +15,6 @@ private:
 	SceneGame* m_sceneGamePtr = nullptr;
 public:
 	PlayerUI(SceneGame* sceneGame);
-	~PlayerUI();
 
 	void Init();
 	void Update(int score, int life);

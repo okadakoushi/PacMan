@@ -41,7 +41,7 @@ protected:
 
 private:
 	//UIパラメーター。
-	int m_restCookieCount = 0;							//クッキーの数。
+	int m_leftCookieCount = 0;							//クッキーの数。
 	int m_lifePoint = 3;								//残機数。
 	int m_score = 0;									//得点。
 
@@ -58,6 +58,9 @@ private:
 	const int STAGE_TABLE_WIDTH = 36;					//ステージテーブルの横。
 	const int STAGE_TABLE_HEIGHT = 36;					//ステージテーブルの縦。
 
+	//ワープ用。
+	Vector2 m_warpPoints[2];
+
 	//フルーツ生成用のパラメーター。
 	const float FRUIT_APPEAR_DISAPPEAR_TIME = 10.0f;	//フルーツ用、出現or消失タイマー。
 	Vector2 m_apperFruitPosition;						//フルーツの出現地点。
@@ -66,11 +69,15 @@ private:
 
 	//Enemyを食べたイベント用。
 	const float WAIT_EATING_TINE = 1.0f;				//食べる演出の時間。
-	bool m_isPowerMode = false;							//パワーモードフラグ。
 	int m_isCallDeadEventFlags = EnCalledDeadEvent_None;//どの敵が食べられたのか識別用。
 	Font m_scoreFont;									//エネミーが食べられた時のスコア表示。
 	int m_currentEatScore = 100;						//現在のスコア。
 	char m_scoreBuffer[12];								//スコア用のバッファー。
+
+	//EnemyState切り替え用パラメーター。
+	float m_enemyChaseTimer = 0.0f;						//敵キャラの追跡、散開を切り替える用のタイマー。
+	float m_eatingWaitTimer = 0.0f;						//食べる演出を待った時間。
+	Vector2 m_frontPrison = {504, 288};					//牢屋の前。
 
 	//CHASE_SCATTER切り替え用。
 	const float	CHASE_TIME = 20.0f;						//追跡モード時の時間。
@@ -84,20 +91,9 @@ private:
 	const float BLINKING_TIME = 1.5f;							//点滅時間。
 	const float NEXT_STAGE_TIME = BLINKING_TIME + 1.0f;			//次ステージ。
 
-	//sound.
-	int m_openingBGM = 0;								//オープニング。
-	int m_standardModeSound = 0;						//通常移動
-	int m_powerModeSE = 0;								//パワーモード。
-	int m_eatingEnemySE = 0;							//敵を食べた。
-
-	//Timer.
-	//シーン用。
+	//timer
 	float m_sceneStartDeltaTime = 0.0f;					//シーンが始まってからの時間。
-	float m_nextStageTimer = 0.0f;						//点滅管理
-	//Ghost用。
-	float m_enemyChaseTimer = 0.0f;						//敵キャラの追跡、散開を切り替える用のタイマー。
-	float m_tweekModeTimer = 0.0f;						//いじけモードのタイマー。
-	float m_eatingWaitTimer = 0.0f;						//食べる演出を待った時間。
+	float m_nextStageTimer = 0.0f;
 
 	//Ready
 	Sprite m_readySprite;
@@ -124,7 +120,6 @@ private:
 
 public:
 	SceneGame(SceneManager* sceneManager);
-	~SceneGame();
 	virtual void Init() override;
 	virtual void Update() override;
 
@@ -152,7 +147,7 @@ public:
 	/// </summary>
 	void ReduceCookieCount()
 	{
-		m_restCookieCount--;
+		m_leftCookieCount--;
 	}
 protected:
 	/// <summary>

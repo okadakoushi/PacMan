@@ -7,10 +7,6 @@ PowerCookie::PowerCookie(SceneGame* sceneGame) : ItemBase(sceneGame, "PowerCooki
 {
 }
 
-PowerCookie::~PowerCookie()
-{
-}
-
 void PowerCookie::Init()
 {
 	m_spirte.Init("Assets/LevelObjects/LevelObjects0-0.png");

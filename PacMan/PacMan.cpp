@@ -10,16 +10,10 @@ PacMan::PacMan(SceneBase* sceneBase) : Actor(sceneBase, "PacMan", 0, RectCollisi
 	m_sceneGamePtr = dynamic_cast<SceneGame*>(sceneBase);
 }
 
-PacMan::~PacMan()
-{
-}
-
 void PacMan::Init()
 {
 	LoadDivGraph("Assets/player_div.bmp", AniamtionNum, 5, 3, 24, 24, m_drawHandle);
 	m_position = PLAYER_RESPAWN_POINT;
-	m_deadSE = GameSound()->Load("Assets/sound/die.ogg");
-	m_collision.SetCollisionSize({ 20, 20 });
 }
 
 void PacMan::Update()
@@ -152,10 +146,6 @@ bool PacMan::PlayDeadAnim()
 
 	if (++m_animationWaitFrame > wait)
 	{
-		if (m_animationIndex == 0)
-		{
-			GameSound()->Play(m_deadSE);
-		}
 		m_animationIndex++;
 		m_animationWaitFrame = 0;
 	}
@@ -181,7 +171,7 @@ bool PacMan::CheckHitObstacle()
 	const std::vector<Actor*>& m_obstacleList = m_sceneGamePtr->GetObstacles();
 	for (Actor* obstacle : m_obstacleList)
 	{
-		if (GetCollision().CheckHitAABB(GetPosition() + Vector2(m_movedVector.x, m_movedVector.y), m_spriteSize, obstacle->GetPosition(), obstacle->GetSpriteSize()))
+		if (GetCollision().CheckHitAABB(GetPosition() + Vector2(m_movedVector.x, m_movedVector.y), {SPRITE_SIZE, SPRITE_SIZE}, obstacle->GetPosition(), { SPRITE_SIZE, SPRITE_SIZE }))
 		{
 			return true;
 		}

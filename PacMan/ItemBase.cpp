@@ -8,10 +8,6 @@ ItemBase::ItemBase(SceneBase* sceneBase, const char* tag, int prio) : Actor(scen
 	assert(m_sceneGame);
 }
 
-ItemBase::~ItemBase()
-{
-}
-
 void ItemBase::HitEffect(Actor* actor)
 {
 	m_sceneGame->AddScore(m_score);
