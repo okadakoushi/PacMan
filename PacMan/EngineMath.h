@@ -84,10 +84,6 @@ struct Vector2{
         y *= s;
         return *this;
     }
-    Vector2 operator *(Vector2 vec) const
-    {
-        return { x * vec.x, y * vec.y };
-    }
 
     //èúñ@
     Vector2 operator /(const float s) const

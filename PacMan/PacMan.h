@@ -27,17 +27,13 @@ private:
 	//アニメーション。
 	const int AnimationSpeed = 1;
 	const int DEAD_ANIMATION_SPEED = 7;
-	const int DEAD_FIRST_EDN_ANIMATION_SPEED = 15;
+	const int DEAD_FIRST_EDN_ANIMATION_SPEED = 60;
 	int m_drawHandle[AniamtionNum];
 	int m_animationIndex = 0;
 	int m_animationWaitFrame = 0;
 
-	//サウンド。
-	int m_deadSE = 0;									//死亡SE。
-
 public:
 	PacMan(SceneBase* sceneBase);
-	~PacMan();
 
 public:
 	virtual void Init() override;
@@ -60,7 +56,7 @@ public:
 	}
 	
 	/// <summary>
-	/// パワーモードか。
+	/// パワークッキーを入手しているか。
 	/// </summary>
 	/// <returns></returns>
 	bool IsPowerMode() 

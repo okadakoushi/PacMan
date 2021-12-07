@@ -13,10 +13,6 @@ EnemyBase::EnemyBase(SceneBase* sceneBase, const char* tag, int prio, PacMan* pa
 void EnemyBase::Init()
 {
 	m_position = START_POINT;
-	m_collision.SetCollisionSize({ 20,20 });
-
-	//GameSound()->Load("Assets/sound/")
-	//m_returnPrisonSE
 }
 
 void EnemyBase::Update()
@@ -33,9 +29,11 @@ void EnemyBase::Update()
 		if (!m_callTweekEvent)
 		{
 			//いじけモード時のイベントを呼び出し。
-			Turning();
+			m_direction *= -1;
 			m_callTweekEvent = true;
 			m_currentMoveSpeed = TWEEK_MOVE_SPEED;
+			//反転した分、残り移動可能ピクセルも変更。
+			m_restMovePixcel = SPRITE_SIZE - m_restMovePixcel;
 		}
 
 		//タイマーを加算。
@@ -44,7 +42,7 @@ void EnemyBase::Update()
 		if (m_tweekTimer > TWEEK_TIME)
 		{
 			//いじけモードが終了している。
-			m_currentState = m_fontState;
+			m_currentState = ChaseMode;
 			m_currentMoveSpeed = STANDARD_MOVE_SPEED;
 			m_tweekTimer = 0.0f;
 			m_callTweekEvent = false;
@@ -106,13 +104,6 @@ void EnemyBase::HitEffect(Actor* actor)
 			pacman->Death();
 		}
 	}
-}
-
-void EnemyBase::Turning()
-{
-	m_direction *= -1;
-	//反転した分、残り移動可能ピクセルも変更。
-	m_restMovePixcel = SPRITE_SIZE - m_restMovePixcel;
 }
 
 void EnemyBase::Death()

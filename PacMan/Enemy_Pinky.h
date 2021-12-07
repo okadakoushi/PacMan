@@ -11,12 +11,10 @@ private:
 
 public:
 	Enemy_Pinky(SceneBase* sceneBase, PacMan* pacManPtr, Vector2 StartPos);
-	~Enemy_Pinky();
-public:
-	virtual void Init() override;
-	virtual void OnCollision(Actor* actor)override {} ;
-	virtual void Update() override;
-	virtual void Draw() override;
 
+public:
+	void Init() override;
+	void Update() override;
+	void Draw() override;
 };
 

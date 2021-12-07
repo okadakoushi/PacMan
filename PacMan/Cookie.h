@@ -6,14 +6,11 @@ class Cookie : public ItemBase
 {
 private:
 	const int COOKIE_SCORE = 10;	//“¾“_B
-	int m_eatingSE = 0;
 public:
 	Cookie(SceneGame* sceneBase);
 
-	virtual void Init() override;
-	virtual void OnCollision(Actor* actor)override {};
-	virtual void Update()override {} ;
-	virtual void Draw() override;
+	void Init() override;
+	void Draw() override;
 	/// <summary>
 	/// Õ“ËŒø‰ÊB
 	/// </summary>
