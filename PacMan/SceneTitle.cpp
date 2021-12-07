@@ -5,9 +5,14 @@ SceneTitle::SceneTitle(SceneManager* sceneManager) : SceneBase(sceneManager)
 {
 }
 
+SceneTitle::~SceneTitle()
+{
+}
+
 void SceneTitle::Init()
 {
 	m_title.Init("Assets/title.bmp");
+
 }
 
 void SceneTitle::Update()

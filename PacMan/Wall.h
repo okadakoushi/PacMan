@@ -10,9 +10,10 @@ private:
 	bool m_isClear = true;
 public:
 	Wall(SceneBase* sceneBase);
-	void Init() override;
-	void Update() override;
-	void Draw() override;
+	virtual void Init() override;
+	virtual void OnCollision(Actor* actor)override {};
+	virtual void Update()override;
+	virtual void Draw() override;
 	/// <summary>
 	/// ファイルパスを設定する。
 	/// </summary>

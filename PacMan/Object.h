@@ -10,6 +10,8 @@ public:
 	/// <param name="tag">オブジェクトタグ。</param>
 	/// <param name="m_prio">優先度。</param>
 	Object(int m_prio = 0);
+
+	virtual ~Object();
 public:
 	///// <summary>
 	///// タグを取得。

@@ -41,6 +41,7 @@
     <ClCompile Include="SceneGame.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="SceneTitle.cpp" />
+    <ClCompile Include="SoundManager.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="RectCollision.cpp" />
     <ClCompile Include="StageLoader.cpp" />
@@ -79,6 +80,7 @@
     <ClInclude Include="SceneGame.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="SceneTitle.h" />
+    <ClInclude Include="SoundManager.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="RectCollision.h" />
     <ClInclude Include="StageLoader.h" />
@@ -86,6 +88,9 @@
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Wall.h" />
     <ClInclude Include="WarpPoint.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cpp.hint" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

@@ -12,6 +12,10 @@ PlayerUI::PlayerUI(SceneGame* sceneGame)
 	}
 }
 
+PlayerUI::~PlayerUI()
+{
+}
+
 void PlayerUI::Init()
 {
 

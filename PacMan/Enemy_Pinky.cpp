@@ -7,6 +7,10 @@ Enemy_Pinky::Enemy_Pinky(SceneBase* sceneBase, PacMan* pacManPtr, Vector2 StartP
 
 }
 
+Enemy_Pinky::~Enemy_Pinky()
+{
+}
+
 void Enemy_Pinky::Init()
 {
 	__super::Init();

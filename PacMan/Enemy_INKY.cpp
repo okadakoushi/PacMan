@@ -10,6 +10,10 @@ Enemy_INKY::Enemy_INKY(SceneBase* sceneBase, PacMan* pacManPtr, Enemy_BLINKY* bl
 	m_blinkyPtr = blinkyPtr;
 }
 
+Enemy_INKY::~Enemy_INKY()
+{
+}
+
 void Enemy_INKY::Init()
 {
 	__super::Init();

@@ -5,6 +5,10 @@ GameOver::GameOver(SceneManager* sceneManager) : SceneBase(sceneManager)
 {
 }
 
+GameOver::~GameOver()
+{
+}
+
 void GameOver::Init()
 {
 	int drawhandle = LoadGraph("Assets/inStageMessage.bmp");
@@ -18,13 +22,15 @@ void GameOver::Update()
 
 	if (m_isStart)
 	{
-		if (--m_fadeColor < 0)
+		if (m_fadeColor < 0)
 		{
 			m_sceneManagerPtr->ChangeScene(SceneBase::EnSceneID_Title);
+			m_fadeColor = 255;
 		}
+		m_fadeColor -= FADE_SPEED;
+		SetDrawBright(m_fadeColor, m_fadeColor, m_fadeColor);
 		return;
 	}
-
 	m_isStart = CheckHitKey(KEY_INPUT_Z);
 
 }

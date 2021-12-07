@@ -7,6 +7,10 @@ Enemy_POKEY::Enemy_POKEY(SceneBase* sceneBase, PacMan* pacManPtr, Vector2 StartP
 	m_packManPtr = pacManPtr;
 }
 
+Enemy_POKEY::~Enemy_POKEY()
+{
+}
+
 void Enemy_POKEY::Init()
 {
 	__super::Init();

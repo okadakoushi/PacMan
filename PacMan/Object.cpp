@@ -6,3 +6,7 @@ Object::Object(int m_prio) :
 {
 
 }
+
+Object::~Object()
+{
+}
