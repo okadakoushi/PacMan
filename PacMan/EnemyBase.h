@@ -53,7 +53,7 @@ protected:
 	unsigned int m_animationIndex = 0;							//アニメーションのインデックス。これを使用して次に流すアニメーションを決める。
 	int m_currentAnimation = 0;									//再生するアニメーション。
 	int m_animationWaitFrame = 0;								//何フレームアニメーションを流したか。
-	//static std::map<Vector2, int> m_directionToHandleIndex;		
+	static std::map<std::pair<int, int>, Animation> m_directionToHandleIndex;
 
 	//移動用。
 	bool				m_isArrive = true;			//wayPointに到着してる？

@@ -2,6 +2,14 @@
 #include "EnemyBase.h"
 #include "PacMan.h"
 
+std::map<std::pair<int, int>, EnemyBase::Animation> EnemyBase::m_directionToHandleIndex =
+{
+	{ { LEFT.x, LEFT.y },	LeftAnimation},
+	{ { UP.x, UP.y }	,	UpAnimation},
+	{ { DOWN.x, DOWN.y },	DownAnimatiom},
+	{ { RIGHT.x, RIGHT.y }, RightAnimation},
+};
+
 EnemyBase::EnemyBase(SceneBase* sceneBase, const char* tag, int prio, PacMan* packPtr, Vector2 startPos) : 
 	Actor(sceneBase, tag, prio, RectCollision::EnCollisionType_Dynamic),
 	m_packManPtr(packPtr),
@@ -250,7 +258,17 @@ void EnemyBase::AnimationUpdate()
 			m_currentAnimation = m_animationIndex % 2 + TweekAnimation;
 		}
 	}
-	else if (m_direction.x == -1)
+	else if (m_currentState == ReturnPrisonMode)
+	{
+		
+	}
+	else
+	{
+		//方向に応じてハンドルインデックスを返す。
+		m_currentAnimation = m_animationIndex % 2 + m_directionToHandleIndex[{m_direction.x, m_direction.y}];
+	}
+
+	/*else if (m_direction.x == -1)
 	{
 		if (m_currentState == ReturnPrisonMode)
 		{
@@ -293,7 +311,7 @@ void EnemyBase::AnimationUpdate()
 		{
 			m_currentAnimation = m_animationIndex % 2 + DownAnimatiom;
 		}
-	}
+	}*/
 
 }
 

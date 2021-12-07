@@ -342,8 +342,6 @@ void SceneGame::EnemyEvent()
 
 	}
 
-
-
 	//パックマンがパワークッキーを取っているかの監視。
 	if (m_pacMan->IsPowerMode())
 	{
@@ -378,6 +376,7 @@ void SceneGame::NextRound()
 
 	m_nextStageTimer += GameTime()->GetDeltaTime();
 	
+	//点滅フレーム制御。
 	if (++m_colorTriggerFrame > COLOR_TRIGGER_FRAME)
 	{
 		SetDrawBright(255 * m_colorTriggerFlag, 255 * m_colorTriggerFlag, 255 * m_colorTriggerFlag);
@@ -385,6 +384,7 @@ void SceneGame::NextRound()
 		m_colorTriggerFrame = 0;
 	}
 
+	//ステージ点滅。
 	if (m_nextStageTimer > BLINKING_TIME)
 	{
 		SetDrawBright(255, 255, 255);
@@ -394,6 +394,7 @@ void SceneGame::NextRound()
 		}
 	}
 	
+	//パラメーターをリセット。
 	if(m_nextStageTimer > NEXT_STAGE_TIME)
 	{
 		m_nextStageTimer = 0;

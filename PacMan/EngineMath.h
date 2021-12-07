@@ -111,3 +111,8 @@ struct Vector2{
     float x = 0;
     float y = 0;
 };
+
+static const Vector2 LEFT = { -1 , 0 };
+static const Vector2 UP = { 0 , -1 };
+static const Vector2 DOWN = { 0 , 1 };
+static const Vector2 RIGHT = { 1 , 0 };
