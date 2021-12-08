@@ -35,7 +35,7 @@ void Enemy_INKY::Update()
 		//˜S–‚Ì‘O
 		m_target = PRISON_FRONT;
 		m_currentMoveSpeed = GETOUT_PRISON_SPEED;
-		if ((m_position - m_target).Length() <= 3.0f)
+		if (m_position == m_target)
 		{
 			m_currentState = ScatterMode;
 		}

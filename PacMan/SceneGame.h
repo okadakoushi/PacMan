@@ -39,6 +39,14 @@ protected:
 		EnCalledDeadEvent_CLYDE		= 0b1000,
 	};
 
+	enum GameBGMType
+	{
+		GameBGMType_Normal,		//ノーマルサイレン音
+		GameBGMType_PowerMode,	//PowerMode
+		GameBGMType_Return,		//牢獄帰還音
+		GameBGMType_Num			//サウンドの数。
+	};
+
 private:
 	//UIパラメーター。
 	int m_restCookieCount = 0;							//クッキーの数。
@@ -85,10 +93,11 @@ private:
 	const float NEXT_STAGE_TIME = BLINKING_TIME + 1.0f;			//次ステージ。
 
 	//sound.
+	int m_enemySEList[GameBGMType_Num];
 	int m_openingBGM = 0;								//オープニング。
-	int m_standardModeSound = 0;						//通常移動
-	int m_powerModeSE = 0;								//パワーモード。
 	int m_eatingEnemySE = 0;							//敵を食べた。
+
+	GameBGMType m_nextPlaySound = GameBGMType_Normal;	//次に流す曲。
 
 	//Timer.
 	//シーン用。
@@ -96,7 +105,6 @@ private:
 	float m_nextStageTimer = 0.0f;						//点滅管理
 	//Ghost用。
 	float m_enemyChaseTimer = 0.0f;						//敵キャラの追跡、散開を切り替える用のタイマー。
-	float m_tweekModeTimer = 0.0f;						//いじけモードのタイマー。
 	float m_eatingWaitTimer = 0.0f;						//食べる演出を待った時間。
 
 	//Ready
@@ -117,14 +125,14 @@ private:
 	//敵の初期位置。
 	const Vector2 ENEMY_START_POS[4] = {
 		{ CENTER_POSITION.x - SPRITE_SIZE, CENTER_POSITION.y - SPRITE_SIZE * 4.0f },
-		{ CENTER_POSITION.x, CENTER_POSITION.y - SPRITE_SIZE * 2.0f },
+		{ CENTER_POSITION.x - SPRITE_SIZE, CENTER_POSITION.y - SPRITE_SIZE * 2.0f },
 		{ CENTER_POSITION.x - SPRITE_SIZE * 3, CENTER_POSITION.y - SPRITE_SIZE * 1.0f },
 		{ CENTER_POSITION.x + SPRITE_SIZE * 2, CENTER_POSITION.y - SPRITE_SIZE * 1.0f }
 	};
 
 public:
 	SceneGame(SceneManager* sceneManager);
-	~SceneGame();
+	virtual ~SceneGame();
 	virtual void Init() override;
 	virtual void Update() override;
 
@@ -154,6 +162,7 @@ public:
 	{
 		m_restCookieCount--;
 	}
+
 protected:
 	/// <summary>
 	/// ステージを外部ファイルよりロード。
@@ -191,5 +200,9 @@ private:
 	/// </summary>
 	void FruitEvent();
 
+	/// <summary>
+	/// パラメーターをリセット。
+	/// </summary>
+	void ResetParams();
 };
 

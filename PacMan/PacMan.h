@@ -30,10 +30,12 @@ private:
 	const int DEAD_FIRST_EDN_ANIMATION_SPEED = 15;
 	int m_drawHandle[AniamtionNum];
 	int m_animationIndex = 0;
+	int m_frontFrameAnimIndex = 0;
 	int m_animationWaitFrame = 0;
 
 	//サウンド。
 	int m_deadSE = 0;									//死亡SE。
+	int m_eatingSE = 0;
 
 public:
 	PacMan(SceneBase* sceneBase);

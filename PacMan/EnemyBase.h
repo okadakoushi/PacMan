@@ -13,7 +13,7 @@ public:
 		GetOutPrisonMode,	//牢獄から出る。
 		ScatterMode,		//散開。
 		ChaseMode,			//追跡。
-		TweekMode,			//いじけ。
+		/*TweekMode,*/			//いじけ。
 		ReturnPrisonMode,	//牢獄内帰還。
 	};
 
@@ -35,13 +35,14 @@ protected:
 
 protected:
 	//定数。
-	const float			TWEEK_TIME			= 10.0f;	//いじけモード時間。
+	const float			TWEEK_TIME			= 7.0f;		//いじけモード時間。
 	const float			STANDARD_MOVE_SPEED = 2.0f;		//通常時移動速度。
 	const float			TWEEK_MOVE_SPEED	= 1.0f;		//いじけ時移動速度。
 	const float			RETURN_PRISON_SPEED = 6.0f;		//牢獄帰還時のスピード。
 	const float			GETOUT_PRISON_SPEED = 1.0f;		//牢獄から出る用のスピード。
 	const Vector2		START_POINT;					//初期位置。
-	const Vector2		PRISON_FRONT = { 504, 288 };	//牢獄の前。
+	const Vector2		PRISON_FRONT = { FIX_VALUE_X + 508,  FIX_VALUE_Y + 286 };	//牢獄の前。
+	const Vector2		PRISON_POINT = { 506.0f + FIX_VALUE_X, 374.0f + FIX_VALUE_Y };
 
 	//ptr.
 	PacMan*				m_packManPtr = nullptr;					//パックマンポインタ。
@@ -53,25 +54,22 @@ protected:
 	unsigned int m_animationIndex = 0;							//アニメーションのインデックス。これを使用して次に流すアニメーションを決める。
 	int m_currentAnimation = 0;									//再生するアニメーション。
 	int m_animationWaitFrame = 0;								//何フレームアニメーションを流したか。
-	static std::map<std::pair<int, int>, Animation> m_directionToHandleIndex;
+	static std::map<std::pair<float, float>, std::pair<Animation, Animation>> m_directionToHandleIndex;
 
 	//移動用。
-	bool				m_isArrive = true;			//wayPointに到着してる？
 	Vector2				m_direction = { 0, -1 };	//方向。
 	Vector2				m_target = {504, 374};		//ターゲットの位置。
 	Vector2				m_nextWayPoint = START_POINT;				//次のwayPoint。
 	float				m_currentMoveSpeed = STANDARD_MOVE_SPEED;
 	EnemyState			m_currentState = InPrisonMode;
-	EnemyState			m_fontState;
 
 	//残りの移動可能ピクセル。
 	int					m_restMovePixcel = 0;
 
 	//いじけモード用。
-	Sprite				m_tweekSprite;				//いじけモードのスプライト。
 	float				m_tweekTimer = 0.0f;		//いじけモード用タイマー。
-	bool				m_callTweekEvent = false;	//いじけモード用イベントを呼び出したか。
 	bool				m_callDeadEvent = false;	//死亡用イベント
+	bool				m_isTweek = false;
 	int					m_nearEndTweekFrame = 2;
 
 	//Sound
@@ -96,6 +94,11 @@ public:
 	/// 反転処理。
 	/// </summary>
 	void Turning();
+
+	/// <summary>
+	/// いじけモード時のイベント。
+	/// </summary>
+	void TweekEvent();
 	
 	/// <summary>
 	/// 現在のステートを取得。
@@ -106,11 +109,6 @@ public:
 		return m_currentState;
 	}
 
-	void SetFrontState(EnemyState state)
-	{
-		m_fontState = state;
-	}
-
 	/// <summary>
 	/// デッドイベントが呼ばれたか。
 	/// </summary>
@@ -118,6 +116,11 @@ public:
 	bool IsCallDeadEvent()
 	{
 		return m_callDeadEvent;
+	}
+
+	bool IsTweek()
+	{
+		return m_isTweek;
 	}
 
 	/// <summary>

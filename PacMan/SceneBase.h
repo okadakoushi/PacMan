@@ -44,6 +44,7 @@ public:
 	{
 
 	}
+
 public:
 	/// <summary>
 	/// アクターを登録。

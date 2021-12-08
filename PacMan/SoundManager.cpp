@@ -10,13 +10,16 @@ SoundManager::~SoundManager()
 
 void SoundManager::Update()
 {
-	//コピーのサウンドハンドルはメモリから解放する。
-	for (auto duplicateSound : m_duplicateSounds)
+	for (auto it = m_duplicateSounds.begin(); it != m_duplicateSounds.end();)
 	{
-		if (!CheckSoundMem(duplicateSound))
+		if (!CheckSoundMem(*it))
 		{
-			//再生が終了しているため、解放。
-			DeleteSoundMem(duplicateSound);
+			DeleteSoundMem(*it);
+			it = m_duplicateSounds.erase(it);
+		}
+		else
+		{
+			++it;
 		}
 	}
 }

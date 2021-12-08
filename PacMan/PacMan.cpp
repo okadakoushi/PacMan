@@ -17,8 +17,9 @@ PacMan::~PacMan()
 void PacMan::Init()
 {
 	LoadDivGraph("Assets/player_div.bmp", AniamtionNum, 5, 3, 24, 24, m_drawHandle);
-	m_position = PLAYER_RESPAWN_POINT;
+	m_position = { PLAYER_RESPAWN_POINT.x - 1, PLAYER_RESPAWN_POINT.y };
 	m_deadSE = GameSound()->Load("Assets/sound/die.ogg");
+	m_eatingSE = GameSound()->Load("Assets/sound/eating.short.ogg");
 	m_collision.SetCollisionSize({ 20, 20 });
 }
 
@@ -71,13 +72,20 @@ void PacMan::Update()
 
 	m_position += Vector2(m_movedVector.x, m_movedVector.y);
 
-	MoveAnimationUpdate();
+	if (m_movedVector.Length() > 0)
+	{
+		MoveAnimationUpdate();
+	}
+
 }
 
 void PacMan::MoveAnimationUpdate()
 {
 	if (++m_animationWaitFrame > AnimationSpeed)
 	{
+		m_frontFrameAnimIndex = m_animationIndex;
+		//口は絶対開いたまま止まる。
+		m_frontFrameAnimIndex = std::clamp(m_frontFrameAnimIndex, 1, moveAnimatiomEnd + 1);
 		m_animationWaitFrame = 0;
 		m_animationIndex++;
 		m_animationIndex %= moveAnimatiomEnd + 1;
@@ -90,6 +98,7 @@ void PacMan::OnCollision(Actor* actor)
 	{
 		//wallにヒットしたので、仮動かしはなかったことに。
 		m_position -= m_movedVector;
+		m_animationIndex = m_frontFrameAnimIndex;
 	}
 	else if (actor->GetHash() == std::hash<std::string>()("Cookie"))
 	{
@@ -99,6 +108,7 @@ void PacMan::OnCollision(Actor* actor)
 		{
 			cookie->HitEffect(this);
 		}
+		GameSound()->Play(m_eatingSE, SoundManager::PlayingType_MiddlePlay);
 	}
 	else if (actor->GetHash() == std::hash<std::string>()("PowerCookie"))
 	{

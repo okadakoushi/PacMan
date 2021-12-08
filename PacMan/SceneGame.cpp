@@ -50,10 +50,11 @@ void SceneGame::Init()
 	CreateStage();
 
 	//サウンドロード。
+	m_enemySEList[GameBGMType_Normal] = GameSound()->Load("Assets/sound/siren.ogg");
+	m_enemySEList[GameBGMType_PowerMode] = GameSound()->Load("Assets/sound/power_pellet.wav");
+	m_enemySEList[GameBGMType_Return] = GameSound()->Load("Assets/sound/retreating.wav");
 	m_openingBGM = GameSound()->Load("Assets/sound/opening_song.ogg");
-	m_standardModeSound = GameSound()->Load("Assets/sound/siren.ogg");
 	m_eatingEnemySE = GameSound()->Load("Assets/sound/eatghost.ogg");
-	m_powerModeSE = GameSound()->Load("Assets/sound/power_pellet.wav");
 
 	GameSound()->Play(m_openingBGM);
 }
@@ -176,7 +177,7 @@ void SceneGame::Update()
 		return;
 	}
 
-	if (m_sceneStartDeltaTime > CHARACTER_SPAWN_TIME && m_pacMan == nullptr)
+	if ((m_sceneStartDeltaTime > CHARACTER_SPAWN_TIME) && m_pacMan == nullptr)
 	{
 		//opening
 		//キャラクターを生成。
@@ -215,8 +216,11 @@ void SceneGame::Update()
 
 	if (m_isCallDeadEventFlags)
 	{
-		StopSoundMem(m_standardModeSound);
-		GameSound()->Play(m_eatingEnemySE);
+		if (!m_eatingWaitTimer)
+		{
+			StopSoundMem(m_nextPlaySound);
+			GameSound()->Play(m_eatingEnemySE);
+		}
 
 		//エネミー捕食演出。
 		m_eatingWaitTimer += GameTime()->GetDeltaTime();
@@ -316,6 +320,8 @@ void SceneGame::EnemyEvent()
 		m_enemyChaseTimer = 0.0f;
 	}
 
+	int TweekEnemyCount = 0;
+
 	for (int i = 0; i < m_enemyList.size(); i++)
 	{
 
@@ -338,8 +344,47 @@ void SceneGame::EnemyEvent()
 			//スコアも更新。
 			m_currentEatScore *= 2;
 			m_score += m_currentEatScore;
-		}
 
+		}
+	}
+
+	//流す曲の決定。
+	{
+		//通常状態のゴーストの数。
+		int normalEnemyCount = m_enemyList.size();
+		
+		for (auto* enemy : m_enemyList)
+		{
+			if (enemy->GetCurrentState() == EnemyBase::ReturnPrisonMode)
+			{
+				m_nextPlaySound = GameBGMType_Return;
+				normalEnemyCount--;
+				break;
+			}
+			else if (enemy->IsTweek())
+			{
+				m_nextPlaySound = GameBGMType_PowerMode;
+				normalEnemyCount--;
+			}
+		}
+		if (normalEnemyCount == m_enemyList.size())
+		{
+			//特殊状態の敵はいないので通常再生。
+			m_nextPlaySound = GameBGMType_Normal;
+		}
+	}
+
+	//いらない曲は止める/曲を流す。
+	for (auto handle : m_enemySEList)
+	{
+		if (m_enemySEList[m_nextPlaySound] == handle)
+		{
+			GameSound()->Play(handle);
+		}
+		else
+		{
+			StopSoundMem(handle);
+		}
 	}
 
 	//パックマンがパワークッキーを取っているかの監視。
@@ -350,8 +395,7 @@ void SceneGame::EnemyEvent()
 			if (enemy->GetCurrentState() != EnemyBase::ReturnPrisonMode)
 			{
 				//すべての敵をいじけモードにする。
-				enemy->SetFrontState(enemy->GetCurrentState());
-				enemy->ChangeCurrentState(EnemyBase::TweekMode);
+				enemy->TweekEvent();
 			}
 		}
 		//フラグはもとに戻す。
@@ -365,14 +409,11 @@ void SceneGame::NextRound()
 	//パラメーターをリセット。
 	delete m_pacMan;
 	m_pacMan = nullptr;
+
 	for (auto* enemy : m_enemyList)
 	{
 		enemy->SetExcutionFlag(Actor::EnExcutionFlagType_Dead);
 	}
-	m_enemyList.clear();
-
-	//ラウンド進行で使用するライフを追加しておく。
-	m_lifePoint++;
 
 	m_nextStageTimer += GameTime()->GetDeltaTime();
 	
@@ -394,17 +435,27 @@ void SceneGame::NextRound()
 		}
 	}
 	
-	//パラメーターをリセット。
 	if(m_nextStageTimer > NEXT_STAGE_TIME)
 	{
-		m_nextStageTimer = 0;
-		m_sceneStartDeltaTime = 0.0f;
-		m_enemyChaseTimer = 0.0f;
-		m_eatingWaitTimer = 0.0f;
+		//ラウンド進行で使用するライフを追加しておく。
+		m_lifePoint++;
+		//パラメーターをリセット。
+		ResetParams();
+		//ステージを作成しなおす。
 		CreateStage();
 	}
+}
 
-
+void SceneGame::ResetParams()
+{
+	//パラメーターをリセット。
+	m_nextStageTimer = 0;
+	m_sceneStartDeltaTime = 0.0f;
+	m_enemyChaseTimer = 0.0f;
+	m_eatingWaitTimer = 0.0f;
+	m_obstacleList.clear();
+	m_enemyList.clear();
+	m_isChaseMode = false;
 }
 
 void SceneGame::FruitEvent()
@@ -444,4 +495,3 @@ void SceneGame::FruitEvent()
 	}
 
 }
-

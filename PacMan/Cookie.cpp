@@ -11,7 +11,6 @@ void Cookie::Init()
 {
 	m_score = COOKIE_SCORE;
 	m_spirte.Init("Assets/LevelObjects/LevelObjects0-1.png");
-	m_eatingSE = GameSound()->Load("Assets/sound/eating.ogg");
 }
 
 void Cookie::Draw()
@@ -31,7 +30,7 @@ void Cookie::HitEffect(Actor* actor)
 		{
 			m_actorExcutionFlag = Actor::EnExcutionFlagType_Dead;
 			m_sceneGame->ReduceCookieCount();
-			GameSound()->Play(m_eatingSE);
+
 		}
 	}
 }

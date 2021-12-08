@@ -15,7 +15,7 @@ void Fruit::Init()
 	m_spirte.Init("Assets/fruit.bmp");
 	m_score = FRUIT_SCORE;
 	m_spriteSize = { 36,36 };
-	GameSound()->Load("Assets/sound/eatpill.ogg");
+	m_eatFruitSound = GameSound()->Load("Assets/sound/eatpill.ogg");
 }
 
 void Fruit::Draw()

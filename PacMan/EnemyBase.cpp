@@ -2,12 +2,12 @@
 #include "EnemyBase.h"
 #include "PacMan.h"
 
-std::map<std::pair<int, int>, EnemyBase::Animation> EnemyBase::m_directionToHandleIndex =
+std::map<std::pair<float, float>, std::pair<EnemyBase::Animation, EnemyBase::Animation>> EnemyBase::m_directionToHandleIndex =
 {
-	{ { LEFT.x, LEFT.y },	LeftAnimation},
-	{ { UP.x, UP.y }	,	UpAnimation},
-	{ { DOWN.x, DOWN.y },	DownAnimatiom},
-	{ { RIGHT.x, RIGHT.y }, RightAnimation},
+	{ { LEFT.x, LEFT.y },	{ LeftAnimation, LeftEyeAnimatiton} },
+	{ { UP.x, UP.y }	,	{ UpAnimation, UpEyeAnimatiton } },
+	{ { DOWN.x, DOWN.y },	{ DownAnimatiom, DownEyeAnimatiton} },
+	{ { RIGHT.x, RIGHT.y }, { RightAnimation, RightEyeAnimatiton } },
 };
 
 EnemyBase::EnemyBase(SceneBase* sceneBase, const char* tag, int prio, PacMan* packPtr, Vector2 startPos) : 
@@ -21,7 +21,7 @@ EnemyBase::EnemyBase(SceneBase* sceneBase, const char* tag, int prio, PacMan* pa
 void EnemyBase::Init()
 {
 	m_position = START_POINT;
-	m_collision.SetCollisionSize({ 20,20 });
+	m_collision.SetCollisionSize({ 18,18 });
 
 	//GameSound()->Load("Assets/sound/")
 	//m_returnPrisonSE
@@ -35,27 +35,18 @@ void EnemyBase::Update()
 	}
 
 
-	if (m_currentState == TweekMode)
+	if (m_isTweek)
 	{
-
-		if (!m_callTweekEvent)
-		{
-			//いじけモード時のイベントを呼び出し。
-			Turning();
-			m_callTweekEvent = true;
-			m_currentMoveSpeed = TWEEK_MOVE_SPEED;
-		}
-
 		//タイマーを加算。
 		m_tweekTimer += GameTime()->GetDeltaTime();
+		m_currentMoveSpeed = TWEEK_MOVE_SPEED;
 
 		if (m_tweekTimer > TWEEK_TIME)
 		{
 			//いじけモードが終了している。
-			m_currentState = m_fontState;
 			m_currentMoveSpeed = STANDARD_MOVE_SPEED;
 			m_tweekTimer = 0.0f;
-			m_callTweekEvent = false;
+			m_isTweek = false;
 		}
 
 	}
@@ -63,7 +54,7 @@ void EnemyBase::Update()
 	if (m_restMovePixcel <= 0)
 	{
 		//指定pix分移動したので次のwayPointを計算する。
-		if (m_currentState == TweekMode)
+		if (m_isTweek && m_currentState != GetOutPrisonMode)
 		{
 			//いじけモード時の移動を実行。
 			WayPointSerchForTweekMode();
@@ -100,7 +91,7 @@ void EnemyBase::Draw()
 
 void EnemyBase::HitEffect(Actor* actor)
 {
-	if (m_currentState == TweekMode)
+	if (m_isTweek)
 	{
 		//いじけ
 		Death();
@@ -118,18 +109,27 @@ void EnemyBase::HitEffect(Actor* actor)
 
 void EnemyBase::Turning()
 {
-	m_direction *= -1;
-	//反転した分、残り移動可能ピクセルも変更。
-	m_restMovePixcel = SPRITE_SIZE - m_restMovePixcel;
+	if (!m_isTweek)
+	{
+		m_direction *= -1;
+		//反転した分、残り移動可能ピクセルも変更。
+		m_restMovePixcel = SPRITE_SIZE - m_restMovePixcel;
+	}
+}
+
+void EnemyBase::TweekEvent()
+{
+	Turning();
+	m_tweekTimer = 0.0f;
+	m_isTweek = true;
 }
 
 void EnemyBase::Death()
 {
 	m_currentState = ReturnPrisonMode;
-	m_isArrive = true;
+	m_isTweek = false;
 	m_tweekTimer = 0.0f;
 	m_callDeadEvent = false;
-	m_callTweekEvent = false;
 	m_currentMoveSpeed = STANDARD_MOVE_SPEED;
 }
 
@@ -166,9 +166,12 @@ std::vector<Vector2> EnemyBase::CanMoveNextWayPoint()
 		//障害物と当たり判定を取る。
 		for (Actor* obstacle : m_obstacleList)
 		{
-			if (m_currentState == GetOutPrisonMode || m_currentState == ReturnPrisonMode && obstacle->GetHash() == std::hash<std::string>()("Gate"))
+			if ((m_currentState == GetOutPrisonMode) || (m_currentState == ReturnPrisonMode ))
 			{
-				continue;
+				if (obstacle->GetHash() == std::hash<std::string>()("Gate")) 
+				{ 
+					continue; 
+				}
 			}
 
 			Vector2 obstaclePosIndex = GetPositionIndex(obstacle->GetPosition());
@@ -246,8 +249,7 @@ void EnemyBase::AnimationUpdate()
 		m_animationIndex++;
 	}
 
-	//汚すぎる todo:リファクタリング。
-	if (m_currentState == TweekMode)
+	if (m_isTweek)
 	{
 		if (m_tweekTimer > TWEEK_TIME * 0.8f)
 		{
@@ -260,58 +262,12 @@ void EnemyBase::AnimationUpdate()
 	}
 	else if (m_currentState == ReturnPrisonMode)
 	{
-		
+		m_currentAnimation = m_directionToHandleIndex[{m_direction.x, m_direction.y}].second;
 	}
 	else
 	{
 		//方向に応じてハンドルインデックスを返す。
-		m_currentAnimation = m_animationIndex % 2 + m_directionToHandleIndex[{m_direction.x, m_direction.y}];
+		m_currentAnimation = m_animationIndex % 2 + m_directionToHandleIndex[{m_direction.x, m_direction.y}].first;
 	}
-
-	/*else if (m_direction.x == -1)
-	{
-		if (m_currentState == ReturnPrisonMode)
-		{
-			m_currentAnimation = LeftEyeAnimatiton;
-		}
-		else
-		{
-			m_currentAnimation = m_animationIndex % 2 + LeftAnimation;
-		}
-	}
-	else if (m_direction.x == 1)
-	{
-		if (m_currentState == ReturnPrisonMode)
-		{
-			m_currentAnimation = RightEyeAnimatiton;
-		}
-		else
-		{
-			m_currentAnimation = m_animationIndex % 2 + RightAnimation;
-		}
-	}
-	else if (m_direction.y == -1)
-	{
-		if (m_currentState == ReturnPrisonMode)
-		{
-			m_currentAnimation = UpEyeAnimatiton;
-		}
-		else
-		{
-			m_currentAnimation = m_animationIndex % 2 + UpAnimation;
-		}
-	}
-	else if (m_direction.y == 1)
-	{
-		if (m_currentState == ReturnPrisonMode)
-		{
-			m_currentAnimation = DownEyeAnimatiton;
-		}
-		else
-		{
-			m_currentAnimation = m_animationIndex % 2 + DownAnimatiom;
-		}
-	}*/
-
 }
 
