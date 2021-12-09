@@ -9,8 +9,9 @@ private:
 	
 public:
 	SceneTitle(SceneManager* sceneManager);
-	~SceneTitle();
-	void Init() override;
-	void Update() override;
+	virtual ~SceneTitle();
+
+	virtual void Init() override;
+	virtual void Update() override;
 };
 

@@ -7,6 +7,10 @@ Cookie::Cookie(SceneGame* sceneGame) : ItemBase(sceneGame, "Cookie", 0)
 {
 }
 
+Cookie::~Cookie()
+{
+}
+
 void Cookie::Init()
 {
 	m_score = COOKIE_SCORE;

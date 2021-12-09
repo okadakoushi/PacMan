@@ -5,6 +5,10 @@ Wall::Wall(SceneBase* sceneBase) : Actor(sceneBase, "Wall", 0, RectCollision::En
 {
 }
 
+Wall::~Wall()
+{
+}
+
 void Wall::Init()
 {
 	m_spirte.Init(m_filePath);

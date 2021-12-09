@@ -5,6 +5,7 @@ SoundManager* SoundManager::m_instance = nullptr;
 
 SoundManager::~SoundManager()
 {
+	//リリース処理。
 	InitSoundMem();
 }
 
@@ -43,6 +44,7 @@ int SoundManager::Load(const char* fp, LoadType loadType)
 			return -1;
 		}
 
+		ChangeVolumeSoundMem(DEFAULT_VOLUME, handle);
 		//リソースとして登録。
 		m_hashToSoundHandle[std::hash<const char*>()(fp)] = handle;
 	}
@@ -50,7 +52,7 @@ int SoundManager::Load(const char* fp, LoadType loadType)
 	return handle;
 }
 
-void SoundManager::Play(int handle, PlayingType playingType, PlayType playType)
+void SoundManager::Play(int handle, PlayingType playingType, int playType)
 {
 	//再生中かの判定。
 	bool isPlay = CheckSoundMem(handle);
@@ -73,6 +75,8 @@ void SoundManager::Play(int handle, PlayingType playingType, PlayType playType)
 			
 			//ソースよりハンドルをコピー。
 			handle = DuplicateSoundMem(handle);
+			//ボリュームコピーしてくれないので、設定。
+			ChangeVolumeSoundMem(GetVolumeSoundMem2(handle), handle);
 			//コピーリストに積む。
 			m_duplicateSounds.push_back(handle);
 			break;
@@ -92,6 +96,15 @@ void SoundManager::Play(int handle, PlayingType playingType, PlayType playType)
 	}
 
 	PlaySoundMem(handle, playType);
+}
+
+void SoundManager::AllStop()
+{
+	for (auto sound : m_hashToSoundHandle)
+	{
+		//音をすべて止める。
+		StopSoundMem(sound.second);
+	}
 }
 
 

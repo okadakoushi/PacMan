@@ -21,6 +21,7 @@ private:
 
 public:
 	RectCollision(CollisionType colType);
+	~RectCollision();
 
 	/// <summary>
 	/// ˆø”1‚ÌAABB‚ªˆø”2‚ÌActor‚É“–‚½‚Á‚Ä‚¢‚é‚©‚Ç‚¤‚©B

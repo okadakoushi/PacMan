@@ -7,8 +7,10 @@ class Cookie : public ItemBase
 private:
 	const int COOKIE_SCORE = 10;	//ìæì_ÅB
 	int m_eatingSE = 0;
+
 public:
 	Cookie(SceneGame* sceneBase);
+	virtual ~Cookie();
 
 	virtual void Init() override;
 	virtual void OnCollision(Actor* actor)override {};

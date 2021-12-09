@@ -5,6 +5,14 @@
 #include "SceneTitle.h"
 #include "GameOver.h"
 
+SceneManager::SceneManager()
+{
+}
+
+SceneManager::~SceneManager()
+{
+}
+
 void SceneManager::Init()
 {
 	//Å‰‚ÌƒV[ƒ“B

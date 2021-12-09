@@ -3,6 +3,7 @@
 #include "StageLoader.h"
 #include "EnemyBase.h"
 #include "Font.h"
+#include "Stage.h"
 
 class Fruit;
 class PlayerUI;
@@ -14,21 +15,6 @@ class EnemyBase;
 /// </summary>
 class SceneGame : public SceneBase
 {
-public:
-	/// <summary>
-	/// オブジェクト。
-	/// </summary>
-	enum PlaceObjectType
-	{
-		EnPlaceObjectType_None = -1,			//NoneObject
-		EnPlaceObjectType_PowerCookie = 0,		//powerCookie
-		EnPlaceObjectType_Cookie = 15,			//Cookie
-		EnPlaceObjectType_WarpPoint = 45,		//Warp
-		EnPlaceObjectType_Gate = 46,			//Gate 牢獄から外はいけるが、外から牢獄はいけない。
-
-		//上に該当しないオブジェクトはすべて壁。
-	};
-
 protected:
 	enum IsCallDeadEventFlag
 	{
@@ -47,24 +33,31 @@ protected:
 		GameBGMType_Num			//サウンドの数。
 	};
 
+	enum GameState
+	{
+		GameState_WaitGameStart,
+		GameState_Running,
+		GameState_EatingWait,
+		GameState_PlayerDead,
+		GameState_NextRound,
+	};
+
 private:
+
+	std::vector<Actor*> m_obstacleList;						//障害物一覧。
+	GameState m_currentGameState = GameState_WaitGameStart;	//現在のゲームステート。
+
 	//UIパラメーター。
-	int m_restCookieCount = 0;							//クッキーの数。
 	int m_lifePoint = 3;								//残機数。
 	int m_score = 0;									//得点。
+	int m_lifeExtendSocre = 10000;							
 
 	//インスタンスのptr記憶。
 	SceneManager* m_sceneManager = nullptr;				//SceneManager。
 	PacMan* m_pacMan			 = nullptr;				//PacMan。
 	PlayerUI* m_playerUI		 = nullptr;				//PlayerUI。
+	Stage m_stage;										//ステージ。
 	std::vector<EnemyBase*> m_enemyList;				//エネミーのリスト。
-
-	//ステージデーター読み込み用プロパティー。
-	StageLoader m_stageLoader;							//ステージローダー。
-	std::vector<std::vector<int>> m_stageTable;			//ステージのデーターテーブル。
-	std::vector<Actor*> m_obstacleList;					//障害物一覧。
-	const int STAGE_TABLE_WIDTH = 36;					//ステージテーブルの横。
-	const int STAGE_TABLE_HEIGHT = 36;					//ステージテーブルの縦。
 
 	//フルーツ生成用のパラメーター。
 	const float FRUIT_APPEAR_DISAPPEAR_TIME = 10.0f;	//フルーツ用、出現or消失タイマー。
@@ -85,6 +78,7 @@ private:
 	const float SCATTER_TIME = 6.0f;					//散開モード。
 	bool m_isChaseMode = false;							//現在どちらのステートか。														
 	static std::map<bool, std::pair<const float, EnemyBase::EnemyState>> m_isChaseToChageStateTimeAndMoveState;	//chaseモードフラグから切り替え時間と次の移動ステートを取得。
+	static std::map<int, int> m_restCookieCountToFrequency;	//残りのクッキーの数から周波数を取得。
 	
 	//ゲーム進行用。
 	const float CHARACTER_SPAWN_TIME = 3.0f;					//キャラクターを生成する
@@ -96,6 +90,7 @@ private:
 	int m_enemySEList[GameBGMType_Num];
 	int m_openingBGM = 0;								//オープニング。
 	int m_eatingEnemySE = 0;							//敵を食べた。
+	int m_extraSE = 0;									//ライフポイント追加。
 
 	GameBGMType m_nextPlaySound = GameBGMType_Normal;	//次に流す曲。
 
@@ -110,10 +105,6 @@ private:
 	//Ready
 	Sprite m_readySprite;
 	int m_drawHandle = 0;
-	//Stage
-	const int COLOR_TRIGGER_FRAME = 5;
-	int m_colorTriggerFrame = 0;
-	bool m_colorTriggerFlag = false;
 
 	//敵のwaitTime
 	const float ENEMY_WAIT_TIME[3] = {
@@ -137,10 +128,19 @@ public:
 	virtual void Update() override;
 
 	/// <summary>
+	/// 障害物リスト。
+	/// </summary>
+	/// <param name="actor"></param>
+	void AddObstacle(Actor* actor)
+	{
+		m_obstacleList.push_back(actor);
+	}
+
+	/// <summary>
 	/// 障害物のリストを取得。
 	/// </summary>
 	/// <returns></returns>
-	const std::vector<Actor*>& GetObstacles() const 
+	const std::vector<Actor*>& GetObstacles() const  
 	{
 		return m_obstacleList;
 	}
@@ -149,31 +149,17 @@ public:
 	/// スコアを加算。
 	/// </summary>
 	/// <param name="score"></param>
-	void AddScore(int score)
-	{
-		m_score += score;
-		m_score = std::clamp(m_score, 0, 99999);
-	}
+	void AddScore(int score);
 
 	/// <summary>
 	/// クッキーカウントを減らす。
 	/// </summary>
 	void ReduceCookieCount()
 	{
-		m_restCookieCount--;
+		m_stage.ReduceCookieCount();
 	}
 
 protected:
-	/// <summary>
-	/// ステージを外部ファイルよりロード。
-	/// </summary>
-	void LoadStage();
-
-	/// <summary>
-	/// ステージを生成。
-	/// </summary>
-	void CreateStage();
-
 	/// <summary>
 	/// エネミー生成。
 	/// </summary>

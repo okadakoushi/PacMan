@@ -50,6 +50,16 @@ void SceneBase::Update()
 //	//m_sceneManagerPtr->ChangeScene()
 //}
 
+SceneBase::SceneBase(SceneManager* sceneManager) :
+	Object::Object(0),
+	m_sceneManagerPtr(sceneManager)
+{
+}
+
+SceneBase::~SceneBase()
+{
+}
+
 void SceneBase::RegistActor(Actor* actor)
 {
 	m_actorList.push_back(actor);

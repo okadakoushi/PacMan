@@ -10,7 +10,8 @@ private:
 
 public:
 	Enemy_Pinky(SceneBase* sceneBase, PacMan* pacManPtr, Vector2 StartPos);
-	~Enemy_Pinky();
+	virtual ~Enemy_Pinky();
+
 public:
 	virtual void Init() override;
 	virtual void OnCollision(Actor* actor)override {} ;

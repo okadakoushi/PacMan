@@ -17,6 +17,10 @@ RectCollision::RectCollision(CollisionType colType) :
 {
 }
 
+RectCollision::~RectCollision()
+{
+}
+
 bool RectCollision::CheckHitAABB(Actor* actor, Actor* serchActor)
 {
 	return CheckHitAABB(actor->GetPosition(), actor->GetCollision().GetCollisionSize(), serchActor->GetPosition(), actor->GetCollision().GetCollisionSize());

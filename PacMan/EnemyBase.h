@@ -13,7 +13,6 @@ public:
 		GetOutPrisonMode,	//牢獄から出る。
 		ScatterMode,		//散開。
 		ChaseMode,			//追跡。
-		/*TweekMode,*/			//いじけ。
 		ReturnPrisonMode,	//牢獄内帰還。
 	};
 
@@ -23,11 +22,11 @@ protected:
 		LeftAnimation = 0,
 		RightAnimation = 2,
 		UpAnimation = 4,
-		DownAnimatiom = 6,
-		LeftEyeAnimatiton = 8,
-		RightEyeAnimatiton,
-		UpEyeAnimatiton,
-		DownEyeAnimatiton,
+		DownAnimation = 6,
+		LeftEyeAnimation = 8,
+		RightEyeAnimation,
+		UpEyeAnimation,
+		DownEyeAnimation,
 		TweekAnimation = 12,
 		NearEndTweekAnimation = 14,
 		AnimationNum
@@ -41,43 +40,45 @@ protected:
 	const float			RETURN_PRISON_SPEED = 6.0f;		//牢獄帰還時のスピード。
 	const float			GETOUT_PRISON_SPEED = 1.0f;		//牢獄から出る用のスピード。
 	const Vector2		START_POINT;					//初期位置。
-	const Vector2		PRISON_FRONT = { FIX_VALUE_X + 508,  FIX_VALUE_Y + 286 };	//牢獄の前。
-	const Vector2		PRISON_POINT = { 506.0f + FIX_VALUE_X, 374.0f + FIX_VALUE_Y };
+	const Vector2		PRISON_FRONT = { FIX_VALUE_X + 400, FIX_VALUE_Y + 300 };	//牢獄の前。
+	const Vector2		PRISON_POINT = { FIX_VALUE_X + 400, FIX_VALUE_Y + 360 };	//牢獄の中。
 
 	//ptr.
 	PacMan*				m_packManPtr = nullptr;					//パックマンポインタ。
 	SceneGame*			m_sceneGame = nullptr;
 
 	//アニメーション。
+	static std::map<std::pair<float, float>, std::pair<Animation, Animation>> m_directionToHandleIndex;	//方向からアニメーションを取得。firstは普通、secondは目のみ。
 	const int AnimationSpeed = 5;								//アニメーションの切り替え速度。
 	int m_drawHandle[AnimationNum];								//アニメーションすべてのDrawHandle。
 	unsigned int m_animationIndex = 0;							//アニメーションのインデックス。これを使用して次に流すアニメーションを決める。
 	int m_currentAnimation = 0;									//再生するアニメーション。
 	int m_animationWaitFrame = 0;								//何フレームアニメーションを流したか。
-	static std::map<std::pair<float, float>, std::pair<Animation, Animation>> m_directionToHandleIndex;
+
 
 	//移動用。
-	Vector2				m_direction = { 0, -1 };	//方向。
-	Vector2				m_target = {504, 374};		//ターゲットの位置。
+	Vector2				m_direction = { 0, -1 };					//方向。
+	Vector2				m_target = {504, 374};						//ターゲットの位置。
 	Vector2				m_nextWayPoint = START_POINT;				//次のwayPoint。
-	float				m_currentMoveSpeed = STANDARD_MOVE_SPEED;
-	EnemyState			m_currentState = InPrisonMode;
+	float				m_currentMoveSpeed = STANDARD_MOVE_SPEED;	//現在の移動速度。
+	EnemyState			m_currentState = InPrisonMode;				//現在のステート。
 
 	//残りの移動可能ピクセル。
-	int					m_restMovePixcel = 0;
+	int					m_restMovePixcel = 0;						//残り移動可能ピクセル。
 
 	//いじけモード用。
 	float				m_tweekTimer = 0.0f;		//いじけモード用タイマー。
 	bool				m_callDeadEvent = false;	//死亡用イベント
-	bool				m_isTweek = false;
-	int					m_nearEndTweekFrame = 2;
+	bool				m_isTweek = false;			//いじけモードか。
+	int					m_nearEndTweekFrame = 2;	//敵の点滅フレーム。
 
 	//Sound
-	int m_returnPrisonSE = 0;
-
+	int m_returnPrisonSE = 0;						//牢獄帰還。
 
 public:
 	EnemyBase(SceneBase* sceneBase, const char* tag, int prio, PacMan* packPtr, Vector2 startPos);
+	virtual ~EnemyBase();
+
 public:
 	virtual void Init() override;
 	virtual void Update() override;
@@ -118,6 +119,10 @@ public:
 		return m_callDeadEvent;
 	}
 
+	/// <summary>
+	/// いじけモードか。
+	/// </summary>
+	/// <returns></returns>
 	bool IsTweek()
 	{
 		return m_isTweek;
@@ -132,6 +137,10 @@ public:
 		m_target = target;
 	}
 
+	/// <summary>
+	/// 死亡用イベントを設定。
+	/// </summary>
+	/// <param name="flag"></param>
 	void SetDeadEvent(bool flag)
 	{
 		m_callDeadEvent = flag;
@@ -145,12 +154,32 @@ public:
 	{
 		m_currentState = state;
 	}
-protected:
+
+protected:	
+	//マス目状にマップをみたときにどこに配置されているか。参照つけない。
+	Vector2 GetPositionIndex(Vector2& pos)
+	{
+		Vector2 centerPos = { SCREEN_WIDTH / 2 , SCREEN_HEIGHT / 2 };
+		Vector2 posIndex = pos - centerPos;
+		return posIndex = { (posIndex.x / SPRITE_SIZE), (posIndex.y / SPRITE_SIZE) };
+	}
+
+private:
+	/// <summary>
+	/// いじけモード時以外の経路検索。
+	/// </summary>
+	void WayPointSerch();
+
+	/// <summary>
+	/// いじけモード時用の経路検索。
+	/// </summary>
+	void WayPointSerchForTweekMode();
+
 	/// <summary>
 	/// 死亡時処理。
 	/// </summary>
 	void Death();
-	
+
 	/// <summary>
 	/// 次の移動候補地点4点に対して、移動可能な場所を返す。
 	/// <para>ローカル変数を返すため、戻り値を参照に変更しないでください。</para>
@@ -159,23 +188,8 @@ protected:
 	std::vector<Vector2> CanMoveNextWayPoint();
 
 	/// <summary>
-	/// いじけモード時以外の経路検索。
+	/// アニメーションの更新。
 	/// </summary>
-	void WayPointSerch();
-	
-	/// <summary>
-	/// いじけモード時用の経路検索。
-	/// </summary>
-	void WayPointSerchForTweekMode();
-	
-	//マス目状にマップをみたときにどこに配置されているか。参照つけない。
-	Vector2 GetPositionIndex(Vector2& pos)
-	{
-		Vector2 centerPos = { SCREEN_WIDTH / 2 , SCREEN_HEIGHT / 2 };
-		Vector2 posIndex = pos - centerPos;
-		return posIndex = { (posIndex.x / SPRITE_SIZE), (posIndex.y / SPRITE_SIZE) };
-	}
-private:
 	void AnimationUpdate();
 };
 

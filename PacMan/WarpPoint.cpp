@@ -6,6 +6,10 @@ WarpPoint::WarpPoint(SceneBase* sceneBase) : Actor(sceneBase, "WarpPoint", 0, Re
 
 }
 
+WarpPoint::~WarpPoint()
+{
+}
+
 void WarpPoint::Init()
 {
 	m_spirte.Init("Assets/portal.bmp");

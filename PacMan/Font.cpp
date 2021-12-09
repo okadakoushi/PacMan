@@ -1,6 +1,14 @@
 #include "stdafx.h"
 #include "Font.h"
 
+Font::Font()
+{
+}
+
+Font::~Font()
+{
+}
+
 void Font::Init(const char* dispStr, int size, int thickness)
 {
 	m_dispChar = dispStr;
@@ -10,7 +18,7 @@ void Font::Init(const char* dispStr, int size, int thickness)
 	m_fontHandle = CreateFontToHandle(m_fontType, size, thickness);
 }
 
-void Font::Draw(const Vector2& pos)
+void Font::Draw(const Vector2& pos, unsigned int color)
 {
-	DrawStringToHandle(pos.x, pos.y, m_dispChar, GetColor(255, 255, 255), m_fontHandle);
+	DrawStringToHandle(pos.x, pos.y, m_dispChar, color, m_fontHandle);
 }

@@ -10,8 +10,12 @@ class SceneGame;
 /// </summary>
 class StageLoader : public Object
 {
+private:
+
 public:
 	StageLoader() {};
+	~StageLoader() {};
+
 	/// <summary>
 	/// ステージデーターを初期化。
 	/// </summary>
@@ -31,6 +35,5 @@ private:
 	/// <param name="w"></param>
 	/// <param name="h"></param>
 	void LoadData(const char* fp, std::vector<std::vector<int>>& outStageData, int w, int h);
-private:
 };
 

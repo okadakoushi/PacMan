@@ -6,6 +6,10 @@
 class Font
 {
 public:
+	Font();
+	virtual ~Font();
+
+public:
 	/// <summary>
 	/// 初期化。
 	/// </summary>
@@ -18,7 +22,7 @@ public:
 	/// 描画。
 	/// </summary>
 	/// <param name="pos">描画する位置。</param>
-	void Draw(const Vector2& pos);
+	void Draw(const Vector2& pos, unsigned int color = GetColor(255,255,255));
 	
 	/// <summary>
 	/// 表示する文字を設定。
@@ -38,7 +42,7 @@ public:
 		m_fontType = fontType;
 	}
 private:
-	const char* m_fontType = "ＭＳ ゴシック";
+	const char* m_fontType = "Emulogic";
 	const char* m_dispChar = "表示する文字を初期化または、設定してください。";
 	int m_fontHandle = 0;
 	int m_size = 10;

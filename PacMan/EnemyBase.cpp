@@ -4,10 +4,10 @@
 
 std::map<std::pair<float, float>, std::pair<EnemyBase::Animation, EnemyBase::Animation>> EnemyBase::m_directionToHandleIndex =
 {
-	{ { LEFT.x, LEFT.y },	{ LeftAnimation, LeftEyeAnimatiton} },
-	{ { UP.x, UP.y }	,	{ UpAnimation, UpEyeAnimatiton } },
-	{ { DOWN.x, DOWN.y },	{ DownAnimatiom, DownEyeAnimatiton} },
-	{ { RIGHT.x, RIGHT.y }, { RightAnimation, RightEyeAnimatiton } },
+	{ { LEFT.x, LEFT.y },	{ LeftAnimation, LeftEyeAnimation} },
+	{ { UP.x, UP.y }	,	{ UpAnimation, UpEyeAnimation } },
+	{ { DOWN.x, DOWN.y },	{ DownAnimation, DownEyeAnimation} },
+	{ { RIGHT.x, RIGHT.y }, { RightAnimation, RightEyeAnimation } },
 };
 
 EnemyBase::EnemyBase(SceneBase* sceneBase, const char* tag, int prio, PacMan* packPtr, Vector2 startPos) : 
@@ -18,13 +18,14 @@ EnemyBase::EnemyBase(SceneBase* sceneBase, const char* tag, int prio, PacMan* pa
 	m_sceneGame = dynamic_cast<SceneGame*>(sceneBase);
 }
 
+EnemyBase::~EnemyBase()
+{
+}
+
 void EnemyBase::Init()
 {
 	m_position = START_POINT;
-	m_collision.SetCollisionSize({ 18,18 });
-
-	//GameSound()->Load("Assets/sound/")
-	//m_returnPrisonSE
+	m_collision.SetCollisionSize({ 20,20 });
 }
 
 void EnemyBase::Update()

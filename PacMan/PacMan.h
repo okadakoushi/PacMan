@@ -14,8 +14,7 @@ private:
 
 private:
 	const float MOVE_SPEED = 2.0f;				//移動速度。
-	const Vector2 RESPAWN_POINT = { 500, 432 };	//復活地点。
-	const Vector2 PLAYER_RESPAWN_POINT = { (float)SCREEN_WIDTH / 2 - SPRITE_SIZE / 2.0f , (float)SCREEN_HEIGHT / 2 + SPRITE_SIZE * 8.0f };
+	const Vector2 PLAYER_RESPAWN_POINT = { (float)SCREEN_WIDTH / 2 - SPRITE_SIZE / 2.0f +1 , (float)SCREEN_HEIGHT / 2 + SPRITE_SIZE * 8.0f };
 
 	Vector2 m_movedVector;						//動いたベクトル。
 	Vector2 m_frontFrameMoved;					//前フレーム動いていた方向。
@@ -39,19 +38,36 @@ private:
 
 public:
 	PacMan(SceneBase* sceneBase);
-	~PacMan();
+	virtual ~PacMan();
 
 public:
 	virtual void Init() override;
 	virtual void OnCollision(Actor* actor) override;
 	virtual void Update() override;
 	virtual void Draw() override;
-	void MoveAnimationUpdate();
-	void Death();
-	bool PlayDeadAnim();
-	void ResetParams();
-public:
 
+	/// <summary>
+	/// 移動アニメーションの更新。
+	/// </summary>
+	void MoveAnimationUpdate();
+
+	/// <summary>
+	/// 死亡処理。
+	/// </summary>
+	void Death();
+
+	/// <summary>
+	/// 死亡アニメーションを再生。
+	/// </summary>
+	/// <returns>再生が終端まで行ったら、trueを返す。</returns>
+	bool PlayDeadAnim();
+
+	/// <summary>
+	/// パラメーターをリセット。
+	/// </summary>
+	void ResetParams();
+
+public:
 	/// <summary>
 	/// 方向を取得。
 	/// </summary>
@@ -87,6 +103,7 @@ public:
 	{
 		m_powerMode = isPowerMode;
 	}
+
 private:
 	/// <summary>
 	/// 障害物と衝突していないか確認。

@@ -13,7 +13,7 @@ private:
 
 public:
 	Enemy_INKY(SceneBase* sceneBase, PacMan* pacManPtr, Enemy_BLINKY* blinkyPtr, Vector2 StartPos);
-	~Enemy_INKY();
+	virtual ~Enemy_INKY();
 
 public:
 	virtual void Init() override;

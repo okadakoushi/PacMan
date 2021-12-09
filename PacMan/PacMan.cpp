@@ -129,7 +129,8 @@ void PacMan::OnCollision(Actor* actor)
 	else if (actor->GetHash() == std::hash<std::string>()("Enemy"))
 	{
 		EnemyBase* enemy = dynamic_cast<EnemyBase*>(actor);
-		if (enemy != nullptr)
+		float len = (enemy->GetPosition() - m_position).Length();
+		if (enemy != nullptr && (len < m_collision.GetCollisionSize().x - 2))
 		{
 			enemy->HitEffect(this);
 		}
@@ -140,7 +141,7 @@ void PacMan::OnCollision(Actor* actor)
 void PacMan::Draw()
 {
 	//上下逆なのでマイナス。
-	m_spirte.Draw({m_position.x + 12, m_position.y + 12 }, 1.5, atan2f(m_movedVector.Normalized().x, -(m_movedVector.Normalized().y)), m_drawHandle[m_animationIndex]);
+	m_spirte.Draw({m_position.x + (SPRITE_SIZE / 2), m_position.y + 12 }, 1.5, atan2f(m_movedVector.Normalized().x, -(m_movedVector.Normalized().y)), m_drawHandle[m_animationIndex]);
 }
 
 void PacMan::Death()
@@ -164,6 +165,7 @@ bool PacMan::PlayDeadAnim()
 	{
 		if (m_animationIndex == 0)
 		{
+			GameSound()->AllStop();
 			GameSound()->Play(m_deadSE);
 		}
 		m_animationIndex++;

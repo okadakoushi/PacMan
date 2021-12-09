@@ -7,6 +7,10 @@ Gate::Gate(SceneBase* sceneBase) : Actor(sceneBase, "Gate", 0, RectCollision::En
 
 }
 
+Gate::~Gate()
+{
+}
+
 void Gate::Init()
 {
 	int drawhandle = LoadGraph("Assets/wall.bmp");

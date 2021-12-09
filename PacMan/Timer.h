@@ -11,8 +11,10 @@ private:
 	LONG m_freq;
 	LONG m_end;
 	double m_elapsed = 0.0f;
+
 private:
 	Timer() {};
+
 public:
 	/// <summary>
 	/// タイムクラスの取得。

@@ -1,6 +1,14 @@
 #include "stdafx.h"
 #include "Sprite.h"
 
+Sprite::Sprite()
+{
+}
+
+Sprite::~Sprite()
+{
+}
+
 void Sprite::Init(const char* filePath)
 {
 	//scale‚É‚Â‚¢‚Ä‚ÍÀ‘•—\’èB

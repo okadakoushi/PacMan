@@ -10,13 +10,13 @@ private:
 
 public:
 	Enemy_POKEY(SceneBase* sceneBase, PacMan* pacManPtr, Vector2 StartPos);
-	~Enemy_POKEY();
+	virtual ~Enemy_POKEY();
+
 public:
 	virtual void Init() override;
 	virtual void OnCollision(Actor* actor)override {};
 	virtual void Update() override;
 	virtual void Draw() override;
-
 
 };
 

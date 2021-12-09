@@ -32,18 +32,11 @@ public:
 	/// コンストラクタ。
 	/// </summary>
 	/// <param name="sceneManager">シーンマネージャー。</param>
-	SceneBase(SceneManager* sceneManager):
-		Object::Object(0),
-		m_sceneManagerPtr(sceneManager)
-	{
-	}
+	SceneBase(SceneManager* sceneManager);
 	/// <summary>
 	/// デストラクタ。
 	/// </summary>
-	virtual ~SceneBase()
-	{
-
-	}
+	virtual ~SceneBase();
 
 public:
 	/// <summary>

@@ -5,7 +5,11 @@ private:
 	int m_drawHandle = 0;					//描画ハンドル。
 	int* m_animationHandle;					//アニメーションハンドル。
 	bool m_transFlag = false;				//透明度を有効にするかのフラグ。
+
 public:
+	Sprite();
+	~Sprite();
+
 	/// <summary>
 	/// 初期化。
 	/// </summary>

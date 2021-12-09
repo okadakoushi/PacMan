@@ -10,9 +10,10 @@ protected:
 	SceneGame* m_sceneGame = nullptr;
 	int m_score = 10;
 	int m_eatingSoundHandle = 0;		//eating.
+
 public:
 	ItemBase(SceneBase* sceneBase, const char* tag, int prio);
-	~ItemBase();
+	virtual ~ItemBase();
 
 	virtual void Init() override = 0;
 	virtual void Draw() override = 0;

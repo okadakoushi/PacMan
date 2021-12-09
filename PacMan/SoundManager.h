@@ -44,6 +44,7 @@ private:
 private:
 	SoundManager() {};
 	~SoundManager();
+
 public:
 	/// <summary>
 	/// インスタンスを取得。
@@ -79,8 +80,12 @@ public:
 	/// <param name="handle">再生するサウンドのハンドル。</param>
 	/// <param name="playingType">再生中だった場合にどういう挙動をするか。</param>
 	/// <param name="playType">再生方法(Bit)。</param>
-	void Play(int handle, PlayingType playingType = PlayingType_EndPlaying, PlayType playType = PlayType_Back);
+	void Play(int handle, PlayingType playingType = PlayingType_EndPlaying, int playType = PlayType_Back);
 
+	/// <summary>
+	/// すべての音を止める。
+	/// </summary>
+	void AllStop();
 
 	//bool IsPlaying()
 	//{
