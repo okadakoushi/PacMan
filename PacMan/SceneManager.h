@@ -2,6 +2,8 @@
 
 #include "SceneBase.h"
 
+class PlayerUI;
+
 /// <summary>
 /// シーンの管理者。
 /// </summary>
@@ -10,6 +12,7 @@ class SceneManager
 private:
 	SceneBase::SceneID m_currentState;		//現在のシーン番号。
 	SceneBase* m_currentScene;
+	PlayerUI* m_UI;
 
 public:
 	SceneManager();

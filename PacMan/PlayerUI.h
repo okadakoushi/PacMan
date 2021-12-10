@@ -10,11 +10,13 @@ class PlayerUI : public Object
 {
 private:
 	PacMan* m_pacManPtr = nullptr;	//パックマン。
-	Font m_font;					//フォント。
-	Sprite m_sprites[3];
-	SceneGame* m_sceneGamePtr = nullptr;
+	Font m_scoreFont;				//フォント。
+	int m_highScore = 10000;		//ハイスコア。
+	Font m_highScoreFont;			//ハイスコアフォント。
+	Sprite m_sprites[3];			//残機表示用のスプライト。
+
 public:
-	PlayerUI(SceneGame* sceneGame);
+	PlayerUI();
 	virtual ~PlayerUI();
 
 	void Init();

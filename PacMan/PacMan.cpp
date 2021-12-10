@@ -20,7 +20,6 @@ void PacMan::Init()
 	m_position = { PLAYER_RESPAWN_POINT.x - 1, PLAYER_RESPAWN_POINT.y };
 	m_deadSE = GameSound()->Load("Assets/sound/die.ogg");
 	m_eatingSE = GameSound()->Load("Assets/sound/eating.short.ogg");
-	m_collision.SetCollisionSize({ 20, 20 });
 }
 
 void PacMan::Update()

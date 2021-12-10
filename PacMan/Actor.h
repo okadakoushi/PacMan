@@ -20,13 +20,12 @@ public:
 protected:
 	Sprite				m_spirte;												//スプライト。
 	Vector2				m_position = { SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 };	//位置。
-	Vector2				m_fix;
-	//Vector2			m_scale;												//拡大。
 	Vector2				m_spriteSize = { SPRITE_SIZE,SPRITE_SIZE };				//スプライトのサイズ。
-	float				m_rotation = 0.0f;										//回転。
 	RectCollision		m_collision;											//コリジョン。
 	SceneBase*			m_sceneBasePtr;											//シーンベースのPtr。
 	ExcutionFlagType	m_actorExcutionFlag = EnExcutionFlagType_Active;		//アクターの実行フラグ。
+	//Vector2			m_scale;												//拡大。
+	//float				m_rotation = 0.0f;										//回転。
 
 private:
 	size_t				m_hash = -1;											//ハッシュ。

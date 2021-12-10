@@ -15,6 +15,7 @@ public:
 	/// </summary>
 	/// <param name="filePath">Spriteのファイルパス。Assets....</param>
 	void Init(const char* filePath);
+	void Init(int drawHandle);
 	
 	/// <summary>
 	/// 描画。

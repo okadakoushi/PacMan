@@ -12,12 +12,13 @@ private:
 	float	m_socreDispTime = 0.0f;
 	char	m_buffer[8];
 public:
-	Fruit(SceneBase* sceneBase);
+	Fruit(SceneGame* sceneGame);
 	virtual ~Fruit();
 
 	virtual void Init() override;
-	virtual void Draw() override;
 	virtual void Update() override; 
+	virtual void OnCollision(Actor* actor) override;
+	virtual void Draw() override;
 	virtual void HitEffect(Actor* actor) override;	
 
 };

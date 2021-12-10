@@ -10,6 +10,24 @@ std::map<std::pair<float, float>, std::pair<EnemyBase::Animation, EnemyBase::Ani
 	{ { RIGHT.x, RIGHT.y }, { RightAnimation, RightEyeAnimation } },
 };
 
+std::map<EnemyBase::Direction, EnemyBase::Animation> EnemyBase::m_directionToNormalAnimHandleIndex
+{
+	//方向、アニメーションハンドルインデックス。
+	{ Direction_Left,	LeftAnimation },
+	{ Direction_Right,	RightAnimation },
+	{ Direction_Up,		UpAnimation },
+	{ Direction_Down,	DownAnimation },
+};
+
+std::map<EnemyBase::Direction, EnemyBase::Animation> EnemyBase::m_directionToEyeAnimHandleIndex
+{
+	{ Direction_Left,	LeftEyeAnimation },
+	{ Direction_Right,	RightEyeAnimation },
+	{ Direction_Up,		UpEyeAnimation },
+	{ Direction_Down,	DownEyeAnimation },
+};
+
+
 EnemyBase::EnemyBase(SceneBase* sceneBase, const char* tag, int prio, PacMan* packPtr, Vector2 startPos) : 
 	Actor(sceneBase, tag, prio, RectCollision::EnCollisionType_Dynamic),
 	m_packManPtr(packPtr),
@@ -25,16 +43,21 @@ EnemyBase::~EnemyBase()
 void EnemyBase::Init()
 {
 	m_position = START_POINT;
-	m_collision.SetCollisionSize({ 20,20 });
+	m_collision.SetCollisionSize({ 16,16 });
+	//最初のフレームはここでWayPointを計算しておく。
+	WayPointSerch();
+	m_direction = (m_nextWayPoint - m_position).Normalized();
 }
 
 void EnemyBase::Update()
 {	
-	if ((m_nextWayPoint - m_position).Length() > SPRITE_SIZE)
+	//自分の位置から次のWayPointまでの距離。
+	float pos2nextWayLen = (m_nextWayPoint - m_position).Length();
+
+	if (pos2nextWayLen > SPRITE_SIZE)
 	{
 		m_restMovePixcel = 0;
 	}
-
 
 	if (m_isTweek)
 	{
@@ -55,7 +78,7 @@ void EnemyBase::Update()
 	if (m_restMovePixcel <= 0)
 	{
 		//指定pix分移動したので次のwayPointを計算する。
-		if (m_isTweek && m_currentState != GetOutPrisonMode)
+		if (m_isTweek && (m_currentState != GetOutPrisonMode) )
 		{
 			//いじけモード時の移動を実行。
 			WayPointSerchForTweekMode();
@@ -82,7 +105,8 @@ void EnemyBase::Update()
 
 void EnemyBase::Draw()
 {
-	Actor::m_spirte.Draw({ m_position.x + 12, m_position.y + 12 }, 1.5, 0, m_drawHandle[m_currentAnimation]);
+	Vector2 drawPos = { m_position.x + 12, m_position.y + 12 };
+	Actor::m_spirte.Draw(drawPos, 1.5f, 0, m_drawHandle[m_currentAnimation]);
 
 
 #ifdef DEBUG
@@ -101,7 +125,7 @@ void EnemyBase::HitEffect(Actor* actor)
 	{
 		//普通
 		PacMan* pacman = dynamic_cast<PacMan*>(actor);
-		if (pacman != nullptr && m_currentState != ReturnPrisonMode)
+		if (pacman != nullptr && (m_currentState != ReturnPrisonMode) )
 		{
 			pacman->Death();
 		}
@@ -158,19 +182,23 @@ std::vector<Vector2> EnemyBase::CanMoveNextWayPoint()
 	for (auto& nextPosIndex : nextPosIndexList) 
 	{
 		//次に進む予定のマス。
-		nextPosIndex += Vector2(GetPositionIndex(GetPosition()).x, GetPositionIndex(GetPosition()).y);
+		nextPosIndex += GetPositionIndex(m_position);
 
 		bool isHit = false;
 
-		const std::vector<Actor*>& m_obstacleList = m_sceneGame->GetObstacles();
+		const std::vector<Actor*>& obstacleList = m_sceneGame->GetObstacles();
 
 		//障害物と当たり判定を取る。
-		for (Actor* obstacle : m_obstacleList)
+		for (Actor* obstacle : obstacleList)
 		{
-			if ((m_currentState == GetOutPrisonMode) || (m_currentState == ReturnPrisonMode ))
+			//ゲートを通れるステートか
+			bool isPassGateState = (m_currentState == GetOutPrisonMode) || (m_currentState == ReturnPrisonMode);
+			
+			if (isPassGateState)
 			{
 				if (obstacle->GetHash() == std::hash<std::string>()("Gate")) 
 				{ 
+					//牢獄から出る時と、牢獄に戻る時はゲートを障害物としては判定しない。
 					continue; 
 				}
 			}
@@ -225,7 +253,8 @@ void EnemyBase::WayPointSerch()
 	//該当のlengthを持っている要素を検索。
 	for (auto nextPos : nexPosList)
 	{
-		if ((nextPos - m_target).Length() == min)
+		float target2nextPos = (nextPos - m_target).Length();
+		if (target2nextPos == min)
 		{
 			m_nextWayPoint = nextPos;
 		}
@@ -244,6 +273,27 @@ void EnemyBase::WayPointSerchForTweekMode()
 
 void EnemyBase::AnimationUpdate()
 {
+	//方向インデックス。
+	Direction directionIndex;
+	//インデックスを決める。
+	if (m_direction == LEFT)
+	{
+		directionIndex = Direction_Left;
+	}
+	else if (m_direction == RIGHT)
+	{
+		directionIndex = Direction_Right;
+	}
+	else if (m_direction == UP)
+	{
+		directionIndex = Direction_Up;
+	}
+	else if (m_direction == DOWN)
+	{
+		directionIndex = Direction_Down;
+	}
+
+
 	if (++m_animationWaitFrame > AnimationSpeed)
 	{
 		m_animationWaitFrame = 0;
@@ -254,21 +304,21 @@ void EnemyBase::AnimationUpdate()
 	{
 		if (m_tweekTimer > TWEEK_TIME * 0.8f)
 		{
-			m_currentAnimation = m_animationIndex % 2 + TweekAnimation + 1;
+			m_currentAnimation = ( m_animationIndex % 2 ) + TweekAnimation + 1;
 		}
 		else
 		{
-			m_currentAnimation = m_animationIndex % 2 + TweekAnimation;
+			m_currentAnimation = (m_animationIndex % 2) + TweekAnimation;
 		}
 	}
 	else if (m_currentState == ReturnPrisonMode)
 	{
-		m_currentAnimation = m_directionToHandleIndex[{m_direction.x, m_direction.y}].second;
+		//方向に応じてハンドルインデックスを返す。
+		m_currentAnimation = m_directionToEyeAnimHandleIndex[directionIndex];
 	}
 	else
 	{
-		//方向に応じてハンドルインデックスを返す。
-		m_currentAnimation = m_animationIndex % 2 + m_directionToHandleIndex[{m_direction.x, m_direction.y}].first;
+		m_currentAnimation = m_animationIndex % 2 + m_directionToNormalAnimHandleIndex[directionIndex];
 	}
 }
 

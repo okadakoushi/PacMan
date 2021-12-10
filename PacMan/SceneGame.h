@@ -44,6 +44,7 @@ protected:
 
 private:
 
+	//ステージ。
 	std::vector<Actor*> m_obstacleList;						//障害物一覧。
 	GameState m_currentGameState = GameState_WaitGameStart;	//現在のゲームステート。
 
@@ -85,14 +86,16 @@ private:
 	const float START_GAME_TIME = CHARACTER_SPAWN_TIME + 1.5f;	//ゲームを開始する。
 	const float BLINKING_TIME = 1.5f;							//点滅時間。
 	const float NEXT_STAGE_TIME = BLINKING_TIME + 1.0f;			//次ステージ。
+	
+	//Ready
+	Sprite m_readySprite;
 
 	//sound.
 	int m_enemySEList[GameBGMType_Num];
 	int m_openingBGM = 0;								//オープニング。
 	int m_eatingEnemySE = 0;							//敵を食べた。
 	int m_extraSE = 0;									//ライフポイント追加。
-
-	GameBGMType m_nextPlaySound = GameBGMType_Normal;	//次に流す曲。
+	GameBGMType m_nextPlaySound = GameBGMType_Normal;	//次に流すSE。
 
 	//Timer.
 	//シーン用。
@@ -101,10 +104,6 @@ private:
 	//Ghost用。
 	float m_enemyChaseTimer = 0.0f;						//敵キャラの追跡、散開を切り替える用のタイマー。
 	float m_eatingWaitTimer = 0.0f;						//食べる演出を待った時間。
-
-	//Ready
-	Sprite m_readySprite;
-	int m_drawHandle = 0;
 
 	//敵のwaitTime
 	const float ENEMY_WAIT_TIME[3] = {
@@ -115,14 +114,14 @@ private:
 
 	//敵の初期位置。
 	const Vector2 ENEMY_START_POS[4] = {
-		{ CENTER_POSITION.x - SPRITE_SIZE, CENTER_POSITION.y - SPRITE_SIZE * 4.0f },
-		{ CENTER_POSITION.x - SPRITE_SIZE, CENTER_POSITION.y - SPRITE_SIZE * 2.0f },
-		{ CENTER_POSITION.x - SPRITE_SIZE * 3, CENTER_POSITION.y - SPRITE_SIZE * 1.0f },
-		{ CENTER_POSITION.x + SPRITE_SIZE * 2, CENTER_POSITION.y - SPRITE_SIZE * 1.0f }
-	};
+		{ CENTER_POSITION.x - ( SPRITE_SIZE * 1.0f ) + 10, CENTER_POSITION.y - ( SPRITE_SIZE * 4.0f ) },
+		{ CENTER_POSITION.x - ( SPRITE_SIZE * 1.0f ) + 10, CENTER_POSITION.y - ( SPRITE_SIZE * 2.0f ) },
+		{ CENTER_POSITION.x - ( SPRITE_SIZE * 3.0f ) + 10, CENTER_POSITION.y - ( SPRITE_SIZE * 1.0f ) },
+		{ CENTER_POSITION.x + ( SPRITE_SIZE * 1.0f ) + 10, CENTER_POSITION.y - ( SPRITE_SIZE * 1.0f ) }
+	};																								 
 
 public:
-	SceneGame(SceneManager* sceneManager);
+	SceneGame(SceneManager* sceneManager, PlayerUI* ui);
 	virtual ~SceneGame();
 	virtual void Init() override;
 	virtual void Update() override;
@@ -166,19 +165,9 @@ protected:
 	void CreateEnemy();
 
 	/// <summary>
-	/// Playerが死亡した際に呼ばれるイベント。
-	/// </summary>
-	void PlayerDeadEvent();
-
-	/// <summary>
 	/// エネミーのステートを変更するイベント。
 	/// </summary>
 	void EnemyEvent();
-
-	/// <summary>
-	/// 次のラウンドへ。
-	/// </summary>
-	void NextRound();
 
 private:
 	/// <summary>

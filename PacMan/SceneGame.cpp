@@ -29,8 +29,9 @@ std::map<int, int> SceneGame::m_restCookieCountToFrequency
 	{48, 70000},
 };
 
-SceneGame::SceneGame(SceneManager* sceneManager) : 
+SceneGame::SceneGame(SceneManager* sceneManager, PlayerUI* ui) : 
 	SceneBase(sceneManager),
+	m_playerUI(ui),
 	m_stage(this)
 {
 }
@@ -49,10 +50,8 @@ void SceneGame::Init()
 
 	//GameOver用Sprite初期化。
 	int drawhandle = LoadGraph("Assets/inStageMessage.bmp");
-	m_drawHandle = DerivationGraph(0, 0, 128, 24, drawhandle);
-	
-	//UI
-	m_playerUI = new PlayerUI(this);
+	int GameOverHanlde = DerivationGraph(0, 0, 128, 24, drawhandle);
+	m_readySprite.Init(GameOverHanlde);
 
 	//サウンドロード。
 	m_enemySEList[GameBGMType_Normal] = GameSound()->Load("Assets/sound/siren_1.wav");
@@ -64,7 +63,7 @@ void SceneGame::Init()
 	m_extraSE = GameSound()->Load("Assets/sound/extend.wav");
 
 	//フルーツの位置。
-	m_apperFruitPosition = { CENTER_POSITION.x - SPRITE_SIZE, CENTER_POSITION.y + SPRITE_SIZE * 1.5f };
+	m_apperFruitPosition = { CENTER_POSITION.x - 24, CENTER_POSITION.y + 24 };
 
 	GameSound()->Play(m_openingBGM);
 }
@@ -112,13 +111,19 @@ void SceneGame::Update()
 	__super::Update();
 
 	m_sceneStartDeltaTime += GameTime()->GetDeltaTime();
-	m_playerUI->Update(m_score, m_lifePoint);
+	
+	if (m_currentGameState != GameState_NextRound)
+	{
+		//次ラウンド遷移中はUI表示を行わない。
+		m_playerUI->Update(m_score, m_lifePoint);
+	}
 
 	switch (m_currentGameState)
 	{
 	case SceneGame::GameState_WaitGameStart:
+		
 		//ゲームスタート待ち//
-		if ((m_sceneStartDeltaTime > CHARACTER_SPAWN_TIME) && m_pacMan == nullptr)
+		if ( (m_sceneStartDeltaTime > CHARACTER_SPAWN_TIME) && m_pacMan == nullptr)
 		{
 			//opening
 			//キャラクターを生成。
@@ -133,17 +138,17 @@ void SceneGame::Update()
 		if (m_sceneStartDeltaTime < START_GAME_TIME)
 		{
 			//演出中。
-			m_readySprite.Draw({ CENTER_POSITION.x - 64 , CENTER_POSITION.y + SPRITE_SIZE * 2 }, m_drawHandle);
+			m_readySprite.Draw({ CENTER_POSITION.x - 64, CENTER_POSITION.y + SPRITE_SIZE * 2});
 		}
 		else
 		{
 			//演出終了。
 			m_currentGameState = GameState_Running;
 		}
-
 		break;
 
 	case SceneGame::GameState_Running:
+		
 		//ゲーム実行中//
 		if (m_stage.GetRestCookieCount() == 0)
 		{
@@ -177,11 +182,11 @@ void SceneGame::Update()
 		FruitEvent();
 
 		m_enemyChaseTimer += GameTime()->GetDeltaTime();
-
 		break;
 
 	case SceneGame::GameState_EatingWait:
 
+		//食べ待ち//
 		if (!m_eatingWaitTimer)
 		{
 			//初めの処理。
@@ -218,20 +223,21 @@ void SceneGame::Update()
 			//エネミー捕食演出。
 			m_eatingWaitTimer += GameTime()->GetDeltaTime();
 		}
-
 		break;
+
 	case SceneGame::GameState_PlayerDead:
 
-		//プレイヤー死亡。敵、Playerの位置をリセット。
+		//プレイヤー死亡演出中。
 		for (int i = 0; i < m_enemyList.size(); i++)
 		{
+			//敵キャラを消す。
 			m_enemyList[i]->SetExcutionFlag(Actor::EnExcutionFlagType_Dead);
 			m_enemyList.erase(m_enemyList.begin() + i);
 		}
 
 		if (m_pacMan->PlayDeadAnim())
 		{
-			//パックマンを削除。
+			//死亡アニメーションが終わったのでステージのリセット処理を行う。
 			delete m_pacMan;
 			m_pacMan = nullptr;
 
@@ -253,11 +259,11 @@ void SceneGame::Update()
 			m_isChaseMode = false;
 			m_currentGameState = GameState_WaitGameStart;
 		}
-
 		break;
 	
 	case SceneGame::GameState_NextRound:
-
+		
+		//次のラウンドに進む。
 		GameSound()->AllStop();
 		//パラメーターをリセット。
 		delete m_pacMan;
@@ -293,16 +299,16 @@ void SceneGame::Update()
 			m_stage.CreateStage();
 			m_currentGameState = GameState_WaitGameStart;
 		}
-
 		break;
-	}
+
+	}//swich-case
 }
 
 void SceneGame::EnemyEvent()
 {
 	for (int i = 1; i < m_enemyList.size(); i++)
 	{
-		if (m_sceneStartDeltaTime >= ENEMY_WAIT_TIME[i - 1] && m_enemyList[i]->GetCurrentState() == EnemyBase::InPrisonMode)
+		if ( (m_sceneStartDeltaTime >= ENEMY_WAIT_TIME[i - 1]) && (m_enemyList[i]->GetCurrentState() == EnemyBase::InPrisonMode) )
 		{
 			m_enemyList[i]->ChangeCurrentState(EnemyBase::GetOutPrisonMode);
 		}
@@ -321,7 +327,7 @@ void SceneGame::EnemyEvent()
 	for (int i = 0; i < m_enemyList.size(); i++)
 	{
 
-		if (m_enemyList[i]->GetCurrentState() == EnemyBase::ChaseMode || m_enemyList[i]->GetCurrentState() == EnemyBase::ScatterMode)
+		if ( (m_enemyList[i]->GetCurrentState() == EnemyBase::ChaseMode) || (m_enemyList[i]->GetCurrentState() == EnemyBase::ScatterMode) )
 		{
 			//毎フレームEnemyをChase/Scatterモードに変更。
 			EnemyBase::EnemyState frontFrameState = m_enemyList[i]->GetCurrentState();
@@ -332,7 +338,7 @@ void SceneGame::EnemyEvent()
 			}
 		}
 
-		if (m_enemyList[i]->GetCurrentState() == EnemyBase::ReturnPrisonMode && !m_enemyList[i]->IsCallDeadEvent())
+		if ( (m_enemyList[i]->GetCurrentState() == EnemyBase::ReturnPrisonMode) && !m_enemyList[i]->IsCallDeadEvent())
 		{
 			//敵が死亡状態。該当Enemyのフラグを上げる。
 			m_isCallDeadEventFlags |= 1 << i;

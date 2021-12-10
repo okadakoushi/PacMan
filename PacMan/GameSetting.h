@@ -1,6 +1,6 @@
 #pragma once
 
-#define DEBUG
+//#define DEBUG
 
 //EngineSetting.
 static const int SCREEN_WIDTH = 800;				//w

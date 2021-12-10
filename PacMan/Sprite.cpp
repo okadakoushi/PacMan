@@ -15,6 +15,11 @@ void Sprite::Init(const char* filePath)
 	m_drawHandle = LoadGraph(filePath);
 }
 
+void Sprite::Init(int drawHandle)
+{
+	m_drawHandle = drawHandle;
+}
+
 void Sprite::Draw(Vector2 pos, double scale, double Angle, int drawHandle)
 {
 	//ï`âÊÅB

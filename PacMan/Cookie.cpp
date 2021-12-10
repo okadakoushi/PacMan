@@ -24,7 +24,6 @@ void Cookie::Draw()
 
 void Cookie::HitEffect(Actor* actor)
 {
-	__super::HitEffect(actor);
 
 	if (actor->GetHash() == std::hash<std::string>()("PacMan"))
 	{
@@ -32,9 +31,9 @@ void Cookie::HitEffect(Actor* actor)
 		PacMan* pacMan = dynamic_cast<PacMan*>(actor);
 		if (pacMan != nullptr) 
 		{
+			__super::HitEffect(actor);
 			m_actorExcutionFlag = Actor::EnExcutionFlagType_Dead;
 			m_sceneGame->ReduceCookieCount();
-
 		}
 	}
 }

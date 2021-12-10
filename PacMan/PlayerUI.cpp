@@ -1,10 +1,10 @@
 #include "stdafx.h"
 #include "PlayerUI.h"
 
-PlayerUI::PlayerUI(SceneGame* sceneGame)
+PlayerUI::PlayerUI()
 {
-	m_font.Init("Score\n", 15, 3);
-	m_sceneGamePtr = sceneGame;
+	m_scoreFont.Init("Score\n", 15, 3);
+	m_highScoreFont.Init("Score\n", 15, 3);
 	
 	for (auto& sprite : m_sprites)
 	{
@@ -23,17 +23,23 @@ void PlayerUI::Init()
 
 void PlayerUI::Update(int score, int life)
 {
-	//str格納用。
-	char str[16];
 	//スコアを表示。
-	sprintf(str, "Score\n  %05d", score);
+	char scoreBuffer[16];
+	sprintf(scoreBuffer, "Score\n  %02d", score);
+	m_scoreFont.SetDispStr(scoreBuffer);
+	
+	//ハイスコアを表示。
+	char highScoreBuffer[32];
+	m_highScore = max(score, m_highScore);
+	sprintf(highScoreBuffer, "HIGH SCORE\n   %02d", m_highScore);
+	m_highScoreFont.SetDispStr(highScoreBuffer);
 
-	m_font.SetDispStr(str);
-	m_font.Draw({ 150, 30 }, GetColor(255, 255, 255));
+	//ドロー。
+	m_scoreFont.Draw({ 150, 30 }, GetColor(255, 255, 255));
+	m_highScoreFont.Draw({ 330, 30 }, GetColor(255, 255, 255));
 
 	for (int i = 0; i < life; i++)
 	{
 		m_sprites[i].Draw({ 150.0f + i * 44, 720.0f });
 	}
 }
-

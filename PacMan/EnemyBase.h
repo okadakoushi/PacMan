@@ -32,29 +32,39 @@ protected:
 		AnimationNum
 	};
 
+	enum Direction
+	{
+		Direction_Left,
+		Direction_Right,
+		Direction_Up,
+		Direction_Down
+	};
+
 protected:
-	//定数。
+	//移動速度。
 	const float			TWEEK_TIME			= 7.0f;		//いじけモード時間。
 	const float			STANDARD_MOVE_SPEED = 2.0f;		//通常時移動速度。
 	const float			TWEEK_MOVE_SPEED	= 1.0f;		//いじけ時移動速度。
 	const float			RETURN_PRISON_SPEED = 6.0f;		//牢獄帰還時のスピード。
 	const float			GETOUT_PRISON_SPEED = 1.0f;		//牢獄から出る用のスピード。
-	const Vector2		START_POINT;					//初期位置。
+	
+	//位置。
+	const Vector2		START_POINT;												//初期位置。
 	const Vector2		PRISON_FRONT = { FIX_VALUE_X + 400, FIX_VALUE_Y + 300 };	//牢獄の前。
 	const Vector2		PRISON_POINT = { FIX_VALUE_X + 400, FIX_VALUE_Y + 360 };	//牢獄の中。
 
-	//ptr.
+	//ptrs。
 	PacMan*				m_packManPtr = nullptr;					//パックマンポインタ。
-	SceneGame*			m_sceneGame = nullptr;
+	SceneGame*			m_sceneGame = nullptr;					//ゲーム。
 
 	//アニメーション。
-	static std::map<std::pair<float, float>, std::pair<Animation, Animation>> m_directionToHandleIndex;	//方向からアニメーションを取得。firstは普通、secondは目のみ。
-	const int AnimationSpeed = 5;								//アニメーションの切り替え速度。
+	static std::map<Direction, Animation> m_directionToNormalAnimHandleIndex;	//通常アニメーション
+	static std::map<Direction, Animation> m_directionToEyeAnimHandleIndex;		//目玉のみアニメーション。
+	const int AnimationSpeed = 5;								//アニメーションの切り替え速度(フレーム）。
 	int m_drawHandle[AnimationNum];								//アニメーションすべてのDrawHandle。
 	unsigned int m_animationIndex = 0;							//アニメーションのインデックス。これを使用して次に流すアニメーションを決める。
 	int m_currentAnimation = 0;									//再生するアニメーション。
 	int m_animationWaitFrame = 0;								//何フレームアニメーションを流したか。
-
 
 	//移動用。
 	Vector2				m_direction = { 0, -1 };					//方向。
@@ -62,15 +72,13 @@ protected:
 	Vector2				m_nextWayPoint = START_POINT;				//次のwayPoint。
 	float				m_currentMoveSpeed = STANDARD_MOVE_SPEED;	//現在の移動速度。
 	EnemyState			m_currentState = InPrisonMode;				//現在のステート。
-
-	//残りの移動可能ピクセル。
-	int					m_restMovePixcel = 0;						//残り移動可能ピクセル。
+	int					m_restMovePixcel = SPRITE_SIZE / 2;			//残り移動可能ピクセル。
 
 	//いじけモード用。
 	float				m_tweekTimer = 0.0f;		//いじけモード用タイマー。
-	bool				m_callDeadEvent = false;	//死亡用イベント
 	bool				m_isTweek = false;			//いじけモードか。
 	int					m_nearEndTweekFrame = 2;	//敵の点滅フレーム。
+	bool				m_callDeadEvent = false;	//死亡用イベント
 
 	//Sound
 	int m_returnPrisonSE = 0;						//牢獄帰還。

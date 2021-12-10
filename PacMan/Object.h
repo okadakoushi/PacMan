@@ -12,6 +12,7 @@ public:
 	Object(int m_prio = 0);
 
 	virtual ~Object();
+
 public:
 	///// <summary>
 	///// ƒ^ƒO‚ğæ“¾B

@@ -27,7 +27,7 @@ void Enemy_INKY::Update()
 	{
 	case EnemyBase::InPrisonMode:
 		//ターゲットは牢獄の中。
-		m_target = RESPAWN_POINT;
+		m_target = WAIT_POINT;
 		m_currentMoveSpeed = STANDARD_MOVE_SPEED;
 		break;
 

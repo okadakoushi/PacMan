@@ -17,6 +17,7 @@ public:
 
 	virtual void Init() override = 0;
 	virtual void Draw() override = 0;
+	
 	/// <summary>
 	/// Õ“ËŒø‰Ê‚ğÀ‘•B
 	/// </summary>

@@ -24,17 +24,17 @@ private:
 	SceneGame* m_sceneGamePtr = nullptr;		//シーンのポインタ。
 	
 	//アニメーション。
-	const int AnimationSpeed = 1;
-	const int DEAD_ANIMATION_SPEED = 7;
-	const int DEAD_FIRST_EDN_ANIMATION_SPEED = 15;
-	int m_drawHandle[AniamtionNum];
-	int m_animationIndex = 0;
-	int m_frontFrameAnimIndex = 0;
-	int m_animationWaitFrame = 0;
+	const int AnimationSpeed = 1;					//アニメーション速度
+	const int DEAD_ANIMATION_SPEED = 7;				//死亡アニメーション速度
+	const int DEAD_FIRST_EDN_ANIMATION_SPEED = 15;	//先端と終端の速度。
+	int m_drawHandle[AniamtionNum];					//アニメーション分のハンドル。
+	int m_animationIndex = 0;						//インデックス。
+	int m_frontFrameAnimIndex = 0;					//前フレームのアニメーション。
+	int m_animationWaitFrame = 0;					//アニメーション切り替えのフレーム数。
 
 	//サウンド。
-	int m_deadSE = 0;									//死亡SE。
-	int m_eatingSE = 0;
+	int m_deadSE = 0;								//死亡SE。
+	int m_eatingSE = 0;								//Cookie食べる音。
 
 public:
 	PacMan(SceneBase* sceneBase);

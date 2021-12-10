@@ -11,6 +11,7 @@ SoundManager::~SoundManager()
 
 void SoundManager::Update()
 {
+	//流し終わったコピー音源は削除する。
 	for (auto it = m_duplicateSounds.begin(); it != m_duplicateSounds.end();)
 	{
 		if (!CheckSoundMem(*it))
@@ -75,7 +76,7 @@ void SoundManager::Play(int handle, PlayingType playingType, int playType)
 			
 			//ソースよりハンドルをコピー。
 			handle = DuplicateSoundMem(handle);
-			//ボリュームコピーしてくれないので、設定。
+			//ボリュームコピーしてくれないので、コピー元の音をコピー。
 			ChangeVolumeSoundMem(GetVolumeSoundMem2(handle), handle);
 			//コピーリストに積む。
 			m_duplicateSounds.push_back(handle);
@@ -104,6 +105,11 @@ void SoundManager::AllStop()
 	{
 		//音をすべて止める。
 		StopSoundMem(sound.second);
+	}
+
+	for (auto sound : m_duplicateSounds)
+	{
+		StopSoundMem(sound);
 	}
 }
 

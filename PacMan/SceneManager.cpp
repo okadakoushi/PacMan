@@ -4,6 +4,7 @@
 #include "SceneGame.h"
 #include "SceneTitle.h"
 #include "GameOver.h"
+#include "PlayerUI.h"
 
 SceneManager::SceneManager()
 {
@@ -18,6 +19,7 @@ void SceneManager::Init()
 	//最初のシーン。
 	m_currentScene = new SceneTitle(this);
 	m_currentScene->Init();
+	m_UI = new PlayerUI;
 }
 
 void SceneManager::Update()
@@ -35,7 +37,7 @@ void SceneManager::ChangeScene(SceneBase::SceneID sceneID)
 			break;
 		case SceneBase::EnSceneID_Game:
 			//ゲーム。
-			m_currentScene = new SceneGame(this);
+			m_currentScene = new SceneGame(this, m_UI);
 			break;
 		case SceneBase::EnSceneID_GameOver:
 			m_currentScene = new GameOver(this);
