@@ -10,10 +10,10 @@ public:
 
 	enum ExcutionFlagType
 	{
-		EnExcutionFlagType_NotActive	= 0b0000,	//アクティブではない。
-		EnExcutionFlagType_Update		= 0b0001,	//更新
-		EnExcutionFlagType_Draw			= 0b0010,	//描画。
-		EnExcutionFlagType_Dead			= 0b0100,	//削除。
+		EnExcutionFlagType_NotActive	= 1 << 0,	//アクティブではない。
+		EnExcutionFlagType_Update		= 1 << 1,	//更新
+		EnExcutionFlagType_Draw			= 1 << 2,	//描画。
+		EnExcutionFlagType_Dead			= 1 << 3,	//削除。
 		EnExcutionFlagType_Active		= EnExcutionFlagType_Update | EnExcutionFlagType_Draw,	//アクティブ（更新、描画)
 	};
 

@@ -2,14 +2,6 @@
 #include "EnemyBase.h"
 #include "PacMan.h"
 
-std::map<std::pair<float, float>, std::pair<EnemyBase::Animation, EnemyBase::Animation>> EnemyBase::m_directionToHandleIndex =
-{
-	{ { LEFT.x, LEFT.y },	{ LeftAnimation, LeftEyeAnimation} },
-	{ { UP.x, UP.y }	,	{ UpAnimation, UpEyeAnimation } },
-	{ { DOWN.x, DOWN.y },	{ DownAnimation, DownEyeAnimation} },
-	{ { RIGHT.x, RIGHT.y }, { RightAnimation, RightEyeAnimation } },
-};
-
 std::map<EnemyBase::Direction, EnemyBase::Animation> EnemyBase::m_directionToNormalAnimHandleIndex
 {
 	//方向、アニメーションハンドルインデックス。
@@ -43,7 +35,7 @@ EnemyBase::~EnemyBase()
 void EnemyBase::Init()
 {
 	m_position = START_POINT;
-	m_collision.SetCollisionSize({ 16,16 });
+	m_collision.SetCollisionSize({ 18,18 });
 	//最初のフレームはここでWayPointを計算しておく。
 	WayPointSerch();
 	m_direction = (m_nextWayPoint - m_position).Normalized();

@@ -4,6 +4,8 @@
 #include "Enemy_BLINKY.h"
 #include "Actor.h"
 
+static const char* Enemy_Inky_fp = "Assets/bashful_div.bmp";
+
 Enemy_INKY::Enemy_INKY(SceneBase* sceneBase, PacMan* pacManPtr, Enemy_BLINKY* blinkyPtr, Vector2 StartPos) : EnemyBase(sceneBase, "Enemy", 1, pacManPtr, StartPos)
 {
 	m_packManPtr = pacManPtr;
@@ -17,7 +19,7 @@ Enemy_INKY::~Enemy_INKY()
 void Enemy_INKY::Init()
 {
 	__super::Init();
-	LoadDivGraph("Assets/bashful_div.bmp", EnemyBase::AnimationNum, 4, 4, 24, 24, m_drawHandle);
+	LoadDivGraph(Enemy_Inky_fp, EnemyBase::AnimationNum, 4, 4, 24, 24, m_drawHandle);
 }
 
 void Enemy_INKY::Update()
@@ -48,16 +50,19 @@ void Enemy_INKY::Update()
 		break;
 
 	case EnemyBase::ChaseMode:
+	{
 		//ターゲットは常にPlayer。
-		m_target = m_packManPtr->GetPosition() + (m_blinkyPtr->GetPosition() - m_packManPtr->GetPosition()) * -1;
+		Vector2 toPacMan = m_blinkyPtr->GetPosition() - m_packManPtr->GetPosition();
+		m_target = m_packManPtr->GetPosition() + toPacMan * -1;
 		m_currentMoveSpeed = STANDARD_MOVE_SPEED;
 		break;
+	}
 
 	case EnemyBase::ReturnPrisonMode:
 		//食べられて、牢獄帰還。
 		m_target = PRISON_POINT;
 		m_currentMoveSpeed = RETURN_PRISON_SPEED;
-		if ((m_position - m_target).Length() <= 3.0f)
+		if (m_position == m_target)
 		{
 			m_currentState = GetOutPrisonMode;
 		}

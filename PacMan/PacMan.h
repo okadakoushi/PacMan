@@ -13,7 +13,7 @@ private:
 	};
 
 private:
-	const float MOVE_SPEED = 2.0f;				//移動速度。
+	const float MOVE_SPEED = 2.00f;				//移動速度。
 	const Vector2 PLAYER_RESPAWN_POINT = { (float)SCREEN_WIDTH / 2 - SPRITE_SIZE / 2.0f +1 , (float)SCREEN_HEIGHT / 2 + SPRITE_SIZE * 8.0f };
 
 	Vector2 m_movedVector;						//動いたベクトル。

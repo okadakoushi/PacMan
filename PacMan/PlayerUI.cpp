@@ -1,15 +1,10 @@
 #include "stdafx.h"
 #include "PlayerUI.h"
 
+static const char* PacMan_LeftLifeSprite_fp = "Assets/life_char.bmp";
+
 PlayerUI::PlayerUI()
 {
-	m_scoreFont.Init("Score\n", 15, 3);
-	m_highScoreFont.Init("Score\n", 15, 3);
-	
-	for (auto& sprite : m_sprites)
-	{
-		sprite.Init("Assets/life_char.bmp");
-	}
 }
 
 PlayerUI::~PlayerUI()
@@ -18,7 +13,13 @@ PlayerUI::~PlayerUI()
 
 void PlayerUI::Init()
 {
+	m_scoreFont.Init("Score\n", 15, 3);
+	m_highScoreFont.Init("Score\n", 15, 3);
 
+	for (auto& sprite : m_sprites)
+	{
+		sprite.Init(PacMan_LeftLifeSprite_fp);
+	}
 }
 
 void PlayerUI::Update(int score, int life)

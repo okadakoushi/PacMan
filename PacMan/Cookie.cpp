@@ -3,6 +3,8 @@
 #include "PacMan.h"
 #include "SceneGame.h"
 
+static const char* Cookie_Sprite = "Assets/LevelObjects/LevelObjects0-1.png";
+
 Cookie::Cookie(SceneGame* sceneGame) : ItemBase(sceneGame, "Cookie", 0)
 {
 }
@@ -14,7 +16,7 @@ Cookie::~Cookie()
 void Cookie::Init()
 {
 	m_score = COOKIE_SCORE;
-	m_spirte.Init("Assets/LevelObjects/LevelObjects0-1.png");
+	m_spirte.Init(Cookie_Sprite);
 }
 
 void Cookie::Draw()

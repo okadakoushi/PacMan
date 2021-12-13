@@ -18,11 +18,11 @@ class SceneGame : public SceneBase
 protected:
 	enum IsCallDeadEventFlag
 	{
-		EnCalledDeadEvent_None		= 0b0000,
-		EnCalledDeadEvent_BLINKY	= 0b0001,
-		EnCalledDeadEvent_PINKY		= 0b0010,
-		EnCalledDeadEvent_INKY		= 0b0100,
-		EnCalledDeadEvent_CLYDE		= 0b1000,
+		EnCalledDeadEvent_None		= 0,
+		EnCalledDeadEvent_BLINKY	= 1 << 0,
+		EnCalledDeadEvent_PINKY		= 1 << 1,
+		EnCalledDeadEvent_INKY		= 1 << 2,
+		EnCalledDeadEvent_CLYDE		= 1 << 3
 	};
 
 	enum GameBGMType
@@ -170,6 +170,11 @@ protected:
 	void EnemyEvent();
 
 private:
+	/// <summary>
+	/// クリーンアップ。
+	/// </summary>
+	void CleanUp();
+
 	/// <summary>
 	/// フルーツが出現できるか。
 	/// </summary>

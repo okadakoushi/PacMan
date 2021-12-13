@@ -8,6 +8,10 @@
 #include "WarpPoint.h"
 #include "SceneGame.h"
 
+static const char* StageBackGroundCSV_fp	= "Assets/pacMan_Stage_bg.csv";
+static const char* StageItemCSV_fp			= "Assets/pacMan_Stage_Item.csv";
+static const char* StageObstacleCSV_fp		= "Assets/pacMan_Stage_Obstacle.csv";
+
 Stage::Stage(SceneGame* sceneGame)
 {
 	m_sceneGame = sceneGame;
@@ -17,7 +21,7 @@ void Stage::Init()
 {
 	//ステージデーターをロード。
 	m_stageTable.resize(STAGE_TABLE_HEIGHT, std::vector<int>(STAGE_TABLE_WIDTH));
-	m_stageLoader.Init(m_stageTable, STAGE_TABLE_WIDTH, STAGE_TABLE_HEIGHT, "Assets/pacMan_Stage_bg.csv", "Assets/pacMan_Stage_Item.csv", "Assets/pacMan_Stage_Obstacle.csv");
+	m_stageLoader.Init(m_stageTable, STAGE_TABLE_WIDTH, STAGE_TABLE_HEIGHT, StageBackGroundCSV_fp, StageItemCSV_fp, StageObstacleCSV_fp);
 
 	//読み込んできたデーターを参照してステージを生成する。
 	CreateStage();
@@ -28,7 +32,8 @@ void Stage::BlinkingStage()
 	//点滅フレーム制御。
 	if (++m_colorTriggerFrame > COLOR_TRIGGER_FRAME)
 	{
-		SetDrawBright(255 * m_colorTriggerFlag, 255 * m_colorTriggerFlag, 255 * m_colorTriggerFlag);
+		int fadeColor = 255 * m_colorTriggerFlag;
+		SetDrawBright(fadeColor, fadeColor, fadeColor);
 		m_colorTriggerFlag ^= true;
 		m_colorTriggerFrame = 0;
 	}

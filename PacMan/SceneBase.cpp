@@ -32,9 +32,7 @@ void SceneBase::Update()
 			auto it = std::find(m_actorList.begin(), m_actorList.end(), actor);
 			if (it != m_actorList.end())
 			{
-				m_actorList.erase(it);
 				delete actor;
-				actor = nullptr;
 			}
 		}
 	}
@@ -83,7 +81,6 @@ void SceneBase::UnRegistActor(Actor* actor)
 
 	if (it == m_actorList.end())
 	{
-		//見つからなかった
 		return;
 	}
 
@@ -102,11 +99,19 @@ void SceneBase::CheckHitActorCollision()
 	{
 		for (int j = i + 1; j < m_actorList.size(); j++)
 		{
-			if ((m_actorList[i]->GetActorExcutionFlag() & Actor::EnExcutionFlagType_Update) 
-				&& (m_actorList[j]->GetActorExcutionFlag() & Actor::EnExcutionFlagType_Update))
+			//お互いのUpdateフラグが立っているか。
+			bool IsActorUpdate_i = m_actorList[i]->GetActorExcutionFlag() & Actor::EnExcutionFlagType_Update;
+			bool IsActorUpdate_j = m_actorList[j]->GetActorExcutionFlag() & Actor::EnExcutionFlagType_Update;
+			
+			if (IsActorUpdate_i && IsActorUpdate_j)
 			{
-				//コリジョンを衝突可能コリジョンテーブルで判定する。
-				if (m_actorList[i]->GetCollision().GetCollisionPossibleTable() & m_actorList[j]->GetCollision().GetCollisionType())
+				//衝突可能コリジョンタイプをまとめたビットテーブル。
+				int CollisionPossibleType = m_actorList[i]->GetCollision().GetCollisionPossibleTable();
+				//自分のコリジョンタイプ。
+				int CollisionType = m_actorList[j]->GetCollision().GetCollisionType();
+				
+				//衝突するかの判定を取る。
+				if (CollisionPossibleType & CollisionType)
 				{
 					if (m_actorList[i]->GetCollision().CheckHitAABB(m_actorList[i], m_actorList[j]))
 					{

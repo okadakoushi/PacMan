@@ -29,6 +29,14 @@ void SceneManager::Update()
 
 void SceneManager::ChangeScene(SceneBase::SceneID sceneID)
 {
+	//削除するシーン。
+	SceneBase* deleteScene = m_currentScene;
+	delete deleteScene;
+	
+	//終了処理。
+	InitGraph();//todo:GraphicsのflywWeight実装したら、バンクのメモリは消えたらいけないのでこのコードは消す。
+	GameSound()->AllStop();
+
 	switch (sceneID)
 	{
 		case SceneBase::EnSceneID_Title:
@@ -44,6 +52,7 @@ void SceneManager::ChangeScene(SceneBase::SceneID sceneID)
 			//ゲームオーバー。
 			break;
 	}
+
 	//シーン初期化。
 	m_currentScene->Init();
 }

@@ -2,6 +2,8 @@
 #include "Enemy_Pinky.h"
 #include "PacMan.h"
 
+static const char* Enemy_Pinky_fp = "Assets/speedy_div.bmp";
+
 Enemy_Pinky::Enemy_Pinky(SceneBase* sceneBase, PacMan* pacManPtr, Vector2 StartPos) : EnemyBase(sceneBase, "Enemy", 1, pacManPtr, StartPos)
 {
 
@@ -14,7 +16,7 @@ Enemy_Pinky::~Enemy_Pinky()
 void Enemy_Pinky::Init()
 {
 	__super::Init();
-	LoadDivGraph("Assets/speedy_div.bmp", EnemyBase::AnimationNum, 4, 4, 24, 24, m_drawHandle);
+	LoadDivGraph(Enemy_Pinky_fp, EnemyBase::AnimationNum, 4, 4, 24, 24, m_drawHandle);
 }
 
 void Enemy_Pinky::Update()
@@ -45,16 +47,19 @@ void Enemy_Pinky::Update()
 		break;
 
 	case EnemyBase::ChaseMode:
+	{
 		//ターゲットはパックマンの方向*４タイル
-		m_target = m_packManPtr->GetPosition() + m_packManPtr->GetDirection() * SPRITE_SIZE * 4;
+		Vector2 travelDirection = m_packManPtr->GetDirection() * SPRITE_SIZE * 4;
+		m_target = m_packManPtr->GetPosition() + travelDirection;
 		m_currentMoveSpeed = STANDARD_MOVE_SPEED;
 		break;
+	}
 
 	case EnemyBase::ReturnPrisonMode:
 		//食べられて、牢獄帰還。
 		m_target = PRISON_POINT;
 		m_currentMoveSpeed = RETURN_PRISON_SPEED;
-		if ((m_position - m_target).Length() <= 3.0f)
+		if (m_position == m_target)
 		{
 			m_currentState = GetOutPrisonMode;
 		}

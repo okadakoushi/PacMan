@@ -5,6 +5,10 @@
 #include "SceneGame.h"
 #include "RectCollision.h"
 
+static const char* PacMan_Animation_fp	= "Assets/player_div.bmp";
+static const char* PacMan_DieSE_fp		= "Assets/sound/die.ogg";
+static const char* PacMan_EatingSE_fp	= "Assets/sound/eating.short.ogg";
+
 PacMan::PacMan(SceneBase* sceneBase) : Actor(sceneBase, "PacMan", 0, RectCollision::EnCollisionType_Dynamic)
 {
 	m_sceneGamePtr = dynamic_cast<SceneGame*>(sceneBase);
@@ -16,10 +20,10 @@ PacMan::~PacMan()
 
 void PacMan::Init()
 {
-	LoadDivGraph("Assets/player_div.bmp", AniamtionNum, 5, 3, 24, 24, m_drawHandle);
+	LoadDivGraph(PacMan_Animation_fp, AniamtionNum, 5, 3, 24, 24, m_drawHandle);
 	m_position = { PLAYER_RESPAWN_POINT.x - 1, PLAYER_RESPAWN_POINT.y };
-	m_deadSE = GameSound()->Load("Assets/sound/die.ogg");
-	m_eatingSE = GameSound()->Load("Assets/sound/eating.short.ogg");
+	m_deadSE = GameSound()->Load(PacMan_DieSE_fp);
+	m_eatingSE = GameSound()->Load(PacMan_EatingSE_fp);
 }
 
 void PacMan::Update()
@@ -129,7 +133,7 @@ void PacMan::OnCollision(Actor* actor)
 	{
 		EnemyBase* enemy = dynamic_cast<EnemyBase*>(actor);
 		float len = (enemy->GetPosition() - m_position).Length();
-		if (enemy != nullptr && (len < m_collision.GetCollisionSize().x - 2))
+		if (enemy != nullptr && (len < m_collision.GetCollisionSize().x))
 		{
 			enemy->HitEffect(this);
 		}

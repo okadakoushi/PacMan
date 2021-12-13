@@ -3,6 +3,8 @@
 #include "PacMan.h"
 #include "PlayerUI.h"
 
+static const char* PowerCookie_Sprite_fp = "Assets/LevelObjects/LevelObjects0-0.png";
+
 PowerCookie::PowerCookie(SceneGame* sceneGame) : ItemBase(sceneGame, "PowerCookie", 0)
 {
 }
@@ -13,7 +15,7 @@ PowerCookie::~PowerCookie()
 
 void PowerCookie::Init()
 {
-	m_spirte.Init("Assets/LevelObjects/LevelObjects0-0.png");
+	m_spirte.Init(PowerCookie_Sprite_fp);
 	m_score = POWER_COOKIE_SCORE;
 }
 

@@ -11,6 +11,13 @@
 #include "PlayerUI.h"
 #include "Stage.h"
 
+static const char* Opening_fp		= "Assets/sound/opening_song.ogg";
+static const char* ExtraSE_fp		= "Assets/sound/extend.wav";
+static const char* SirenSE_fp		= "Assets/sound/siren_1.wav";
+static const char* TweekModeSE_fp	= "Assets/sound/power_pellet.wav";
+static const char* ReturnModeSE_fp	= "Assets/sound/retreating.wav";
+static const char* EatingSE_fp		= "Assets/sound/eatghost.ogg";
+
 std::map<bool, std::pair<const float, EnemyBase::EnemyState>> SceneGame::m_isChaseToChageStateTimeAndMoveState
 {
 	//scatterモード時。
@@ -38,12 +45,13 @@ SceneGame::SceneGame(SceneManager* sceneManager, PlayerUI* ui) :
 
 SceneGame::~SceneGame()
 {
+	CleanUp();
 }
 
 void SceneGame::Init()
 {
 	m_stage.Init();
-
+	
 	//スコア初期化。
 	snprintf(m_scoreBuffer, sizeof(m_scoreBuffer) / sizeof(char), "%d", m_currentEatScore);
 	m_scoreFont.Init(m_scoreBuffer, 13, 2);
@@ -54,16 +62,18 @@ void SceneGame::Init()
 	m_readySprite.Init(GameOverHanlde);
 
 	//サウンドロード。
-	m_enemySEList[GameBGMType_Normal] = GameSound()->Load("Assets/sound/siren_1.wav");
+	m_enemySEList[GameBGMType_Normal] = GameSound()->Load(SirenSE_fp);
 	ChangeVolumeSoundMem(255, m_enemySEList[GameBGMType_Normal]);
-	m_enemySEList[GameBGMType_PowerMode] = GameSound()->Load("Assets/sound/power_pellet.wav");
-	m_enemySEList[GameBGMType_Return] = GameSound()->Load("Assets/sound/retreating.wav");
-	m_openingBGM = GameSound()->Load("Assets/sound/opening_song.ogg");
-	m_eatingEnemySE = GameSound()->Load("Assets/sound/eatghost.ogg");
-	m_extraSE = GameSound()->Load("Assets/sound/extend.wav");
+	m_enemySEList[GameBGMType_PowerMode] = GameSound()->Load(TweekModeSE_fp);
+	m_enemySEList[GameBGMType_Return] = GameSound()->Load(ReturnModeSE_fp);
+	m_openingBGM = GameSound()->Load(Opening_fp);
+	m_eatingEnemySE = GameSound()->Load(EatingSE_fp);
+	m_extraSE = GameSound()->Load(ExtraSE_fp);
 
 	//フルーツの位置。
 	m_apperFruitPosition = { CENTER_POSITION.x - 24, CENTER_POSITION.y + 24 };
+
+	m_playerUI->Init();
 
 	GameSound()->Play(m_openingBGM);
 }
@@ -250,7 +260,6 @@ void SceneGame::Update()
 			{
 				//残機0。シーンを切り替え。
 				m_sceneManagerPtr->ChangeScene(SceneBase::EnSceneID_GameOver);
-				delete this;
 				return;
 			}
 
@@ -423,6 +432,16 @@ void SceneGame::ResetParams()
 	m_enemyList.clear();
 	m_isChaseMode = false;
 	GameSound()->AllStop();
+}
+
+void SceneGame::CleanUp()
+{
+	for (auto it = m_actorList.begin(); it != m_actorList.end();)
+	{
+		Actor* actor = *it;
+		it = m_actorList.erase(it);
+		delete actor;
+	}
 }
 
 void SceneGame::FruitEvent()

@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "GameOver.h"
 
+static const char* GameOver_Sprite_fp = "Assets/inStageMessage.bmp";
+
 GameOver::GameOver(SceneManager* sceneManager) : SceneBase(sceneManager)
 {
 }
@@ -11,7 +13,7 @@ GameOver::~GameOver()
 
 void GameOver::Init()
 {
-	int drawhandle = LoadGraph("Assets/inStageMessage.bmp");
+	int drawhandle = LoadGraph(GameOver_Sprite_fp);
 	m_drawHandle = DerivationGraph(0, 48, 128, 24, drawhandle);
 }
 

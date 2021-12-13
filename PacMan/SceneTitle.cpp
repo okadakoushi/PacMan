@@ -1,18 +1,20 @@
 #include "stdafx.h"
 #include "SceneTitle.h"
 
+static const char* TitleSprite_fp = "Assets/title.bmp";
+
 SceneTitle::SceneTitle(SceneManager* sceneManager) : SceneBase(sceneManager)
 {
 }
 
 SceneTitle::~SceneTitle()
 {
+	SetDrawBright(255, 255, 255);
 }
 
 void SceneTitle::Init()
 {
-	m_title.Init("Assets/title.bmp");
-
+	m_title.Init(TitleSprite_fp);
 }
 
 void SceneTitle::Update()
@@ -24,7 +26,7 @@ void SceneTitle::Update()
 		if (m_fadeColor < 0)
 		{
 			m_sceneManagerPtr->ChangeScene(SceneBase::EnSceneID_Game);
-			m_fadeColor = 255;
+			return;
 		}
 		m_fadeColor -= FADE_SPEED;
 		SetDrawBright(m_fadeColor, m_fadeColor, m_fadeColor);

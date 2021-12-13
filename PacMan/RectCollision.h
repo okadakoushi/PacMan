@@ -7,9 +7,9 @@ class RectCollision
 public:
 	enum CollisionType
 	{
-		EnCollisionType_None =		0b0000,
-		EnCollisionType_Static =	0b0001,
-		EnCollisionType_Dynamic =	0b0010,
+		EnCollisionType_None =		0,
+		EnCollisionType_Static =	1 << 0,
+		EnCollisionType_Dynamic =	1 << 1,
 	};
 
 private:

@@ -2,6 +2,8 @@
 #include "Enemy_BLINKY.h"
 #include "PacMan.h"
 
+static const char* Enemy_Blinky_fp = "Assets/shadow_div.png";
+
 Enemy_BLINKY::Enemy_BLINKY(SceneBase* sceneBase, PacMan* pacManPtr, Vector2 StartPos) : EnemyBase(sceneBase, "Enemy", 1, pacManPtr, StartPos)
 {
 
@@ -14,7 +16,7 @@ Enemy_BLINKY::~Enemy_BLINKY()
 void Enemy_BLINKY::Init()
 {
 	__super::Init();
-	LoadDivGraph("Assets/shadow_div.png", EnemyBase::AnimationNum, 4, 4, 24, 24, m_drawHandle);
+	LoadDivGraph(Enemy_Blinky_fp, EnemyBase::AnimationNum, 4, 4, 24, 24, m_drawHandle);
 }
 
 void Enemy_BLINKY::Update()
@@ -54,7 +56,7 @@ void Enemy_BLINKY::Update()
 		//食べられて、牢獄帰還。
 		m_target = PRISON_POINT;
 		m_currentMoveSpeed = RETURN_PRISON_SPEED;
-		if ((m_position - m_target).Length() <= 3.0f)
+		if (m_position == m_target)
 		{
 			m_currentState = GetOutPrisonMode;
 		}

@@ -2,6 +2,8 @@
 #include "Enemy_POKEY.h"
 #include "PacMan.h"
 
+static const char* Enemy_Pokey_fp = "Assets/pokey_div.bmp";
+
 Enemy_POKEY::Enemy_POKEY(SceneBase* sceneBase, PacMan* pacManPtr, Vector2 StartPos) : EnemyBase(sceneBase, "Enemy", 1, pacManPtr, StartPos)
 {
 	m_packManPtr = pacManPtr;
@@ -14,7 +16,7 @@ Enemy_POKEY::~Enemy_POKEY()
 void Enemy_POKEY::Init()
 {
 	__super::Init();
-	LoadDivGraph("Assets/pokey_div.bmp", EnemyBase::AnimationNum, 4, 4, 24, 24, m_drawHandle);
+	LoadDivGraph(Enemy_Pokey_fp, EnemyBase::AnimationNum, 4, 4, 24, 24, m_drawHandle);
 }
 
 void Enemy_POKEY::Update()
@@ -45,8 +47,10 @@ void Enemy_POKEY::Update()
 		break;
 
 	case EnemyBase::ChaseMode:
+	{
 		//遠いときはPlayer、近くは散開ポイント。
-		if ((m_position - m_packManPtr->GetPosition()).Length() <= SPRITE_SIZE * 15)
+		float toPacManLen = (m_packManPtr->GetPosition() - m_position).Length();
+		if (toPacManLen <= SPRITE_SIZE * CHASE_TILED)
 		{
 			m_target = SCATTER_POINT;
 		}
@@ -56,12 +60,13 @@ void Enemy_POKEY::Update()
 		}
 		m_currentMoveSpeed = STANDARD_MOVE_SPEED;
 		break;
+	}
 
 	case EnemyBase::ReturnPrisonMode:
 		//食べられて、牢獄帰還。
 		m_target = PRISON_POINT;
 		m_currentMoveSpeed = RETURN_PRISON_SPEED;
-		if ((m_position - m_target).Length() <= 3.0f)
+		if (m_position == m_target)
 		{
 			m_currentState = GetOutPrisonMode;
 		}

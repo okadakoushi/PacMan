@@ -36,13 +36,14 @@ public:
 	/// <summary>
 	/// フォントタイプを設定。
 	/// </summary>
-	/// <param name="fontType"></param>
+	/// <param name="fontType">フォントのファイルパス or システムフォントの名前。</param>
 	void SetFontType(const char* fontType)
 	{
 		m_fontType = fontType;
+		m_fontHandle = LoadFontDataToHandle(fontType);
 	}
 private:
-	const char* m_fontType = "Emulogic";
+	const char* m_fontType;
 	const char* m_dispChar = "表示する文字を初期化または、設定してください。";
 	int m_fontHandle = 0;
 	int m_size = 10;
