@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "PlayerUI.h"
 
-static const char* PacMan_LeftLifeSprite_fp = "Assets/life_char.bmp";
+static const char* PacMan_LeftLifeSprite_FilePath = "Assets/life_char.bmp";
 
 PlayerUI::PlayerUI()
 {
@@ -18,7 +18,7 @@ void PlayerUI::Init()
 
 	for (auto& sprite : m_sprites)
 	{
-		sprite.Init(PacMan_LeftLifeSprite_fp);
+		sprite.Init(PacMan_LeftLifeSprite_FilePath);
 	}
 }
 

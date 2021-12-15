@@ -26,17 +26,17 @@ void SoundManager::Update()
 	}
 }
 
-int SoundManager::Load(const char* fp, LoadType loadType)
+int SoundManager::Load(const char* FilePath, LOAD_TYPE loadType)
 {	
 	//検索。
-	int handle = m_hashToSoundHandle[std::hash<const char*>()(fp)];
+	int handle = m_hashToSoundHandle[std::hash<const char*>()(FilePath)];
 
 	if (!handle)
 	{
 		//登録されていない。
 		//読み込み形式を設定。
 		SetCreateSoundDataType(loadType);
-		handle = LoadSoundMem(fp);
+		handle = LoadSoundMem(FilePath);
 		
 		if (handle == -1)
 		{
@@ -47,13 +47,13 @@ int SoundManager::Load(const char* fp, LoadType loadType)
 
 		ChangeVolumeSoundMem(DEFAULT_VOLUME, handle);
 		//リソースとして登録。
-		m_hashToSoundHandle[std::hash<const char*>()(fp)] = handle;
+		m_hashToSoundHandle[std::hash<const char*>()(FilePath)] = handle;
 	}
 	
 	return handle;
 }
 
-void SoundManager::Play(int handle, PlayingType playingType, int playType)
+void SoundManager::Play(int handle, PLAYING_TYPE playingType, int playType)
 {
 	//再生中かの判定。
 	bool isPlay = CheckSoundMem(handle);

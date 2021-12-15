@@ -21,19 +21,19 @@ public:
 	/// </summary>
 	/// <param name="stageWidth"></param>
 	/// <param name="stageHeight"></param>
-	/// <param name="bgfp"></param>
-	/// <param name="obstaclefp"></param>
-	/// <param name="itemfp"></param>
-	void Init(std::vector<std::vector<int>>& outStageData, int w, int h, const char* bgfp, const char* obstaclefp, const char* itemfp);
+	/// <param name="bgFilePath"></param>
+	/// <param name="obstacleFilePath"></param>
+	/// <param name="itemFilePath"></param>
+	void Init(std::vector<std::vector<int>>& outStageData, int w, int h, const char* bgFilePath, const char* obstacleFilePath, const char* itemFilePath);
 
 private:
 	/// <summary>
 	/// stageData‚ğload‚·‚éB
 	/// </summary>
-	/// <param name="fp"></param>
+	/// <param name="FilePath"></param>
 	/// <param name="outStageData"></param>
 	/// <param name="w"></param>
 	/// <param name="h"></param>
-	void LoadData(const char* fp, std::vector<std::vector<int>>& outStageData, int w, int h);
+	void LoadData(const char* FilePath, std::vector<std::vector<int>>& outStageData, int w, int h);
 };
 

@@ -11,14 +11,15 @@
 #include "PlayerUI.h"
 #include "Stage.h"
 
-static const char* Opening_fp		= "Assets/sound/opening_song.ogg";
-static const char* ExtraSE_fp		= "Assets/sound/extend.wav";
-static const char* SirenSE_fp		= "Assets/sound/siren_1.wav";
-static const char* TweekModeSE_fp	= "Assets/sound/power_pellet.wav";
-static const char* ReturnModeSE_fp	= "Assets/sound/retreating.wav";
-static const char* EatingSE_fp		= "Assets/sound/eatghost.ogg";
+static const char* StageMassage_FilePath	= "Assets/inStageMessage.bmp";
+static const char* Opening_FilePath			= "Assets/sound/opening_song.ogg";
+static const char* ExtraSE_FilePath			= "Assets/sound/extend.wav";
+static const char* SirenSE_FilePath			= "Assets/sound/siren_1.wav";
+static const char* TweekModeSE_FilePath		= "Assets/sound/power_pellet.wav";
+static const char* ReturnModeSE_FilePath	= "Assets/sound/retreating.wav";
+static const char* EatingSE_FilePath		= "Assets/sound/eatghost.ogg";
 
-std::map<bool, std::pair<const float, EnemyBase::EnemyState>> SceneGame::m_isChaseToChageStateTimeAndMoveState
+std::map<bool, std::pair<const float, EnemyBase::ENEMY_STATE>> SceneGame::m_isChaseToChageStateTimeAndMoveState
 {
 	//scatterモード時。
 	{false, {6.0f, EnemyBase::ScatterMode} },
@@ -53,25 +54,26 @@ void SceneGame::Init()
 	m_stage.Init();
 	
 	//スコア初期化。
-	snprintf(m_scoreBuffer, sizeof(m_scoreBuffer) / sizeof(char), "%d", m_currentEatScore);
+	int size = sizeof(m_scoreBuffer) / sizeof(char);
+	snprintf(m_scoreBuffer, size, "%d", m_currentEatScore);
 	m_scoreFont.Init(m_scoreBuffer, 13, 2);
 
 	//GameOver用Sprite初期化。
-	int drawhandle = LoadGraph("Assets/inStageMessage.bmp");
+	int drawhandle = LoadGraph(StageMassage_FilePath);
 	int GameOverHanlde = DerivationGraph(0, 0, 128, 24, drawhandle);
 	m_readySprite.Init(GameOverHanlde);
 
 	//サウンドロード。
-	m_enemySEList[GameBGMType_Normal] = GameSound()->Load(SirenSE_fp);
+	m_enemySEList[GameBGMType_Normal] = GameSound()->Load(SirenSE_FilePath);
 	ChangeVolumeSoundMem(255, m_enemySEList[GameBGMType_Normal]);
-	m_enemySEList[GameBGMType_PowerMode] = GameSound()->Load(TweekModeSE_fp);
-	m_enemySEList[GameBGMType_Return] = GameSound()->Load(ReturnModeSE_fp);
-	m_openingBGM = GameSound()->Load(Opening_fp);
-	m_eatingEnemySE = GameSound()->Load(EatingSE_fp);
-	m_extraSE = GameSound()->Load(ExtraSE_fp);
+	m_enemySEList[GameBGMType_PowerMode] = GameSound()->Load(TweekModeSE_FilePath);
+	m_enemySEList[GameBGMType_Return] = GameSound()->Load(ReturnModeSE_FilePath);
+	m_openingBGM = GameSound()->Load(Opening_FilePath);
+	m_eatingEnemySE = GameSound()->Load(EatingSE_FilePath);
+	m_extraSE = GameSound()->Load(ExtraSE_FilePath);
 
 	//フルーツの位置。
-	m_apperFruitPosition = { CENTER_POSITION.x - 24, CENTER_POSITION.y + 24 };
+	m_apperFruitPosition = { CENTER_POSITION.x - 24.0f, CENTER_POSITION.y + 24.0f };
 
 	m_playerUI->Init();
 
@@ -108,7 +110,6 @@ void SceneGame::CreateEnemy()
 	{
 		enemy->Init();
 		enemy->ChangeCurrentState(EnemyBase::InPrisonMode);
-		enemy->SetExcutionFlag(Actor::EnExcutionFlagType_Draw);
 	}
 	//ブリンキーは最初から外。
 	enemy_blinky->ChangeCurrentState(EnemyBase::ScatterMode);
@@ -131,183 +132,28 @@ void SceneGame::Update()
 	switch (m_currentGameState)
 	{
 	case SceneGame::GameState_WaitGameStart:
-		
 		//ゲームスタート待ち//
-		if ( (m_sceneStartDeltaTime > CHARACTER_SPAWN_TIME) && m_pacMan == nullptr)
-		{
-			//opening
-			//キャラクターを生成。
-			m_pacMan = new PacMan(this);
-			m_pacMan->Init();
-			m_pacMan->SetExcutionFlag(Actor::EnExcutionFlagType_Draw);
-			m_lifePoint--;
-			//敵。
-			CreateEnemy();
-		}
-
-		if (m_sceneStartDeltaTime < START_GAME_TIME)
-		{
-			//演出中。
-			m_readySprite.Draw({ CENTER_POSITION.x - 64, CENTER_POSITION.y + SPRITE_SIZE * 2});
-		}
-		else
-		{
-			//演出終了。
-			m_currentGameState = GameState_Running;
-		}
+		WaitGameStartProcess();
 		break;
 
 	case SceneGame::GameState_Running:
-		
 		//ゲーム実行中//
-		if (m_stage.GetRestCookieCount() == 0)
-		{
-			//次ラウンドへ行く演出。
-			m_currentGameState = GameState_NextRound;
-			return;
-		}
-
-		if (m_pacMan->IsDying())
-		{
-			//パックマン死亡演出。
-			m_currentGameState = GameState_PlayerDead;
-			return;
-		}
-
-		if (m_isCallDeadEventFlags)
-		{
-			//敵キャラを食べる演出。
-			m_currentGameState = GameState_EatingWait;
-			return;
-		}
-
-		//ステートは戻す。
-		m_pacMan->SetExcutionFlag(Actor::EnExcutionFlagType_Update);
-		for (auto* enemy : m_actorList)
-		{
-			enemy->SetExcutionFlag(Actor::EnExcutionFlagType_Active);
-		}
-
-		EnemyEvent();
-		FruitEvent();
-
-		m_enemyChaseTimer += GameTime()->GetDeltaTime();
+		GameRunningProcess();
 		break;
 
 	case SceneGame::GameState_EatingWait:
-
-		//食べ待ち//
-		if (!m_eatingWaitTimer)
-		{
-			//初めの処理。
-			StopSoundMem(m_nextPlaySound);
-			GameSound()->Play(m_eatingEnemySE);
-
-			for (int i = 0; i < m_enemyList.size(); i++)
-			{
-				if (m_isCallDeadEventFlags == 1 << i)
-				{
-					m_enemyList[i]->SetExcutionFlag(Actor::EnExcutionFlagType_NotActive);
-				}
-				else
-				{
-					m_enemyList[i]->SetExcutionFlag(Actor::EnExcutionFlagType_Draw);
-				}
-			}
-		}
-
-		if (m_eatingWaitTimer > WAIT_EATING_TINE)
-		{
-			//食べ終わり。
-			m_eatingWaitTimer = 0.0f;
-			m_isCallDeadEventFlags = EnCalledDeadEvent_None;
-			m_currentGameState = GameState_Running;
-		}
-		else
-		{
-			snprintf(m_scoreBuffer, sizeof(m_scoreBuffer) / sizeof(char), "%d", m_currentEatScore);
-			m_scoreFont.SetDispStr(m_scoreBuffer);
-			m_scoreFont.Draw({ m_pacMan->GetPosition().x, m_pacMan->GetPosition().y }, GetColor(0, 255, 255));
-			//waitTimeが終了していない。
-			m_pacMan->SetExcutionFlag(Actor::EnExcutionFlagType_NotActive);
-			//エネミー捕食演出。
-			m_eatingWaitTimer += GameTime()->GetDeltaTime();
-		}
+		//敵を食べる演出中//
+		WaitEatingProcess();
 		break;
 
 	case SceneGame::GameState_PlayerDead:
-
-		//プレイヤー死亡演出中。
-		for (int i = 0; i < m_enemyList.size(); i++)
-		{
-			//敵キャラを消す。
-			m_enemyList[i]->SetExcutionFlag(Actor::EnExcutionFlagType_Dead);
-			m_enemyList.erase(m_enemyList.begin() + i);
-		}
-
-		if (m_pacMan->PlayDeadAnim())
-		{
-			//死亡アニメーションが終わったのでステージのリセット処理を行う。
-			delete m_pacMan;
-			m_pacMan = nullptr;
-
-			if (m_fruit != nullptr)
-			{
-				m_fruit->SetExcutionFlag(Actor::EnExcutionFlagType_Dead);
-			}
-
-			if (m_lifePoint == 0)
-			{
-				//残機0。シーンを切り替え。
-				m_sceneManagerPtr->ChangeScene(SceneBase::EnSceneID_GameOver);
-				return;
-			}
-
-			m_enemyChaseTimer = 0.0f;
-			m_sceneStartDeltaTime = 0.0f;
-			m_isChaseMode = false;
-			m_currentGameState = GameState_WaitGameStart;
-		}
+		//プレイヤー死亡演出//
+		PlayerDeadProcess();
 		break;
 	
 	case SceneGame::GameState_NextRound:
-		
-		//次のラウンドに進む。
-		GameSound()->AllStop();
-		//パラメーターをリセット。
-		delete m_pacMan;
-		m_pacMan = nullptr;
-
-		for (auto* enemy : m_enemyList)
-		{
-			enemy->SetExcutionFlag(Actor::EnExcutionFlagType_Dead);
-		}
-
-		m_nextStageTimer += GameTime()->GetDeltaTime();
-
-		//ステージ点滅。
-		m_stage.BlinkingStage();
-
-		//ステージ点滅。
-		if (m_nextStageTimer > BLINKING_TIME)
-		{
-			SetDrawBright(255, 255, 255);
-			for (auto* actor : m_actorList)
-			{
-				actor->SetExcutionFlag(Actor::EnExcutionFlagType_Dead);
-			}
-		}
-
-		if (m_nextStageTimer > NEXT_STAGE_TIME)
-		{
-			//ラウンド進行で使用するライフを追加しておく。
-			m_lifePoint++;
-			//パラメーターをリセット。
-			ResetParams();
-			//ステージを作成しなおす。
-			m_stage.CreateStage();
-			m_currentGameState = GameState_WaitGameStart;
-		}
+		//次ラウンドに進む//
+		NextRoundProcess();
 		break;
 
 	}//swich-case
@@ -327,7 +173,7 @@ void SceneGame::EnemyEvent()
 	if (m_enemyChaseTimer > m_isChaseToChageStateTimeAndMoveState[m_isChaseMode].first)
 	{
 		//フラグ切り替え。
-		m_isChaseMode ^= true;
+		m_isChaseMode = !m_isChaseMode;
 		m_enemyChaseTimer = 0.0f;
 	}
 
@@ -335,34 +181,35 @@ void SceneGame::EnemyEvent()
 
 	for (int i = 0; i < m_enemyList.size(); i++)
 	{
+		EnemyBase::ENEMY_STATE enemyCurrentState = m_enemyList[i]->GetCurrentState();
 
-		if ( (m_enemyList[i]->GetCurrentState() == EnemyBase::ChaseMode) || (m_enemyList[i]->GetCurrentState() == EnemyBase::ScatterMode) )
+		if ( (enemyCurrentState == EnemyBase::ChaseMode) || (enemyCurrentState == EnemyBase::ScatterMode) )
 		{
 			//毎フレームEnemyをChase/Scatterモードに変更。
-			EnemyBase::EnemyState frontFrameState = m_enemyList[i]->GetCurrentState();
-			m_enemyList[i]->ChangeCurrentState(m_isChaseToChageStateTimeAndMoveState[m_isChaseMode].second);
+			EnemyBase::ENEMY_STATE frontFrameState = m_enemyList[i]->GetCurrentState();
+			EnemyBase::ENEMY_STATE nextState = m_isChaseToChageStateTimeAndMoveState[m_isChaseMode].second;
+			m_enemyList[i]->ChangeCurrentState(nextState);
 			if (frontFrameState != m_enemyList[i]->GetCurrentState())
 			{
 				m_enemyList[i]->Turning();
 			}
 		}
 
-		if ( (m_enemyList[i]->GetCurrentState() == EnemyBase::ReturnPrisonMode) && !m_enemyList[i]->IsCallDeadEvent())
+		if ( (enemyCurrentState == EnemyBase::ReturnPrisonMode) && !m_enemyList[i]->IsCallDeadEvent())
 		{
 			//敵が死亡状態。該当Enemyのフラグを上げる。
-			m_isCallDeadEventFlags |= 1 << i;
+			m_isCallDeadEventFlags |= (1 << i);
 			m_enemyList[i]->SetDeadEvent(true);
 			//スコアも更新。
 			m_currentEatScore *= 2;
-			m_score += m_currentEatScore;
-
+			AddScore(m_currentEatScore);
 		}
 	}
 
 	//流す曲の決定。
 	{
 		//通常状態のゴーストの数。
-		int normalEnemyCount = m_enemyList.size();
+		size_t normalEnemyCount = m_enemyList.size();
 		
 		for (auto* enemy : m_enemyList)
 		{
@@ -424,7 +271,7 @@ void SceneGame::EnemyEvent()
 void SceneGame::ResetParams()
 {
 	//パラメーターをリセット。
-	m_nextStageTimer = 0;
+	m_nextStageTimer = 0.0f;
 	m_sceneStartDeltaTime = 0.0f;
 	m_enemyChaseTimer = 0.0f;
 	m_eatingWaitTimer = 0.0f;
@@ -432,6 +279,191 @@ void SceneGame::ResetParams()
 	m_enemyList.clear();
 	m_isChaseMode = false;
 	GameSound()->AllStop();
+}
+
+void SceneGame::WaitGameStartProcess()
+{
+	if ((m_sceneStartDeltaTime > CHARACTER_SPAWN_TIME) && m_pacMan == nullptr)
+	{
+		//opening
+		//キャラクターを生成。
+		m_pacMan = new PacMan(this);
+		m_pacMan->Init();
+		m_lifePoint--;
+		//敵。
+		CreateEnemy();
+	}
+
+	if (m_sceneStartDeltaTime < START_GAME_TIME)
+	{
+		//演出中。
+		Vector2 readySpritePosition = { CENTER_POSITION.x - 64.0f, CENTER_POSITION.y + 40.0f };
+		m_readySprite.Draw(readySpritePosition);
+
+		for (auto* actor : m_actorList)
+		{
+			actor->SetExcutionFlag(Actor::EnExcutionFlagType_Draw);
+		}
+	}
+	else
+	{
+		//演出終了。
+		m_currentGameState = GameState_Running;
+
+		for (auto* actor : m_actorList)
+		{
+			actor->SetExcutionFlag(Actor::EnExcutionFlagType_Active);
+		}
+	}
+}
+
+void SceneGame::GameRunningProcess()
+{
+	if (m_stage.GetRestCookieCount() == 0)
+	{
+		//次ラウンドへ行く演出。
+		m_currentGameState = GameState_NextRound;
+		return;
+	}
+
+	if (m_pacMan->IsDying())
+	{
+		//パックマン死亡演出。
+		m_currentGameState = GameState_PlayerDead;
+		return;
+	}
+
+	if (m_isCallDeadEventFlags)
+	{
+		//敵キャラを食べる演出。
+		m_currentGameState = GameState_EatingWait;
+		return;
+	}
+
+	//ステートは戻す。
+	m_pacMan->SetExcutionFlag(Actor::EnExcutionFlagType_Active);
+	for (auto* enemy : m_enemyList)
+	{
+		enemy->SetExcutionFlag(Actor::EnExcutionFlagType_Active);
+	}
+
+	EnemyEvent();
+	FruitEvent();
+
+	m_enemyChaseTimer += GameTime()->GetDeltaTime();
+}
+
+void SceneGame::WaitEatingProcess()
+{
+	if (!m_eatingWaitTimer)
+	{
+		//初めの処理。
+		StopSoundMem(m_nextPlaySound);
+		GameSound()->Play(m_eatingEnemySE);
+
+		for (int i = 0; i < m_enemyList.size(); i++)
+		{
+			if (m_isCallDeadEventFlags == (1 << i))
+			{
+				m_enemyList[i]->SetExcutionFlag(Actor::EnExcutionFlagType_NotActive);
+			}
+			else
+			{
+				m_enemyList[i]->SetExcutionFlag(Actor::EnExcutionFlagType_Draw);
+			}
+		}
+	}
+
+	if (m_eatingWaitTimer > WAIT_EATING_TINE)
+	{
+		//食べ終わり。
+		m_eatingWaitTimer = 0.0f;
+		m_isCallDeadEventFlags = EnCalledDeadEvent_None;
+		m_currentGameState = GameState_Running;
+	}
+	else
+	{
+		snprintf(m_scoreBuffer, sizeof(m_scoreBuffer) / sizeof(char), "%d", m_currentEatScore);
+		m_scoreFont.SetDispStr(m_scoreBuffer);
+		m_scoreFont.Draw(m_pacMan->GetPosition(), GetColor(0, 255, 255));
+		//waitTimeが終了していない。
+		m_pacMan->SetExcutionFlag(Actor::EnExcutionFlagType_NotActive);
+		//エネミー捕食演出。
+		m_eatingWaitTimer += GameTime()->GetDeltaTime();
+	}
+}
+
+void SceneGame::PlayerDeadProcess()
+{
+	for (int i = 0; i < m_enemyList.size(); i++)
+	{
+		//敵キャラを消す。
+		m_enemyList[i]->SetExcutionFlag(Actor::EnExcutionFlagType_Dead);
+		m_enemyList.erase(m_enemyList.begin() + i);
+	}
+
+	if (m_pacMan->PlayDeadAnim())
+	{
+		//死亡アニメーションが終わったのでステージのリセット処理を行う。
+		m_pacMan->SetExcutionFlag(Actor::EnExcutionFlagType_Dead);
+		m_pacMan = nullptr;
+
+		if (m_fruit != nullptr)
+		{
+			m_fruit->SetExcutionFlag(Actor::EnExcutionFlagType_Dead);
+		}
+
+		if (m_lifePoint == 0)
+		{
+			//残機0。シーンを切り替え。
+			m_sceneManagerPtr->ChangeScene(SceneBase::EnSceneID_GameOver);
+			return;
+		}
+
+		m_enemyChaseTimer = 0.0f;
+		m_sceneStartDeltaTime = 0.0f;
+		m_isChaseMode = false;
+		m_currentGameState = GameState_WaitGameStart;
+	}
+}
+
+void SceneGame::NextRoundProcess()
+{
+	GameSound()->AllStop();
+	//パラメーターをリセット。
+	delete m_pacMan;
+	m_pacMan = nullptr;
+
+	for (auto* enemy : m_enemyList)
+	{
+		enemy->SetExcutionFlag(Actor::EnExcutionFlagType_Dead);
+	}
+
+	m_nextStageTimer += GameTime()->GetDeltaTime();
+
+	//ステージ点滅。
+	m_stage.BlinkingStage();
+
+	//ステージ点滅。
+	if (m_nextStageTimer > BLINKING_TIME)
+	{
+		SetDrawBright(255, 255, 255);
+		for (auto* actor : m_actorList)
+		{
+			actor->SetExcutionFlag(Actor::EnExcutionFlagType_Dead);
+		}
+	}
+
+	if (m_nextStageTimer > NEXT_STAGE_TIME)
+	{
+		//ラウンド進行で使用するライフを追加しておく。
+		m_lifePoint++;
+		//パラメーターをリセット。
+		ResetParams();
+		//ステージを作成しなおす。
+		m_stage.CreateStage();
+		m_currentGameState = GameState_WaitGameStart;
+	}
 }
 
 void SceneGame::CleanUp()
@@ -450,7 +482,7 @@ void SceneGame::FruitEvent()
 	if (m_fruit == nullptr)
 	{
 		//フルーツが出現していない。
-		if (m_stage.GetRestCookieCount() == 84 || m_stage.GetRestCookieCount() == 167)
+		if ( ( m_stage.GetRestCookieCount() % FRUIT_APPEAR_REST_COOKIE_COUNT ) == 0)
 		{
 			//フルーツが出現。		
 			m_fruit = new Fruit(this);
@@ -470,11 +502,6 @@ void SceneGame::FruitEvent()
 			{
 				//ほかの処理でまだ削除されたりしていないので削除。
 				m_fruit->SetExcutionFlag(Actor::EnExcutionFlagType_Dead);
-			}
-			else
-			{
-				//すでに削除されていた。
-				m_fruit = nullptr;
 			}
 			m_fruitTimer = 0.0f;
 		}

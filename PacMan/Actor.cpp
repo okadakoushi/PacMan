@@ -3,7 +3,7 @@
 #include "SceneBase.h"
 #include "RectCollision.h"
 
-Actor::Actor(SceneBase* sceneBase, std::string tag, int prio, RectCollision::CollisionType colType) : 
+Actor::Actor(SceneBase* sceneBase, std::string tag, int prio, RectCollision::COLLISION_TYPE colType) : 
 	Object(prio),
 	m_collision(colType)
 {

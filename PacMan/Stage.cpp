@@ -8,9 +8,9 @@
 #include "WarpPoint.h"
 #include "SceneGame.h"
 
-static const char* StageBackGroundCSV_fp	= "Assets/pacMan_Stage_bg.csv";
-static const char* StageItemCSV_fp			= "Assets/pacMan_Stage_Item.csv";
-static const char* StageObstacleCSV_fp		= "Assets/pacMan_Stage_Obstacle.csv";
+static const char* StageBackGroundCSV_FilePath	= "Assets/pacMan_Stage_bg.csv";
+static const char* StageItemCSV_FilePath			= "Assets/pacMan_Stage_Item.csv";
+static const char* StageObstacleCSV_FilePath		= "Assets/pacMan_Stage_Obstacle.csv";
 
 Stage::Stage(SceneGame* sceneGame)
 {
@@ -21,7 +21,7 @@ void Stage::Init()
 {
 	//ステージデーターをロード。
 	m_stageTable.resize(STAGE_TABLE_HEIGHT, std::vector<int>(STAGE_TABLE_WIDTH));
-	m_stageLoader.Init(m_stageTable, STAGE_TABLE_WIDTH, STAGE_TABLE_HEIGHT, StageBackGroundCSV_fp, StageItemCSV_fp, StageObstacleCSV_fp);
+	m_stageLoader.Init(m_stageTable, STAGE_TABLE_WIDTH, STAGE_TABLE_HEIGHT, StageBackGroundCSV_FilePath, StageItemCSV_FilePath, StageObstacleCSV_FilePath);
 
 	//読み込んできたデーターを参照してステージを生成する。
 	CreateStage();
@@ -57,12 +57,13 @@ void Stage::CreateStage()
 			}
 
 			//中心からどれくらい離れているか。
-			Vector2 CenterDist;
+			Vector2_Int CenterDist;
 			CenterDist.x = j - centerIndexX;
 			CenterDist.y = i - centerIndexY;
+			CenterDist *= SPRITE_SIZE;
 			//実際に置く場所。
 			Vector2 PlaceObjectPos;
-			PlaceObjectPos = CENTER_POSITION + Vector2(CenterDist.x * SPRITE_SIZE, CenterDist.y * SPRITE_SIZE);
+			PlaceObjectPos = CENTER_POSITION + EngineMath::CovertToFloatVec(CenterDist);
 
 			//Cookie.
 			if (m_stageTable[i][j] == EnPlaceObjectType_Cookie)
@@ -77,6 +78,7 @@ void Stage::CreateStage()
 				PowerCookie* pCookie = new PowerCookie(m_sceneGame);
 				pCookie->Init();
 				pCookie->SetPosition(PlaceObjectPos);
+				pCookie->SetExcutionFlag(Actor::EnExcutionFlagType_Draw);
 				m_restCookieCount++;
 			}
 			else if (m_stageTable[i][j] == EnPlaceObjectType_WarpPoint)

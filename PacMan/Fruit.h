@@ -9,7 +9,7 @@ private:
 	Font	m_scoreFont;				//スコア表示用フォント。
 	int		m_eatFruitSound = 0;		//フルーツ。
 	bool	m_getFlag = false;			//取得されているか。
-	float	m_socreDispTime = 0.0f;
+	double	m_socreDispTime = 0.0f;
 	char	m_buffer[8];
 public:
 	Fruit(SceneGame* sceneGame);

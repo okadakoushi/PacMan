@@ -27,7 +27,7 @@ void SceneManager::Update()
 	m_currentScene->Update();
 }
 
-void SceneManager::ChangeScene(SceneBase::SceneID sceneID)
+void SceneManager::ChangeScene(SceneBase::SCENE_ID sceneID)
 {
 	//íœ‚·‚éƒV[ƒ“B
 	SceneBase* deleteScene = m_currentScene;

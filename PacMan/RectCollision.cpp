@@ -2,7 +2,7 @@
 #include "RectCollision.h"
 
 //リストの初期化。
-std::map<RectCollision::CollisionType, int> RectCollision::m_collisionTypeToBitTable = 
+std::map<RectCollision::COLLISION_TYPE, int> RectCollision::m_collisionTypeToBitTable = 
 {
 	//{コリジョンタイプ, 衝突テーブル}
 	{EnCollisionType_None, EnCollisionType_None},
@@ -11,7 +11,7 @@ std::map<RectCollision::CollisionType, int> RectCollision::m_collisionTypeToBitT
 };
 
 //コリジョンタイプとテーブルの初期化。
-RectCollision::RectCollision(CollisionType colType) :
+RectCollision::RectCollision(COLLISION_TYPE colType) :
 	m_collisionType(colType),
 	m_collisibleBitTable(m_collisionTypeToBitTable.at(colType))
 {

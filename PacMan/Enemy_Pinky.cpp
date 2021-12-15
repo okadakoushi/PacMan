@@ -2,7 +2,7 @@
 #include "Enemy_Pinky.h"
 #include "PacMan.h"
 
-static const char* Enemy_Pinky_fp = "Assets/speedy_div.bmp";
+static const char* Enemy_Pinky_FilePath = "Assets/speedy_div.bmp";
 
 Enemy_Pinky::Enemy_Pinky(SceneBase* sceneBase, PacMan* pacManPtr, Vector2 StartPos) : EnemyBase(sceneBase, "Enemy", 1, pacManPtr, StartPos)
 {
@@ -16,7 +16,7 @@ Enemy_Pinky::~Enemy_Pinky()
 void Enemy_Pinky::Init()
 {
 	__super::Init();
-	LoadDivGraph(Enemy_Pinky_fp, EnemyBase::AnimationNum, 4, 4, 24, 24, m_drawHandle);
+	LoadDivGraph(Enemy_Pinky_FilePath, EnemyBase::AnimationNum, 4, 4, 24, 24, m_drawHandle);
 }
 
 void Enemy_Pinky::Update()

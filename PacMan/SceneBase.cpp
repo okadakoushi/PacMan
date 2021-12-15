@@ -72,6 +72,7 @@ Actor* SceneBase::GetActor(const char* tag)
 			return actor;
 		}
 	}
+	return nullptr;
 }
 
 void SceneBase::UnRegistActor(Actor* actor)

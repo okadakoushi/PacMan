@@ -9,7 +9,7 @@ public:
 	/// <summary>
 	/// ロードタイプ。
 	/// </summary>
-	enum LoadType
+	enum LOAD_TYPE
 	{
 		LoadType_MemNoPress,	//圧縮なしサウンドデーター保存。読み込み速度：遅い　再生負荷：速い　必要メモリ領域：大きい
 		LoadType_MemPress,		//圧縮ありサウンドデーター保存。読み込み速度：普通　再生負荷：少し重い　必要メモリ領域：普通
@@ -19,7 +19,7 @@ public:
 	/// <summary>
 	/// プレイタイプ。
 	/// </summary>
-	enum PlayType
+	enum PLAY_TYPE
 	{
 		PlayType_NORMAL = 0b000,		//再生。再生終了までゲームループが止まる。
 		PlayType_Back	= 0b001,		//バックグラウンド再生。こいつが普通の再生。
@@ -29,7 +29,7 @@ public:
 	/// <summary>
 	/// 同じサウンドが、再生中だった時にどうするかの列挙。
 	/// </summary>
-	enum PlayingType 
+	enum PLAYING_TYPE 
 	{
 		PlayingType_EndPlaying,			//再生終了まで流さない。
 		PlayingType_MiddlePlay,			//現在の音源は残したまま、次の音源を流す
@@ -68,11 +68,11 @@ public:
 	/// サウンドを再生。
 	/// <para>FlyWeight設計。戻り値は他関数内で使用。</para>
 	/// </summary>
-	/// <param name="fp">ファイルパス。</param>
+	/// <param name="FilePath">ファイルパス。</param>
 	/// <param name="playType">再生タイプ。</param>
 	/// <param name="loadType">ロードタイプ。</param>
 	/// <returns>サウンドハンドル。</returns>
-	int Load(const char* fp, LoadType loadType = LoadType_MemNoPress);
+	int Load(const char* FilePath, LOAD_TYPE loadType = LoadType_MemNoPress);
 
 	/// <summary>
 	/// 再生。
@@ -80,7 +80,7 @@ public:
 	/// <param name="handle">再生するサウンドのハンドル。</param>
 	/// <param name="playingType">再生中だった場合にどういう挙動をするか。</param>
 	/// <param name="playType">再生方法(Bit)。</param>
-	void Play(int handle, PlayingType playingType = PlayingType_EndPlaying, int playType = PlayType_Back);
+	void Play(int handle, PLAYING_TYPE playingType = PlayingType_EndPlaying, int playType = PlayType_Back);
 
 	/// <summary>
 	/// すべての音を止める。

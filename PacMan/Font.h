@@ -43,7 +43,7 @@ public:
 		m_fontHandle = LoadFontDataToHandle(fontType);
 	}
 private:
-	const char* m_fontType;
+	const char* m_fontType = nullptr;
 	const char* m_dispChar = "•\¦‚·‚é•¶š‚ğ‰Šú‰»‚Ü‚½‚ÍAİ’è‚µ‚Ä‚­‚¾‚³‚¢B";
 	int m_fontHandle = 0;
 	int m_size = 10;

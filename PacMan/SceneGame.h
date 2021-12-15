@@ -16,7 +16,7 @@ class EnemyBase;
 class SceneGame : public SceneBase
 {
 protected:
-	enum IsCallDeadEventFlag
+	enum IS_CALL_DEADEVENT_FLAG
 	{
 		EnCalledDeadEvent_None		= 0,
 		EnCalledDeadEvent_BLINKY	= 1 << 0,
@@ -25,7 +25,7 @@ protected:
 		EnCalledDeadEvent_CLYDE		= 1 << 3
 	};
 
-	enum GameBGMType
+	enum GAME_BGM_TYPE
 	{
 		GameBGMType_Normal,		//ノーマルサイレン音
 		GameBGMType_PowerMode,	//PowerMode
@@ -33,7 +33,7 @@ protected:
 		GameBGMType_Num			//サウンドの数。
 	};
 
-	enum GameState
+	enum GAME_STATE
 	{
 		GameState_WaitGameStart,
 		GameState_Running,
@@ -46,7 +46,7 @@ private:
 
 	//ステージ。
 	std::vector<Actor*> m_obstacleList;						//障害物一覧。
-	GameState m_currentGameState = GameState_WaitGameStart;	//現在のゲームステート。
+	GAME_STATE m_currentGameState = GameState_WaitGameStart;	//現在のゲームステート。
 
 	//UIパラメーター。
 	int m_lifePoint = 3;								//残機数。
@@ -62,8 +62,9 @@ private:
 
 	//フルーツ生成用のパラメーター。
 	const float FRUIT_APPEAR_DISAPPEAR_TIME = 10.0f;	//フルーツ用、出現or消失タイマー。
+	const int FRUIT_APPEAR_REST_COOKIE_COUNT = 84;		//フルーツが出現する残りクッキーの枚数。
 	Vector2 m_apperFruitPosition;						//フルーツの出現地点。
-	float m_fruitTimer = 0.0f;							//フルーツ用のタイマー。
+	double m_fruitTimer = 0.0f;							//フルーツ用のタイマー。
 	Fruit* m_fruit = nullptr;							//フルーツ。
 
 	//Enemyを食べたイベント用。
@@ -78,7 +79,7 @@ private:
 	const float	CHASE_TIME = 20.0f;						//追跡モード時の時間。
 	const float SCATTER_TIME = 6.0f;					//散開モード。
 	bool m_isChaseMode = false;							//現在どちらのステートか。														
-	static std::map<bool, std::pair<const float, EnemyBase::EnemyState>> m_isChaseToChageStateTimeAndMoveState;	//chaseモードフラグから切り替え時間と次の移動ステートを取得。
+	static std::map<bool, std::pair<const float, EnemyBase::ENEMY_STATE>> m_isChaseToChageStateTimeAndMoveState;	//chaseモードフラグから切り替え時間と次の移動ステートを取得。
 	static std::map<int, int> m_restCookieCountToFrequency;	//残りのクッキーの数から周波数を取得。
 	
 	//ゲーム進行用。
@@ -91,19 +92,19 @@ private:
 	Sprite m_readySprite;
 
 	//sound.
-	int m_enemySEList[GameBGMType_Num];
+	int m_enemySEList[GameBGMType_Num] = { 0 };
 	int m_openingBGM = 0;								//オープニング。
 	int m_eatingEnemySE = 0;							//敵を食べた。
 	int m_extraSE = 0;									//ライフポイント追加。
-	GameBGMType m_nextPlaySound = GameBGMType_Normal;	//次に流すSE。
+	GAME_BGM_TYPE m_nextPlaySound = GameBGMType_Normal;	//次に流すSE。
 
 	//Timer.
 	//シーン用。
-	float m_sceneStartDeltaTime = 0.0f;					//シーンが始まってからの時間。
-	float m_nextStageTimer = 0.0f;						//点滅管理
+	double m_sceneStartDeltaTime = 0.0f;					//シーンが始まってからの時間。
+	double m_nextStageTimer = 0.0f;						//点滅管理
 	//Ghost用。
-	float m_enemyChaseTimer = 0.0f;						//敵キャラの追跡、散開を切り替える用のタイマー。
-	float m_eatingWaitTimer = 0.0f;						//食べる演出を待った時間。
+	double m_enemyChaseTimer = 0.0f;						//敵キャラの追跡、散開を切り替える用のタイマー。
+	double m_eatingWaitTimer = 0.0f;						//食べる演出を待った時間。
 
 	//敵のwaitTime
 	const float ENEMY_WAIT_TIME[3] = {
@@ -184,5 +185,30 @@ private:
 	/// パラメーターをリセット。
 	/// </summary>
 	void ResetParams();
+
+	/// <summary>
+	/// ゲームスタート演出。
+	/// </summary>
+	void WaitGameStartProcess();
+
+	/// <summary>
+	/// ゲーム実行。
+	/// </summary>
+	void GameRunningProcess();
+
+	/// <summary>
+	/// 食べるの待ち処理。
+	/// </summary>
+	void WaitEatingProcess();
+
+	/// <summary>
+	/// プレイヤー死亡演出。
+	/// </summary>
+	void PlayerDeadProcess();
+
+	/// <summary>
+	/// 次のラウンド処理。
+	/// </summary>
+	void NextRoundProcess();
 };
 

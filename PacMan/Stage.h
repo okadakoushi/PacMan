@@ -14,7 +14,7 @@ public:
 	/// <summary>
 	/// オブジェクト。
 	/// </summary>
-	enum PlaceObjectType
+	enum PLACE_OBJECT_TYPE
 	{
 		EnPlaceObjectType_None = -1,			//NoneObject
 		EnPlaceObjectType_PowerCookie = 0,		//powerCookie

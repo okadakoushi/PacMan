@@ -26,6 +26,7 @@ int Engine::InitEngine()
 	SetTransColor(TRANS_COLOR[0], TRANS_COLOR[1], TRANS_COLOR[2]);
 
 	m_sceneManager.Init();
+	return 0;
 }
 
 void Engine::ExcuteEngine()
@@ -49,7 +50,6 @@ void Engine::ExcuteEngine()
 #endif // DEBUG
 
 
-		
 		//SwapChain。
 		ScreenFlip();
 		//計測を終了。
@@ -65,15 +65,17 @@ void Engine::DebugLineDraw()
 	//グリッド表示。
 	for (int i = 0; i < 999; i++) 
 	{
-		DrawLine(SCREEN_WIDTH, i * 24, -SCREEN_WIDTH, i * 24, GetColor(100, 100, 100), 3);
-		if (i * 24 < -SCREEN_HEIGHT) 
+		DrawLine(SCREEN_WIDTH, i * SPRITE_SIZE, -SCREEN_WIDTH, i * SPRITE_SIZE, GetColor(100, 100, 100), 3);
+		if (i * SPRITE_SIZE < -SCREEN_HEIGHT)
 		{
 			break;
 		}
 	}
 	for (int i = 0; i < 999; i++) {
-		DrawLine(i * 24 + 7.2, SCREEN_HEIGHT, i * 24 + 7.2, -SCREEN_HEIGHT, GetColor(100, 100, 100), 3);
-		if (i * 24 < -SCREEN_WIDTH) 
+		Vector2_Int GridPosStart = { i * SPRITE_SIZE + 7, SCREEN_HEIGHT };
+		Vector2_Int GridPosEnd = { i * SPRITE_SIZE + 7, -SCREEN_HEIGHT };
+		DrawLine(GridPosStart.x, GridPosStart.y, GridPosEnd.x, GridPosEnd.y, GetColor(100, 100, 100), 3);
+		if (i * SPRITE_SIZE < -SCREEN_WIDTH)
 		{
 			break;
 		}

@@ -6,7 +6,7 @@
 class PacMan : public Actor
 {
 private:
-	enum animation {
+	enum ANIMATION {
 		moveAnimatiomEnd = 3,
 		deadAnimatiomEnd = 12,
 		AniamtionNum
@@ -26,8 +26,8 @@ private:
 	//アニメーション。
 	const int AnimationSpeed = 1;					//アニメーション速度
 	const int DEAD_ANIMATION_SPEED = 7;				//死亡アニメーション速度
-	const int DEAD_FIRST_EDN_ANIMATION_SPEED = 15;	//先端と終端の速度。
-	int m_drawHandle[AniamtionNum];					//アニメーション分のハンドル。
+	const int DEAD_FIRST_EDN_ANIMATION_SPEED = 60;	//先端と終端の速度。
+	int m_drawHandle[AniamtionNum] = { 0 };			//アニメーション分のハンドル。
 	int m_animationIndex = 0;						//インデックス。
 	int m_frontFrameAnimIndex = 0;					//前フレームのアニメーション。
 	int m_animationWaitFrame = 0;					//アニメーション切り替えのフレーム数。
@@ -72,7 +72,7 @@ public:
 	/// 方向を取得。
 	/// </summary>
 	/// <returns></returns>
-	const Vector2& GetDirection() const 
+	Vector2 GetDirection() 
 	{
 		return m_frontFrameMoved.Normalized();
 	}

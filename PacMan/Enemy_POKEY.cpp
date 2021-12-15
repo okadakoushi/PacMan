@@ -2,7 +2,7 @@
 #include "Enemy_POKEY.h"
 #include "PacMan.h"
 
-static const char* Enemy_Pokey_fp = "Assets/pokey_div.bmp";
+static const char* Enemy_Pokey_FilePath = "Assets/pokey_div.bmp";
 
 Enemy_POKEY::Enemy_POKEY(SceneBase* sceneBase, PacMan* pacManPtr, Vector2 StartPos) : EnemyBase(sceneBase, "Enemy", 1, pacManPtr, StartPos)
 {
@@ -16,7 +16,7 @@ Enemy_POKEY::~Enemy_POKEY()
 void Enemy_POKEY::Init()
 {
 	__super::Init();
-	LoadDivGraph(Enemy_Pokey_fp, EnemyBase::AnimationNum, 4, 4, 24, 24, m_drawHandle);
+	LoadDivGraph(Enemy_Pokey_FilePath, EnemyBase::AnimationNum, 4, 4, 24, 24, m_drawHandle);
 }
 
 void Enemy_POKEY::Update()
@@ -63,14 +63,17 @@ void Enemy_POKEY::Update()
 	}
 
 	case EnemyBase::ReturnPrisonMode:
+	{
 		//食べられて、牢獄帰還。
 		m_target = PRISON_POINT;
 		m_currentMoveSpeed = RETURN_PRISON_SPEED;
-		if (m_position == m_target)
+		float len = (m_position - m_target).Length();
+		if (len < 3)
 		{
 			m_currentState = GetOutPrisonMode;
 		}
 		break;
+	}
 	default:
 		break;
 	}
