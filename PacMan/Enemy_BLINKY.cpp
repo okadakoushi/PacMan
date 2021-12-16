@@ -2,7 +2,7 @@
 #include "Enemy_BLINKY.h"
 #include "PacMan.h"
 
-static const char* Enemy_Blinky_FilePath = "Assets/shadow_div.png";
+static const char* Enemy_Blinky_fp = "Assets/shadow_div.png";
 
 Enemy_BLINKY::Enemy_BLINKY(SceneBase* sceneBase, PacMan* pacManPtr, Vector2 StartPos) : EnemyBase(sceneBase, "Enemy", 1, pacManPtr, StartPos)
 {
@@ -16,7 +16,7 @@ Enemy_BLINKY::~Enemy_BLINKY()
 void Enemy_BLINKY::Init()
 {
 	__super::Init();
-	LoadDivGraph(Enemy_Blinky_FilePath, EnemyBase::AnimationNum, 4, 4, 24, 24, m_drawHandle);
+	LoadDivGraph(Enemy_Blinky_fp, EnemyBase::AnimationNum, 4, 4, 24, 24, m_drawHandle);
 }
 
 void Enemy_BLINKY::Update()

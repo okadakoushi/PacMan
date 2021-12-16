@@ -2,8 +2,8 @@
 #include "Fruit.h"
 #include "PacMan.h"
 
-static const char* Fruit_Sprite_FilePath = "Assets/fruit.bmp";
-static const char* Fruit_EatSE_FilePath = "Assets/sound/eatpill.ogg";
+static const char* Fruit_Sprite_fp = "Assets/fruit.bmp";
+static const char* Fruit_EatSE_fp = "Assets/sound/eatpill.ogg";
 
 Fruit::Fruit(SceneGame* sceneGame) : ItemBase(sceneGame, "Fruit", 0)
 {
@@ -15,11 +15,11 @@ Fruit::~Fruit()
 
 void Fruit::Init()
 {
-	m_spirte.Init(Fruit_Sprite_FilePath);
+	m_spirte.Init(Fruit_Sprite_fp);
 	m_score = FRUIT_SCORE;
 	m_scoreFont.Init("200", 13, 2);
 	m_collision.SetCollisionSize({ 36, 36 });
-	m_eatFruitSound = GameSound()->Load(Fruit_EatSE_FilePath);
+	m_eatFruitSound = GameSound()->Load(Fruit_EatSE_fp);
 }
 
 void Fruit::Draw()

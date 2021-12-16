@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "SceneTitle.h"
 
-static const char* TitleSprite_FilePath = "Assets/title.bmp";
+static const char* TitleSprite_fp = "Assets/title.bmp";
 
 SceneTitle::SceneTitle(SceneManager* sceneManager) : SceneBase(sceneManager)
 {
@@ -14,7 +14,7 @@ SceneTitle::~SceneTitle()
 
 void SceneTitle::Init()
 {
-	m_title.Init(TitleSprite_FilePath);
+	m_title.Init(TitleSprite_fp);
 }
 
 void SceneTitle::Update()

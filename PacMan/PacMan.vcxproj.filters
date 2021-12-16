@@ -128,6 +128,9 @@
     <ClInclude Include="Actor.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="EngineMath.h">
+      <Filter>ソース ファイル</Filter>
+    </ClInclude>
     <ClInclude Include="Sprite.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -204,9 +207,6 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Stage.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="EngineMath.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

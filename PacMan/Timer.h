@@ -7,9 +7,9 @@ class Timer
 {
 private:
 	static Timer* m_instance;
-	LONG m_begin = 0;
-	LONG m_freq = 0;
-	LONG m_end = 0;
+	LONG m_begin;
+	LONG m_freq;
+	LONG m_end;
 	double m_elapsed = 0.0f;
 
 private:

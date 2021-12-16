@@ -33,5 +33,5 @@ void Font::Init(const char* dispStr, int size, int thickness)
 
 void Font::Draw(const Vector2& pos, unsigned int color)
 {
-	DrawStringToHandle((int)pos.x, (int)pos.y, m_dispChar, color, m_fontHandle);
+	DrawStringToHandle(pos.x, pos.y, m_dispChar, color, m_fontHandle);
 }

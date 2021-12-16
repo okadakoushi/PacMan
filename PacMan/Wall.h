@@ -21,7 +21,7 @@ public:
 	/// 	/// <summary>
 	/// ファイルパスを設定する。
 	/// </summary>
-	/// <param name="FilePath"></param>
+	/// <param name="fp"></param>
 	void SetFilePath(const char* filePath)
 	{
 		//コピー。

@@ -2,7 +2,7 @@
 #include "EnemyBase.h"
 #include "PacMan.h"
 
-std::map<EnemyBase::DIRECTION, EnemyBase::ANIMATION> EnemyBase::m_directionToNormalAnimHandleIndex
+std::map<EnemyBase::Direction, EnemyBase::Animation> EnemyBase::m_directionToNormalAnimHandleIndex
 {
 	//方向、アニメーションハンドルインデックス。
 	{ Direction_Left,	LeftAnimation },
@@ -11,7 +11,7 @@ std::map<EnemyBase::DIRECTION, EnemyBase::ANIMATION> EnemyBase::m_directionToNor
 	{ Direction_Down,	DownAnimation },
 };
 
-std::map<EnemyBase::DIRECTION, EnemyBase::ANIMATION> EnemyBase::m_directionToEyeAnimHandleIndex
+std::map<EnemyBase::Direction, EnemyBase::Animation> EnemyBase::m_directionToEyeAnimHandleIndex
 {
 	{ Direction_Left,	LeftEyeAnimation },
 	{ Direction_Right,	RightEyeAnimation },
@@ -38,8 +38,7 @@ void EnemyBase::Init()
 	m_collision.SetCollisionSize({ 18,18 });
 	//最初のフレームはここでWayPointを計算しておく。
 	WayPointSerch();
-	Vector2 direction = (m_nextWayPoint - m_position).Normalized();
-	m_direction = EngineMath::ConvertToIntVec(direction);
+	m_direction = (m_nextWayPoint - m_position).Normalized();
 }
 
 void EnemyBase::Update()
@@ -68,7 +67,7 @@ void EnemyBase::Update()
 
 	}
 
-	if (m_restMovePixcel <= 0.0f)
+	if (m_restMovePixcel <= 0)
 	{
 		//指定pix分移動したので次のwayPointを計算する。
 		if (m_isTweek && (m_currentState != GetOutPrisonMode) )
@@ -82,8 +81,7 @@ void EnemyBase::Update()
 			WayPointSerch();
 		}
 		//次のwayPointが更新されたため、進行方向も更新。
-		Vector2 Direction = (m_nextWayPoint - m_position).Normalized();
-		m_direction = EngineMath::ConvertToIntVec(Direction);
+		m_direction = (m_nextWayPoint - m_position).Normalized();
 		//残り移動ピクセルを初期化。
 		m_restMovePixcel = SPRITE_SIZE;
 	}
@@ -155,11 +153,11 @@ void EnemyBase::Death()
 std::vector<Vector2> EnemyBase::CanMoveNextWayPoint()
 {
 	//どれか4点。
-	const Vector2_Int NEXT_POSITION_LIST[4] = { {1,0}, {-1,0}, {0,1}, {0,-1} };
-	Vector2_Int inverseDir = m_direction * -1;
+	const Vector2 NEXT_POSITION_LIST[4] = { {1,0}, {-1,0}, {0,1}, {0,-1} };
+	Vector2 inverseDir = m_direction * -1;
 
 	//進む３点
-	std::vector<Vector2_Int> nextPosIndexList;
+	std::vector<Vector2> nextPosIndexList;
 	//候補３点を算出。
 	for (auto nextIndex : NEXT_POSITION_LIST) 
 	{
@@ -197,7 +195,7 @@ std::vector<Vector2> EnemyBase::CanMoveNextWayPoint()
 				}
 			}
 
-			Vector2_Int obstaclePosIndex = GetPositionIndex(obstacle->GetPosition());
+			Vector2 obstaclePosIndex = GetPositionIndex(obstacle->GetPosition());
 			if (obstaclePosIndex == nextPosIndex)
 			{
 				isHit = true;
@@ -209,8 +207,8 @@ std::vector<Vector2> EnemyBase::CanMoveNextWayPoint()
 		//衝突しなかった。
 		if (!isHit)
 		{
-			Vector2 nextPos = { (float)nextPosIndex.x * SPRITE_SIZE , (float)nextPosIndex.y * SPRITE_SIZE };
-			nextPos += {SCREEN_WIDTH / 2.0f, SCREEN_HEIGHT / 2.0f};
+			Vector2 nextPos = { nextPosIndex.x * SPRITE_SIZE , nextPosIndex.y * SPRITE_SIZE };
+			nextPos += {SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2};
 			//きちんとした座標に戻してリストに積む。
 
 			nexPosList.push_back(nextPos);
@@ -268,45 +266,41 @@ void EnemyBase::WayPointSerchForTweekMode()
 void EnemyBase::AnimationUpdate()
 {
 	//方向インデックス。
-	DIRECTION directionIndex;
+	Direction directionIndex;
 	//インデックスを決める。
-	if (m_direction == EngineMath::LEFT)
+	if (m_direction == LEFT)
 	{
 		directionIndex = Direction_Left;
 	}
-	else if (m_direction == EngineMath::RIGHT)
+	else if (m_direction == RIGHT)
 	{
 		directionIndex = Direction_Right;
 	}
-	else if (m_direction == EngineMath::UP)
+	else if (m_direction == UP)
 	{
 		directionIndex = Direction_Up;
 	}
-	else if (m_direction == EngineMath::DOWN)
+	else if (m_direction == DOWN)
 	{
 		directionIndex = Direction_Down;
 	}
 
-	//インデックスを上げる。
+
 	if (++m_animationWaitFrame > AnimationSpeed)
 	{
 		m_animationWaitFrame = 0;
 		m_animationIndex++;
 	}
 
-	//現在どちらのアニメーションを流しているか判定。
-	int animationFrame = m_animationIndex % 2;
-
 	if (m_isTweek)
 	{
-		if (m_tweekTimer > TWEEK_TIME * 0.7f)
+		if (m_tweekTimer > TWEEK_TIME * 0.8f)
 		{
-			//チカチカ。
-			m_currentAnimation = animationFrame + TweekAnimation + 1;
+			m_currentAnimation = ( m_animationIndex % 2 ) + TweekAnimation + 1;
 		}
 		else
 		{
-			m_currentAnimation = animationFrame + TweekAnimation;
+			m_currentAnimation = (m_animationIndex % 2) + TweekAnimation;
 		}
 	}
 	else if (m_currentState == ReturnPrisonMode)
@@ -316,7 +310,7 @@ void EnemyBase::AnimationUpdate()
 	}
 	else
 	{
-		m_currentAnimation = animationFrame + m_directionToNormalAnimHandleIndex[directionIndex];
+		m_currentAnimation = m_animationIndex % 2 + m_directionToNormalAnimHandleIndex[directionIndex];
 	}
 }
 
