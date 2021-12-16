@@ -251,9 +251,6 @@
     <ClInclude Include="Stage.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
     <ClInclude Include="EngineMath.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -302,12 +299,6 @@
     <ClInclude Include="Character\PacMan.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-=======
->>>>>>> parent of d0d8c4a (PACMAN)
-=======
->>>>>>> parent of d0d8c4a (PACMAN)
-=======
->>>>>>> parent of d0d8c4a (PACMAN)
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />
