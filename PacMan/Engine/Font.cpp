@@ -45,5 +45,5 @@ void Font::Draw(unsigned int color)
 		DrawPos = m_position;
 	}
 
-	DrawStringToHandle((int)DrawPos.x, (int)DrawPos.y, m_dispChar, color, m_fontHandle);
+	DrawStringToHandle(DrawPos.x, DrawPos.y, m_dispChar, color, m_fontHandle);
 }

@@ -15,19 +15,20 @@ void PlayerUI::Init()
 {
 	//スコア。
 	m_scoreMassage.Init("Score", 15, 3);
-	m_scoreMassage.SetPosition({ 160, 30 });
+	m_scoreMassage.SetPosition({ 360, 30 });
 	
 	m_scoreValueFont.Init("00", 15, 3);
+	m_scoreValueFont.SetParent(&m_scoreMassage);
 	m_scoreValueFont.SetPosition({ 40, 20 });
-	m_scoreValueFont.SetParent(m_scoreMassage);
 
 	//ハイスコア。
 	m_highScoreMassage.Init("Score", 15, 3);
-	m_highScoreMassage.SetPosition({ 330, 30 });
-	
+	m_highScoreMassage.SetParent(&m_scoreMassage);
+	m_highScoreMassage.SetPosition({ 170, 0 });
+
 	m_highScoreValueFont.Init("Score", 15, 3);
+	m_highScoreValueFont.SetParent(&m_highScoreMassage);
 	m_highScoreValueFont.SetPosition({ 30, 20 });
-	m_highScoreValueFont.SetParent(m_highScoreMassage);
 
 	for (auto& sprite : m_sprites)
 	{
@@ -53,7 +54,7 @@ void PlayerUI::Update(int score, int life)
 	sprintf(highScoreBuffer, "%d", m_highScore);
 	m_highScoreValueFont.SetDispStr(highScoreBuffer);
 
-	////ドロー。
+	//ドロー。
 	m_scoreMassage.Draw(GetColor(255, 255, 255));
 	m_scoreValueFont.Draw(GetColor(255, 255, 255));
 	m_highScoreMassage.Draw(GetColor(255, 255, 255));

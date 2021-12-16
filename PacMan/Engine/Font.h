@@ -79,9 +79,9 @@ public:
 	/// e‚ğİ’èB
 	/// </summary>
 	/// <param name="parent"></param>
-	void SetParent(Font& parent)
+	void SetParent(Font* parent)
 	{
-		m_parent = &parent;
+		m_parent = parent;
 	}
 
 	/// <summary>
