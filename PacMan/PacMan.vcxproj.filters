@@ -170,6 +170,9 @@
     <ClInclude Include="Actor.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="EngineMath.h">
+      <Filter>ソース ファイル</Filter>
+    </ClInclude>
     <ClInclude Include="Sprite.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -248,6 +251,7 @@
     <ClInclude Include="Stage.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="EngineMath.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -296,6 +300,8 @@
     <ClInclude Include="Character\PacMan.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+=======
+>>>>>>> parent of d0d8c4a (PACMAN)
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />

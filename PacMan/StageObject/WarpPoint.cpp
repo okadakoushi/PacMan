@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "WarpPoint.h"
 
-static const char* PortalSprite_FilePath = "Assets/portal.bmp";
+static const char* PortalSprite_fp = "Assets/portal.bmp";
 
 WarpPoint::WarpPoint(SceneBase* sceneBase) : Actor(sceneBase, "WarpPoint", 0, RectCollision::EnCollisionType_Static)
 {
@@ -14,7 +14,7 @@ WarpPoint::~WarpPoint()
 
 void WarpPoint::Init()
 {
-	m_spirte.Init(PortalSprite_FilePath);
+	m_spirte.Init(PortalSprite_fp);
 }
 
 void WarpPoint::Update()

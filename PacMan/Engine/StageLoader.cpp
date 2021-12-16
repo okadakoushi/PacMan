@@ -6,7 +6,7 @@
 
 using namespace std;
 
-void StageLoader::Init(std::vector<std::vector<int>>& outStageData, int w, int h, const char* bgFilePath, const char* obstacleFilePath, const char* itemFilePath)
+void StageLoader::Init(std::vector<std::vector<int>>& outStageData, int w, int h, const char* bgfp, const char* obstaclefp, const char* itemfp)
 {
     for (int i = 0; i < w * h; i++) 
     {
@@ -14,14 +14,14 @@ void StageLoader::Init(std::vector<std::vector<int>>& outStageData, int w, int h
         outStageData[i / w][i % h] = -1;
     }
     //レイヤーが高いものからロードしていくこと。
-    LoadData(bgFilePath, outStageData, w, h);
-    LoadData(obstacleFilePath, outStageData, w, h);
-    LoadData(itemFilePath, outStageData, w, h);
+    LoadData(bgfp, outStageData, w, h);
+    LoadData(obstaclefp, outStageData, w, h);
+    LoadData(itemfp, outStageData, w, h);
 }
 
-void StageLoader::LoadData(const char* FilePath, std::vector<std::vector<int>>& outStageData, int w, int h)
+void StageLoader::LoadData(const char* fp, std::vector<std::vector<int>>& outStageData, int w, int h)
 {
-    ifstream ifs(FilePath);
+    ifstream ifs(fp);
     string str;
     int i;
 

@@ -7,7 +7,7 @@ class SceneGame;
 class EnemyBase : public Actor
 {
 public:
-	enum ENEMY_STATE
+	enum EnemyState
 	{
 		InPrisonMode = 1,	//牢獄内。
 		GetOutPrisonMode,	//牢獄から出る。
@@ -17,7 +17,7 @@ public:
 	};
 
 protected:
-	enum ANIMATION
+	enum Animation
 	{
 		LeftAnimation = 0,
 		RightAnimation = 2,
@@ -32,7 +32,7 @@ protected:
 		AnimationNum
 	};
 
-	enum DIRECTION
+	enum Direction
 	{
 		Direction_Left,
 		Direction_Right,
@@ -42,7 +42,7 @@ protected:
 
 protected:
 	//移動速度。
-	const double		TWEEK_TIME			= 8.0f;		//いじけモード時間。
+	const float			TWEEK_TIME			= 7.0f;		//いじけモード時間。
 	const float			STANDARD_MOVE_SPEED = 2.0f;		//通常時移動速度。
 	const float			TWEEK_MOVE_SPEED	= 1.0f;		//いじけ時移動速度。
 	const float			RETURN_PRISON_SPEED = 6.0f;		//牢獄帰還時のスピード。
@@ -50,32 +50,32 @@ protected:
 	
 	//位置。
 	const Vector2		START_POINT;												//初期位置。
-	const Vector2		PRISON_FRONT = { FIX_VALUE_X + 400.0f, FIX_VALUE_Y + 300.0f };	//牢獄の前。
-	const Vector2		PRISON_POINT = { FIX_VALUE_X + 400.0f, FIX_VALUE_Y + 360.0f };	//牢獄の中。
+	const Vector2		PRISON_FRONT = { FIX_VALUE_X + 400, FIX_VALUE_Y + 300 };	//牢獄の前。
+	const Vector2		PRISON_POINT = { FIX_VALUE_X + 400, FIX_VALUE_Y + 360 };	//牢獄の中。
 
 	//ptrs。
 	PacMan*				m_packManPtr = nullptr;					//パックマンポインタ。
 	SceneGame*			m_sceneGame = nullptr;					//ゲーム。
 
 	//アニメーション。
-	static std::map<DIRECTION, ANIMATION> m_directionToNormalAnimHandleIndex;	//通常アニメーション
-	static std::map<DIRECTION, ANIMATION> m_directionToEyeAnimHandleIndex;		//目玉のみアニメーション。
+	static std::map<Direction, Animation> m_directionToNormalAnimHandleIndex;	//通常アニメーション
+	static std::map<Direction, Animation> m_directionToEyeAnimHandleIndex;		//目玉のみアニメーション。
 	const int AnimationSpeed = 5;								//アニメーションの切り替え速度(フレーム）。
-	int m_drawHandle[AnimationNum] = { 0 };						//アニメーションすべてのDrawHandle。
+	int m_drawHandle[AnimationNum];								//アニメーションすべてのDrawHandle。
 	unsigned int m_animationIndex = 0;							//アニメーションのインデックス。これを使用して次に流すアニメーションを決める。
 	int m_currentAnimation = 0;									//再生するアニメーション。
 	int m_animationWaitFrame = 0;								//何フレームアニメーションを流したか。
 
 	//移動用。
-	Vector2_Int			m_direction = { 0, -1 };					//方向。
+	Vector2				m_direction = { 0, -1 };					//方向。
 	Vector2				m_target = {504, 374};						//ターゲットの位置。
 	Vector2				m_nextWayPoint = START_POINT;				//次のwayPoint。
 	float				m_currentMoveSpeed = STANDARD_MOVE_SPEED;	//現在の移動速度。
-	ENEMY_STATE			m_currentState = InPrisonMode;				//現在のステート。
-	float				m_restMovePixcel = SPRITE_SIZE / 2.0f;		//残り移動可能ピクセル。
+	EnemyState			m_currentState = InPrisonMode;				//現在のステート。
+	int					m_restMovePixcel = SPRITE_SIZE / 2;			//残り移動可能ピクセル。
 
 	//いじけモード用。
-	double				m_tweekTimer = 0.0f;		//いじけモード用タイマー。
+	float				m_tweekTimer = 0.0f;		//いじけモード用タイマー。
 	bool				m_isTweek = false;			//いじけモードか。
 	int					m_nearEndTweekFrame = 2;	//敵の点滅フレーム。
 	bool				m_callDeadEvent = false;	//死亡用イベント
@@ -113,7 +113,7 @@ public:
 	/// 現在のステートを取得。
 	/// </summary>
 	/// <returns></returns>
-	ENEMY_STATE GetCurrentState()
+	EnemyState GetCurrentState()
 	{
 		return m_currentState;
 	}
@@ -158,19 +158,18 @@ public:
 	/// 現在のステートを変更。
 	/// </summary>
 	/// <param name="state"></param>
-	void ChangeCurrentState(ENEMY_STATE state)
+	void ChangeCurrentState(EnemyState state)
 	{
 		m_currentState = state;
 	}
 
 protected:	
 	//マス目状にマップをみたときにどこに配置されているか。参照つけない。
-	Vector2_Int GetPositionIndex(Vector2& pos)
+	Vector2 GetPositionIndex(Vector2& pos)
 	{
 		Vector2 centerPos = { SCREEN_WIDTH / 2 , SCREEN_HEIGHT / 2 };
 		Vector2 posIndex = pos - centerPos;
-		posIndex = { (posIndex.x / SPRITE_SIZE), (posIndex.y / SPRITE_SIZE) };
-		return EngineMath::ConvertToIntVec(posIndex);
+		return posIndex = { (posIndex.x / SPRITE_SIZE), (posIndex.y / SPRITE_SIZE) };
 	}
 
 private:

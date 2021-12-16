@@ -10,9 +10,9 @@ class PlayerUI;
 class SceneManager
 {
 private:
-	SceneBase::SCENE_ID m_currentState = SceneBase::EnSceneID_Title;	//現在のシーン番号。
-	SceneBase* m_currentScene = nullptr;
-	PlayerUI* m_UI = nullptr;
+	SceneBase::SceneID m_currentState;		//現在のシーン番号。
+	SceneBase* m_currentScene;
+	PlayerUI* m_UI;
 
 public:
 	SceneManager();
@@ -32,6 +32,6 @@ public:
 	/// シーンを変更。
 	/// </summary>
 	/// <param name="sceneID"></param>
-	void ChangeScene(SceneBase::SCENE_ID sceneID);
+	void ChangeScene(SceneBase::SceneID sceneID);
 };
 

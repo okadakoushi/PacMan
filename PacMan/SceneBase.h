@@ -11,7 +11,7 @@ public:
 	/// <summary>
 	/// SceneID.
 	/// </summary>
-	enum SCENE_ID
+	enum SceneID
 	{
 		EnSceneID_Title,
 		EnSceneID_Game,
@@ -19,7 +19,7 @@ public:
 	};
 
 protected:
-	SCENE_ID			m_nextStage = EnSceneID_Title;	//次のシーン。
+	SceneID				m_nextStage = EnSceneID_Title;	//次のシーン。
 	SceneManager*		m_sceneManagerPtr = nullptr;	//Managerへのptr。	
 	std::vector<Actor*>	m_actorList;					//アクターリスト。
 

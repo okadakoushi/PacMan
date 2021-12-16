@@ -5,7 +5,7 @@ class Actor;
 class RectCollision
 {
 public:
-	enum COLLISION_TYPE
+	enum CollisionType
 	{
 		EnCollisionType_None =		0,
 		EnCollisionType_Static =	1 << 0,
@@ -13,14 +13,14 @@ public:
 	};
 
 private:
-	static std::map<COLLISION_TYPE, int> m_collisionTypeToBitTable;	//コリジョンタイプに応じて、ビットテーブルを返却。
+	static std::map<CollisionType, int> m_collisionTypeToBitTable;	//コリジョンタイプに応じて、ビットテーブルを返却。
 
-	const COLLISION_TYPE m_collisionType;							//コリジョンタイプ
+	const CollisionType m_collisionType;							//コリジョンタイプ
 	const int m_collisibleBitTable;									//衝突可能なビットテーブル。
 	Vector2	m_collisionSize = { SPRITE_SIZE, SPRITE_SIZE };			//コリジョンのサイズ。
 
 public:
-	RectCollision(COLLISION_TYPE colType);
+	RectCollision(CollisionType colType);
 	~RectCollision();
 
 	/// <summary>
@@ -36,7 +36,7 @@ public:
 	/// コリジョンタイプを取得。
 	/// </summary>
 	/// <returns></returns>
-	COLLISION_TYPE GetCollisionType()
+	CollisionType GetCollisionType()
 	{
 		return m_collisionType;
 	}

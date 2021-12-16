@@ -5,9 +5,9 @@
 #include "SceneGame.h"
 #include "RectCollision.h"
 
-static const char* PacMan_Animation_FilePath	= "Assets/player_div.bmp";
-static const char* PacMan_DieSE_FilePath		= "Assets/sound/die.ogg";
-static const char* PacMan_EatingSE_FilePath		= "Assets/sound/eating.short.ogg";
+static const char* PacMan_Animation_fp	= "Assets/player_div.bmp";
+static const char* PacMan_DieSE_fp		= "Assets/sound/die.ogg";
+static const char* PacMan_EatingSE_fp	= "Assets/sound/eating.short.ogg";
 
 PacMan::PacMan(SceneBase* sceneBase) : Actor(sceneBase, "PacMan", 0, RectCollision::EnCollisionType_Dynamic)
 {
@@ -20,10 +20,10 @@ PacMan::~PacMan()
 
 void PacMan::Init()
 {
-	LoadDivGraph(PacMan_Animation_FilePath, AniamtionNum, 5, 3, 24, 24, m_drawHandle);
+	LoadDivGraph(PacMan_Animation_fp, AniamtionNum, 5, 3, 24, 24, m_drawHandle);
 	m_position = { PLAYER_RESPAWN_POINT.x - 1, PLAYER_RESPAWN_POINT.y };
-	m_deadSE = GameSound()->Load(PacMan_DieSE_FilePath);
-	m_eatingSE = GameSound()->Load(PacMan_EatingSE_FilePath);
+	m_deadSE = GameSound()->Load(PacMan_DieSE_fp);
+	m_eatingSE = GameSound()->Load(PacMan_EatingSE_fp);
 }
 
 void PacMan::Update()
@@ -143,10 +143,8 @@ void PacMan::OnCollision(Actor* actor)
 
 void PacMan::Draw()
 {
-	Vector2 DrawPosition = { m_position.x + (SPRITE_SIZE / 2), m_position.y + 12 };
-	float Rotation = atan2f(m_movedVector.Normalized().x, -(m_movedVector.Normalized().y));
 	//上下逆なのでマイナス。
-	m_spirte.Draw(DrawPosition, 1.5, Rotation, m_drawHandle[m_animationIndex]);
+	m_spirte.Draw({m_position.x + (SPRITE_SIZE / 2), m_position.y + 12 }, 1.5, atan2f(m_movedVector.Normalized().x, -(m_movedVector.Normalized().y)), m_drawHandle[m_animationIndex]);
 }
 
 void PacMan::Death()
@@ -173,14 +171,7 @@ bool PacMan::PlayDeadAnim()
 			GameSound()->AllStop();
 			GameSound()->Play(m_deadSE);
 		}
-		
 		m_animationIndex++;
-
-		if (m_animationIndex == AniamtionNum)
-		{
-			m_actorExcutionFlag = Actor::EnExcutionFlagType_Update;
-		}
-
 		m_animationWaitFrame = 0;
 	}
 

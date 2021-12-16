@@ -8,12 +8,12 @@ class Actor : public Object
 {
 public:
 
-	enum EXCUTION_FLAG_TYPE
+	enum ExcutionFlagType
 	{
-		EnExcutionFlagType_NotActive	= 0,	//アクティブではない。
-		EnExcutionFlagType_Update		= 1 << 0,	//更新
-		EnExcutionFlagType_Draw			= 1 << 1,	//描画。
-		EnExcutionFlagType_Dead			= 1 << 2,	//削除。
+		EnExcutionFlagType_NotActive	= 1 << 0,	//アクティブではない。
+		EnExcutionFlagType_Update		= 1 << 1,	//更新
+		EnExcutionFlagType_Draw			= 1 << 2,	//描画。
+		EnExcutionFlagType_Dead			= 1 << 3,	//削除。
 		EnExcutionFlagType_Active		= EnExcutionFlagType_Update | EnExcutionFlagType_Draw,	//アクティブ（更新、描画)
 	};
 
@@ -23,7 +23,7 @@ protected:
 	Vector2				m_spriteSize = { SPRITE_SIZE,SPRITE_SIZE };				//スプライトのサイズ。
 	RectCollision		m_collision;											//コリジョン。
 	SceneBase*			m_sceneBasePtr;											//シーンベースのPtr。
-	EXCUTION_FLAG_TYPE	m_actorExcutionFlag = EnExcutionFlagType_Active;		//アクターの実行フラグ。
+	ExcutionFlagType	m_actorExcutionFlag = EnExcutionFlagType_Active;		//アクターの実行フラグ。
 	//Vector2			m_scale;												//拡大。
 	//float				m_rotation = 0.0f;										//回転。
 
@@ -38,7 +38,7 @@ public:
 	/// <param name="sceneBase"></param>
 	/// <param name="tag"></param>
 	/// <param name="prio"></param>
-	Actor(SceneBase* sceneBase, std::string tag, int prio, RectCollision::COLLISION_TYPE colType);
+	Actor(SceneBase* sceneBase, std::string tag, int prio, RectCollision::CollisionType colType);
 	
 	/// <summary>
 	/// デストラクタ。
@@ -82,7 +82,7 @@ public://Getter_Setter
 	}
 
 	//実行フラグを取得。
-	EXCUTION_FLAG_TYPE GetActorExcutionFlag()
+	ExcutionFlagType GetActorExcutionFlag()
 	{
 		return m_actorExcutionFlag;
 	}
@@ -100,7 +100,7 @@ public://Getter_Setter
 	}
 
 	//実行フラグを設定。
-	void SetExcutionFlag(EXCUTION_FLAG_TYPE flagType)
+	void SetExcutionFlag(ExcutionFlagType flagType)
 	{
 		m_actorExcutionFlag = flagType;
 	}

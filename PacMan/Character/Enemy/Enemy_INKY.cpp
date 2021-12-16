@@ -4,7 +4,7 @@
 #include "Enemy_BLINKY.h"
 #include "Actor.h"
 
-static const char* Enemy_Inky_FilePath = "Assets/bashful_div.bmp";
+static const char* Enemy_Inky_fp = "Assets/bashful_div.bmp";
 
 Enemy_INKY::Enemy_INKY(SceneBase* sceneBase, PacMan* pacManPtr, Enemy_BLINKY* blinkyPtr, Vector2 StartPos) : EnemyBase(sceneBase, "Enemy", 1, pacManPtr, StartPos)
 {
@@ -19,7 +19,7 @@ Enemy_INKY::~Enemy_INKY()
 void Enemy_INKY::Init()
 {
 	__super::Init();
-	LoadDivGraph(Enemy_Inky_FilePath, EnemyBase::AnimationNum, 4, 4, 24, 24, m_drawHandle);
+	LoadDivGraph(Enemy_Inky_fp, EnemyBase::AnimationNum, 4, 4, 24, 24, m_drawHandle);
 }
 
 void Enemy_INKY::Update()
