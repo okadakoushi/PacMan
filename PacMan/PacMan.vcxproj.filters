@@ -263,6 +263,9 @@
     <ClInclude Include="Stage.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+<<<<<<< HEAD
+>>>>>>> parent of d0d8c4a (PACMAN)
+=======
 >>>>>>> parent of d0d8c4a (PACMAN)
   </ItemGroup>
   <ItemGroup>
