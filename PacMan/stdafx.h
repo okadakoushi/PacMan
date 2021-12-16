@@ -13,10 +13,10 @@
 #include <cassert>
 //#include <string>
 
-#include "Engine/Engine.h"
-#include "Enegine/EngineMath.h"
-#include "Enegine/Timer.h"
-#include "Enegine/SoundManager.h"
+#include "Engine.h"
+#include "EngineMath.h"
+#include "Timer.h"
+#include "SoundManager.h"
 
 #include "GameSetting.h"
 

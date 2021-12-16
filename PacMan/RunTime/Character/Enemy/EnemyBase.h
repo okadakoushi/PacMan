@@ -50,8 +50,8 @@ protected:
 	
 	//位置。
 	const Vector2		START_POINT;												//初期位置。
-	const Vector2		PRISON_FRONT = { FIX_VALUE_X + 400, FIX_VALUE_Y + 300 };	//牢獄の前。
-	const Vector2		PRISON_POINT = { FIX_VALUE_X + 400, FIX_VALUE_Y + 360 };	//牢獄の中。
+	const Vector2		PRISON_FRONT = { FIX_VALUE_X + 400.0f, FIX_VALUE_Y + 300.0f };	//牢獄の前。
+	const Vector2		PRISON_POINT = { FIX_VALUE_X + 400.0f, FIX_VALUE_Y + 360.0f };	//牢獄の中。
 
 	//ptrs。
 	PacMan*				m_packManPtr = nullptr;					//パックマンポインタ。

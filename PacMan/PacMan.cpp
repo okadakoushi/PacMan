@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "PacMan.h"
 #include "ItemBase.h"
-#include "EnemyBase.h"
+#include "RunTime/Character/Enemy/EnemyBase.h"
 #include "SceneGame.h"
 #include "RectCollision.h"
 

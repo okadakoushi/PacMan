@@ -1,7 +1,7 @@
 #pragma once
 
 #include "StageLoader.h"
-#include "EnemyBase.h"
+#include "RunTime/Character/Enemy/EnemyBase.h"
 #include "Font.h"
 #include "Stage.h"
 
