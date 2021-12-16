@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Font.h"
 
-static const char FONT_DATA_PATH[32] = "Assets/FontData/Pacman.dft";
+static const char FONT_DATA_PATH[32] = "Assets/Pacman.dft";
 
 
 Font::Font()
