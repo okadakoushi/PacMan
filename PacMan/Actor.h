@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Object.h"
-#include "Sprite.h"
-#include "RectCollision.h"
+#include "Engine/Sprite.h"
+#include "Engine/RectCollision.h"
 
 class Actor : public Object
 {

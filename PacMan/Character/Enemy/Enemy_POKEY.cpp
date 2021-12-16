@@ -1,28 +1,25 @@
 #include "stdafx.h"
-#include "Enemy_INKY.h"
-#include "PacMan.h"
-#include "Enemy_BLINKY.h"
-#include "Actor.h"
+#include "Enemy_POKEY.h"
+#include "Character/PacMan.h"
 
-static const char* Enemy_Inky_FilePath = "Assets/bashful_div.bmp";
+static const char* Enemy_Pokey_FilePath = "Assets/pokey_div.bmp";
 
-Enemy_INKY::Enemy_INKY(SceneBase* sceneBase, PacMan* pacManPtr, Enemy_BLINKY* blinkyPtr, Vector2 StartPos) : EnemyBase(sceneBase, "Enemy", 1, pacManPtr, StartPos)
+Enemy_POKEY::Enemy_POKEY(SceneBase* sceneBase, PacMan* pacManPtr, Vector2 StartPos) : EnemyBase(sceneBase, "Enemy", 1, pacManPtr, StartPos)
 {
 	m_packManPtr = pacManPtr;
-	m_blinkyPtr = blinkyPtr;
 }
 
-Enemy_INKY::~Enemy_INKY()
+Enemy_POKEY::~Enemy_POKEY()
 {
 }
 
-void Enemy_INKY::Init()
+void Enemy_POKEY::Init()
 {
 	__super::Init();
-	LoadDivGraph(Enemy_Inky_FilePath, EnemyBase::AnimationNum, 4, 4, 24, 24, m_drawHandle);
+	LoadDivGraph(Enemy_Pokey_FilePath, EnemyBase::AnimationNum, 4, 4, 24, 24, m_drawHandle);
 }
 
-void Enemy_INKY::Update()
+void Enemy_POKEY::Update()
 {
 	//モードに応じてTargetを決める。
 	switch (m_currentState)
@@ -51,22 +48,32 @@ void Enemy_INKY::Update()
 
 	case EnemyBase::ChaseMode:
 	{
-		//ターゲットは常にPlayer。
-		Vector2 toPacMan = m_blinkyPtr->GetPosition() - m_packManPtr->GetPosition();
-		m_target = m_packManPtr->GetPosition() + toPacMan * -1;
+		//遠いときはPlayer、近くは散開ポイント。
+		float toPacManLen = (m_packManPtr->GetPosition() - m_position).Length();
+		if (toPacManLen <= SPRITE_SIZE * CHASE_TILED)
+		{
+			m_target = SCATTER_POINT;
+		}
+		else
+		{
+			m_target = m_packManPtr->GetPosition();
+		}
 		m_currentMoveSpeed = STANDARD_MOVE_SPEED;
 		break;
 	}
 
 	case EnemyBase::ReturnPrisonMode:
+	{
 		//食べられて、牢獄帰還。
 		m_target = PRISON_POINT;
 		m_currentMoveSpeed = RETURN_PRISON_SPEED;
-		if (m_position == m_target)
+		float len = (m_position - m_target).Length();
+		if (len < 3)
 		{
 			m_currentState = GetOutPrisonMode;
 		}
 		break;
+	}
 	default:
 		break;
 	}
@@ -75,10 +82,10 @@ void Enemy_INKY::Update()
 	__super::Update();
 }
 
-void Enemy_INKY::Draw()
+void Enemy_POKEY::Draw()
 {
 #ifdef DEBUG
-	DrawCircle(m_target.x, m_target.y, 12, GetColor(0, 60, 255), true);
+	DrawCircle(m_target.x, m_target.y, 12, GetColor(255, 127, 39), true);
 #endif // DEBUG
 	__super::Draw();
 }

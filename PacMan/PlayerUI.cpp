@@ -13,8 +13,21 @@ PlayerUI::~PlayerUI()
 
 void PlayerUI::Init()
 {
-	m_scoreFont.Init("Score\n", 15, 3);
-	m_highScoreFont.Init("Score\n", 15, 3);
+	//スコア。
+	m_scoreMassage.Init("Score", 15, 3);
+	m_scoreMassage.SetPosition({ 160, 30 });
+	
+	m_scoreValueFont.Init("00", 15, 3);
+	m_scoreValueFont.SetPosition({ 40, 20 });
+	m_scoreValueFont.SetParent(m_scoreMassage);
+
+	//ハイスコア。
+	m_highScoreMassage.Init("Score", 15, 3);
+	m_highScoreMassage.SetPosition({ 330, 30 });
+	
+	m_highScoreValueFont.Init("Score", 15, 3);
+	m_highScoreValueFont.SetPosition({ 30, 20 });
+	m_highScoreValueFont.SetParent(m_highScoreMassage);
 
 	for (auto& sprite : m_sprites)
 	{
@@ -24,20 +37,27 @@ void PlayerUI::Init()
 
 void PlayerUI::Update(int score, int life)
 {
-	//スコアを表示。
-	char scoreBuffer[16];
-	sprintf(scoreBuffer, "Score\n  %02d", score);
-	m_scoreFont.SetDispStr(scoreBuffer);
+	//スコア。
+	m_scoreMassage.SetDispStr("Score");
 	
-	//ハイスコアを表示。
-	char highScoreBuffer[32];
-	m_highScore = max(score, m_highScore);
-	sprintf(highScoreBuffer, "HIGH SCORE\n   %02d", m_highScore);
-	m_highScoreFont.SetDispStr(highScoreBuffer);
+	//数値側。
+	char scoreBuffer[8];
+	sprintf(scoreBuffer, "%02d", score);
+	m_scoreValueFont.SetDispStr(scoreBuffer);
 
-	//ドロー。
-	m_scoreFont.Draw({ 150, 30 }, GetColor(255, 255, 255));
-	m_highScoreFont.Draw({ 330, 30 }, GetColor(255, 255, 255));
+	//ハイスコア。
+	m_highScoreMassage.SetDispStr("HighScore");
+
+	//数値側。
+	char highScoreBuffer[16];
+	sprintf(highScoreBuffer, "%d", m_highScore);
+	m_highScoreValueFont.SetDispStr(highScoreBuffer);
+
+	////ドロー。
+	m_scoreMassage.Draw(GetColor(255, 255, 255));
+	m_scoreValueFont.Draw(GetColor(255, 255, 255));
+	m_highScoreMassage.Draw(GetColor(255, 255, 255));
+	m_highScoreValueFont.Draw(GetColor(255, 255, 255));
 
 	for (int i = 0; i < life; i++)
 	{

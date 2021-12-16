@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "Gate.h"
-#include "EnemyBase.h"
+#include "Character/Enemy/EnemyBase.h"
 
 static const char* Gate_Sprite_FilePath = "Assets/wall.bmp";
 

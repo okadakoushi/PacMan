@@ -13,8 +13,8 @@
 #include <cassert>
 //#include <string>
 
-#include "Engine.h"
-#include "EngineMath.h"
+#include "Engine/Engine.h"
+#include "Engine/EngineMath.h"
 #include "Timer.h"
 #include "SoundManager.h"
 

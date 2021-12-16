@@ -1,8 +1,8 @@
 #pragma once
 
 #include "StageLoader.h"
-#include "EnemyBase.h"
-#include "Font.h"
+#include "Character/Enemy/EnemyBase.h"
+#include "Engine/Font.h"
 #include "Stage.h"
 
 class Fruit;

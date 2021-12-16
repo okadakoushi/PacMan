@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "Fruit.h"
-#include "PacMan.h"
+#include "Character/PacMan.h"
 
 static const char* Fruit_Sprite_FilePath = "Assets/fruit.bmp";
 static const char* Fruit_EatSE_FilePath = "Assets/sound/eatpill.ogg";
@@ -17,9 +17,11 @@ void Fruit::Init()
 {
 	m_spirte.Init(Fruit_Sprite_FilePath);
 	m_score = FRUIT_SCORE;
-	m_scoreFont.Init("200", 13, 2);
 	m_collision.SetCollisionSize({ 36, 36 });
 	m_eatFruitSound = GameSound()->Load(Fruit_EatSE_FilePath);
+	m_scoreFont.Init("200", 13, 2);
+	Vector2 DrawScorePosition = { m_position.x, m_position.y + 11 };
+	m_scoreFont.SetPosition(EngineMath::ConvertToIntVec(DrawScorePosition));
 }
 
 void Fruit::Draw()
@@ -30,7 +32,7 @@ void Fruit::Draw()
 	}
 	else
 	{
-		m_scoreFont.Draw({ m_position.x, m_position.y + 11}, GetColor(0, 255, 255));
+		m_scoreFont.Draw(GetColor(0, 255, 255));
 	}
 }
 
@@ -48,7 +50,6 @@ void Fruit::Update()
 			m_actorExcutionFlag = Actor::EnExcutionFlagType_Dead;
 		}
 	}
-
 }
 
 void Fruit::OnCollision(Actor* actor)

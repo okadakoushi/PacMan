@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Actor.h"
 #include "SceneBase.h"
-#include "RectCollision.h"
+#include "Engine/RectCollision.h"
 
 Actor::Actor(SceneBase* sceneBase, std::string tag, int prio, RectCollision::COLLISION_TYPE colType) : 
 	Object(prio),

@@ -31,7 +31,19 @@ void Font::Init(const char* dispStr, int size, int thickness)
 	}
 }
 
-void Font::Draw(const Vector2& pos, unsigned int color)
+void Font::Draw(unsigned int color)
 {
-	DrawStringToHandle((int)pos.x, (int)pos.y, m_dispChar, color, m_fontHandle);
+	Vector2_Int DrawPos;
+	
+	if (m_parent != nullptr)
+	{
+		//parent‚ÌˆÊ’u+Ž©•ª‚ÌˆÊ’uB
+		DrawPos = m_parent->GetPosition() + m_position;
+	}
+	else
+	{
+		DrawPos = m_position;
+	}
+
+	DrawStringToHandle((int)DrawPos.x, (int)DrawPos.y, m_dispChar, color, m_fontHandle);
 }

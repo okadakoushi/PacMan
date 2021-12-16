@@ -1,11 +1,11 @@
 #include "stdafx.h"
 #include "Stage.h"
 #include "StageLoader.h"
-#include "Cookie.h"
-#include "PowerCookie.h"
-#include "Wall.h"
-#include "Gate.h"
-#include "WarpPoint.h"
+#include "StageObject/Cookie.h"
+#include "StageObject/PowerCookie.h"
+#include "StageObject/Wall.h"
+#include "StageObject/Gate.h"
+#include "StageObject/WarpPoint.h"
 #include "SceneGame.h"
 
 static const char* StageBackGroundCSV_FilePath	= "Assets/pacMan_Stage_bg.csv";

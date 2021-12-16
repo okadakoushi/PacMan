@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Wall.h"
+#include "StageObject/Wall.h"
 #include "SceneGame.h"
 
 class PacMan : public Actor

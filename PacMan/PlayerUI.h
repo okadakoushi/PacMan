@@ -1,7 +1,7 @@
 #pragma once
 
-#include "PacMan.h"
-#include "Font.h"
+#include "Character/PacMan.h"
+#include "Engine/Font.h"
 
 /// <summary>
 /// PlayerUI.
@@ -10,10 +10,15 @@ class PlayerUI : public Object
 {
 private:
 	PacMan* m_pacManPtr = nullptr;	//パックマン。
-	Font m_scoreFont;				//フォント。
 	int m_highScore = 10000;		//ハイスコア。
-	Font m_highScoreFont;			//ハイスコアフォント。
 	Sprite m_sprites[3];			//残機表示用のスプライト。
+
+	Font m_scoreMassage;
+	Font m_scoreValueFont;
+
+	Font m_highScoreMassage;
+	Font m_highScoreValueFont;
+
 
 public:
 	PlayerUI();

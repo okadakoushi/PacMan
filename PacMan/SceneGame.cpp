@@ -1,13 +1,13 @@
 #include "stdafx.h"
 #include "SceneGame.h"
 #include "SceneBase.h"
-#include "PacMan.h"
-#include "EnemyBase.h"
-#include "Enemy_BLINKY.h"
-#include "Enemy_Pinky.h"
-#include "Enemy_INKY.h"
-#include "Enemy_POKEY.h"
-#include "Fruit.h"
+#include "Character/PacMan.h"
+#include "Character/Enemy/EnemyBase.h"
+#include "Character/Enemy/Enemy_BLINKY.h"
+#include "Character/Enemy/Enemy_Pinky.h"
+#include "Character/Enemy/Enemy_INKY.h"
+#include "Character/Enemy/Enemy_POKEY.h"
+#include "StageObject/Fruit.h"
 #include "PlayerUI.h"
 #include "Stage.h"
 
@@ -385,7 +385,9 @@ void SceneGame::WaitEatingProcess()
 	{
 		snprintf(m_scoreBuffer, sizeof(m_scoreBuffer) / sizeof(char), "%d", m_currentEatScore);
 		m_scoreFont.SetDispStr(m_scoreBuffer);
-		m_scoreFont.Draw(m_pacMan->GetPosition(), GetColor(0, 255, 255));
+		Vector2_Int DrawPos = EngineMath::ConvertToIntVec(m_pacMan->GetPosition());
+		m_scoreFont.SetPosition(DrawPos);
+		m_scoreFont.Draw(GetColor(0, 255, 255));
 		//waitTimeが終了していない。
 		m_pacMan->SetExcutionFlag(Actor::EnExcutionFlagType_NotActive);
 		//エネミー捕食演出。

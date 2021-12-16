@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "PowerCookie.h"
-#include "PacMan.h"
+#include "Character/PacMan.h"
 #include "PlayerUI.h"
 
 static const char* PowerCookie_Sprite_FilePath = "Assets/LevelObjects/LevelObjects0-0.png";

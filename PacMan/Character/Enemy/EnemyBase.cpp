@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "EnemyBase.h"
-#include "PacMan.h"
+#include "Character/PacMan.h"
 
 std::map<EnemyBase::DIRECTION, EnemyBase::ANIMATION> EnemyBase::m_directionToNormalAnimHandleIndex
 {

@@ -1,25 +1,28 @@
 #include "stdafx.h"
-#include "Enemy_Pinky.h"
-#include "PacMan.h"
+#include "Enemy_INKY.h"
+#include "Character/PacMan.h"
+#include "Enemy_BLINKY.h"
+#include "Actor.h"
 
-static const char* Enemy_Pinky_FilePath = "Assets/speedy_div.bmp";
+static const char* Enemy_Inky_FilePath = "Assets/bashful_div.bmp";
 
-Enemy_Pinky::Enemy_Pinky(SceneBase* sceneBase, PacMan* pacManPtr, Vector2 StartPos) : EnemyBase(sceneBase, "Enemy", 1, pacManPtr, StartPos)
+Enemy_INKY::Enemy_INKY(SceneBase* sceneBase, PacMan* pacManPtr, Enemy_BLINKY* blinkyPtr, Vector2 StartPos) : EnemyBase(sceneBase, "Enemy", 1, pacManPtr, StartPos)
 {
-
+	m_packManPtr = pacManPtr;
+	m_blinkyPtr = blinkyPtr;
 }
 
-Enemy_Pinky::~Enemy_Pinky()
+Enemy_INKY::~Enemy_INKY()
 {
 }
 
-void Enemy_Pinky::Init()
+void Enemy_INKY::Init()
 {
 	__super::Init();
-	LoadDivGraph(Enemy_Pinky_FilePath, EnemyBase::AnimationNum, 4, 4, 24, 24, m_drawHandle);
+	LoadDivGraph(Enemy_Inky_FilePath, EnemyBase::AnimationNum, 4, 4, 24, 24, m_drawHandle);
 }
 
-void Enemy_Pinky::Update()
+void Enemy_INKY::Update()
 {
 	//モードに応じてTargetを決める。
 	switch (m_currentState)
@@ -48,9 +51,9 @@ void Enemy_Pinky::Update()
 
 	case EnemyBase::ChaseMode:
 	{
-		//ターゲットはパックマンの方向*４タイル
-		Vector2 travelDirection = m_packManPtr->GetDirection() * SPRITE_SIZE * 4;
-		m_target = m_packManPtr->GetPosition() + travelDirection;
+		//ターゲットは常にPlayer。
+		Vector2 toPacMan = m_blinkyPtr->GetPosition() - m_packManPtr->GetPosition();
+		m_target = m_packManPtr->GetPosition() + toPacMan * -1;
 		m_currentMoveSpeed = STANDARD_MOVE_SPEED;
 		break;
 	}
@@ -68,18 +71,14 @@ void Enemy_Pinky::Update()
 		break;
 	}
 
-
 	//移動処理呼び出し。
 	__super::Update();
 }
 
-void Enemy_Pinky::Draw()
+void Enemy_INKY::Draw()
 {
-	__super::Draw();
-
 #ifdef DEBUG
-	DrawCircle(m_target.x, m_target.y, 12, GetColor(255, 120, 255), true);
+	DrawCircle(m_target.x, m_target.y, 12, GetColor(0, 60, 255), true);
 #endif // DEBUG
-
-
+	__super::Draw();
 }

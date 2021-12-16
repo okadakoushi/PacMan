@@ -1,25 +1,25 @@
 #include "stdafx.h"
-#include "Enemy_POKEY.h"
-#include "PacMan.h"
+#include "Enemy_BLINKY.h"
+#include "Character/PacMan.h"
 
-static const char* Enemy_Pokey_FilePath = "Assets/pokey_div.bmp";
+static const char* Enemy_Blinky_FilePath = "Assets/shadow_div.png";
 
-Enemy_POKEY::Enemy_POKEY(SceneBase* sceneBase, PacMan* pacManPtr, Vector2 StartPos) : EnemyBase(sceneBase, "Enemy", 1, pacManPtr, StartPos)
+Enemy_BLINKY::Enemy_BLINKY(SceneBase* sceneBase, PacMan* pacManPtr, Vector2 StartPos) : EnemyBase(sceneBase, "Enemy", 1, pacManPtr, StartPos)
 {
-	m_packManPtr = pacManPtr;
+
 }
 
-Enemy_POKEY::~Enemy_POKEY()
+Enemy_BLINKY::~Enemy_BLINKY()
 {
 }
 
-void Enemy_POKEY::Init()
+void Enemy_BLINKY::Init()
 {
 	__super::Init();
-	LoadDivGraph(Enemy_Pokey_FilePath, EnemyBase::AnimationNum, 4, 4, 24, 24, m_drawHandle);
+	LoadDivGraph(Enemy_Blinky_FilePath, EnemyBase::AnimationNum, 4, 4, 24, 24, m_drawHandle);
 }
 
-void Enemy_POKEY::Update()
+void Enemy_BLINKY::Update()
 {
 	//モードに応じてTargetを決める。
 	switch (m_currentState)
@@ -47,33 +47,20 @@ void Enemy_POKEY::Update()
 		break;
 
 	case EnemyBase::ChaseMode:
-	{
-		//遠いときはPlayer、近くは散開ポイント。
-		float toPacManLen = (m_packManPtr->GetPosition() - m_position).Length();
-		if (toPacManLen <= SPRITE_SIZE * CHASE_TILED)
-		{
-			m_target = SCATTER_POINT;
-		}
-		else
-		{
-			m_target = m_packManPtr->GetPosition();
-		}
+		//ターゲットは常にPlayer。
+		m_target = m_packManPtr->GetPosition();
 		m_currentMoveSpeed = STANDARD_MOVE_SPEED;
 		break;
-	}
 
 	case EnemyBase::ReturnPrisonMode:
-	{
 		//食べられて、牢獄帰還。
 		m_target = PRISON_POINT;
 		m_currentMoveSpeed = RETURN_PRISON_SPEED;
-		float len = (m_position - m_target).Length();
-		if (len < 3)
+		if (m_position == m_target)
 		{
 			m_currentState = GetOutPrisonMode;
 		}
 		break;
-	}
 	default:
 		break;
 	}
@@ -82,10 +69,7 @@ void Enemy_POKEY::Update()
 	__super::Update();
 }
 
-void Enemy_POKEY::Draw()
+void Enemy_BLINKY::Draw()
 {
-#ifdef DEBUG
-	DrawCircle(m_target.x, m_target.y, 12, GetColor(255, 127, 39), true);
-#endif // DEBUG
 	__super::Draw();
 }

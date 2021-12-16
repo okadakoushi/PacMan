@@ -1,9 +1,9 @@
 #include "stdafx.h"
 #include "PacMan.h"
-#include "ItemBase.h"
-#include "EnemyBase.h"
+#include "StageObject/ItemBase.h"
+#include "Character/Enemy/EnemyBase.h"
 #include "SceneGame.h"
-#include "RectCollision.h"
+#include "Engine/RectCollision.h"
 
 static const char* PacMan_Animation_FilePath	= "Assets/player_div.bmp";
 static const char* PacMan_DieSE_FilePath		= "Assets/sound/die.ogg";
