@@ -8,9 +8,9 @@
 #include "WarpPoint.h"
 #include "SceneGame.h"
 
-static const char* StageBackGroundCSV_FilePath	= "Assets/pacMan_Stage_bg.csv";
-static const char* StageItemCSV_FilePath			= "Assets/pacMan_Stage_Item.csv";
-static const char* StageObstacleCSV_FilePath		= "Assets/pacMan_Stage_Obstacle.csv";
+static const char* StageBackGroundCSV_FilePath		= "Assets/StageData/pacMan_Stage_bg.csv";
+static const char* StageItemCSV_FilePath			= "Assets/StageData/pacMan_Stage_Item.csv";
+static const char* StageObstacleCSV_FilePath		= "Assets/StageData/pacMan_Stage_Obstacle.csv";
 
 Stage::Stage(SceneGame* sceneGame)
 {

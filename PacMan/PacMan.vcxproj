@@ -20,6 +20,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Actor.cpp" />
+    <ClCompile Include="Character\Enemy\EnemyBase.cpp" />
+    <ClCompile Include="Character\Enemy\Enemy_BLINKY.cpp" />
+    <ClCompile Include="Character\Enemy\Enemy_INKY.cpp" />
+    <ClCompile Include="Character\Enemy\Enemy_Pinky.cpp" />
+    <ClCompile Include="Character\Enemy\Enemy_POKEY.cpp" />
+    <ClCompile Include="Character\PacMan.cpp" />
     <ClCompile Include="Cookie.cpp" />
     <ClCompile Include="EnemyBase.cpp" />
     <ClCompile Include="Enemy_BLINKY.cpp" />
@@ -27,6 +33,14 @@
     <ClCompile Include="Enemy_Pinky.cpp" />
     <ClCompile Include="Enemy_POKEY.cpp" />
     <ClCompile Include="Engine.cpp" />
+    <ClCompile Include="Engine\Engine.cpp" />
+    <ClCompile Include="Engine\Font.cpp" />
+    <ClCompile Include="Engine\Object.cpp" />
+    <ClCompile Include="Engine\RectCollision.cpp" />
+    <ClCompile Include="Engine\SoundManager.cpp" />
+    <ClCompile Include="Engine\Sprite.cpp" />
+    <ClCompile Include="Engine\StageLoader.cpp" />
+    <ClCompile Include="Engine\Timer.cpp" />
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="Fruit.cpp" />
     <ClCompile Include="GameOver.cpp" />
@@ -59,6 +73,12 @@
   <ItemGroup>
     <ClInclude Include="Actor.h" />
     <ClInclude Include="Assets\CollisionFunction.h" />
+    <ClInclude Include="Character\Enemy\EnemyBase.h" />
+    <ClInclude Include="Character\Enemy\Enemy_BLINKY.h" />
+    <ClInclude Include="Character\Enemy\Enemy_INKY.h" />
+    <ClInclude Include="Character\Enemy\Enemy_Pinky.h" />
+    <ClInclude Include="Character\Enemy\Enemy_POKEY.h" />
+    <ClInclude Include="Character\PacMan.h" />
     <ClInclude Include="Cookie.h" />
     <ClInclude Include="EnemyBase.h" />
     <ClInclude Include="Enemy_BLINKY.h" />
@@ -67,6 +87,15 @@
     <ClInclude Include="Enemy_POKEY.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="EngineMath.h" />
+    <ClInclude Include="Engine\Engine.h" />
+    <ClInclude Include="Engine\EngineMath.h" />
+    <ClInclude Include="Engine\Font.h" />
+    <ClInclude Include="Engine\Object.h" />
+    <ClInclude Include="Engine\RectCollision.h" />
+    <ClInclude Include="Engine\SoundManager.h" />
+    <ClInclude Include="Engine\Sprite.h" />
+    <ClInclude Include="Engine\StageLoader.h" />
+    <ClInclude Include="Engine\Timer.h" />
     <ClInclude Include="Font.h" />
     <ClInclude Include="Fruit.h" />
     <ClInclude Include="GameOver.h" />

@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "Cookie.h"
-#include "Character/PacMan.h"
+#include "PacMan.h"
 #include "SceneGame.h"
 
 static const char* Cookie_Sprite = "Assets/LevelObjects/LevelObjects0-1.png";
