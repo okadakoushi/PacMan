@@ -1,10 +1,22 @@
 #pragma once
 
+#include "Canvas.h"
+
 /// <summary>
 /// フォントクラス。
 /// </summary>
 class Font
 {
+private:
+	Vector2_Int m_position;
+	const char* m_fontType = nullptr;
+	const char* m_dispChar = "表示する文字を初期化または、設定してください。";
+	int m_fontHandle = 0;
+	int m_size = 10;
+	int m_thickness = 5;
+	Canvas* m_parent = nullptr;
+	bool m_isDraw = true;
+
 public:
 	Font();
 	virtual ~Font();
@@ -16,7 +28,7 @@ public:
 	/// <param name="dispStr">表示する文字列。</param>
 	/// <param name="size">表示する文字のサイズ。</param>
 	/// <param name="thickness">表示する文字の太さ。</param>
-	void Init(const char* dispStr, int size, int thickness);
+	void Init(const char* dispStr, int size, int thickness, Canvas* parent = nullptr);
 	
 	/// <summary>
 	/// 描画。
@@ -79,7 +91,7 @@ public:
 	/// 親を設定。
 	/// </summary>
 	/// <param name="parent"></param>
-	void SetParent(Font* parent)
+	void SetParent(Canvas* parent)
 	{
 		m_parent = parent;
 	}
@@ -91,14 +103,5 @@ public:
 	{
 		m_parent = nullptr;
 	}
-
-private:
-	Vector2_Int m_position;
-	const char* m_fontType = nullptr;
-	const char* m_dispChar = "表示する文字を初期化または、設定してください。";
-	int m_fontHandle = 0;
-	int m_size = 10;
-	int m_thickness = 5;
-	Font* m_parent = nullptr;
 };
 

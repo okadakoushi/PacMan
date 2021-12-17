@@ -330,6 +330,8 @@ void SceneGame::GameRunningProcess()
 	{
 		//パックマン死亡演出。
 		m_currentGameState = GameState_PlayerDead;
+		GameSound()->AllStop();
+
 		return;
 	}
 
@@ -406,10 +408,6 @@ void SceneGame::PlayerDeadProcess()
 
 	if (m_pacMan->PlayDeadAnim())
 	{
-		//死亡アニメーションが終わったのでステージのリセット処理を行う。
-		m_pacMan->SetExcutionFlag(Actor::EnExcutionFlagType_Dead);
-		m_pacMan = nullptr;
-
 		if (m_fruit != nullptr)
 		{
 			m_fruit->SetExcutionFlag(Actor::EnExcutionFlagType_Dead);
@@ -417,15 +415,27 @@ void SceneGame::PlayerDeadProcess()
 
 		if (m_lifePoint == 0)
 		{
+			SetDrawBright(255, 255, 255);
 			//残機0。シーンを切り替え。
 			m_sceneManagerPtr->ChangeScene(SceneBase::EnSceneID_GameOver);
 			return;
 		}
 
-		m_enemyChaseTimer = 0.0f;
-		m_sceneStartDeltaTime = 0.0f;
-		m_isChaseMode = false;
-		m_currentGameState = GameState_WaitGameStart;
+		SetDrawBright(0, 0, 0);
+		m_hiddenStageTimer += GameTime()->GetDeltaTime();
+
+		if (m_hiddenStageTimer > HIDDEN_STAGE_TIME)
+		{
+			SetDrawBright(255, 255, 255);
+			//死亡アニメーションが終わったのでステージのリセット処理を行う。
+			m_pacMan->SetExcutionFlag(Actor::EnExcutionFlagType_Dead);
+			m_pacMan = nullptr;
+			m_enemyChaseTimer = 0.0f;
+			m_sceneStartDeltaTime = 0.0f;
+			m_hiddenStageTimer = 0.0f;
+			m_isChaseMode = false;
+			m_currentGameState = GameState_WaitGameStart;
+		}
 	}
 }
 

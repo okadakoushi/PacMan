@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "PlayerUI.h"
+#include "Canvas.h"
 
 static const char* PacMan_LeftLifeSprite_FilePath = "Assets/life_char.bmp";
 
@@ -13,22 +14,32 @@ PlayerUI::~PlayerUI()
 
 void PlayerUI::Init()
 {
+	//スコア系Canvas
+	m_scoreAndHighScoreCanvas.SetDrawFlag(true);
+
+	//スコアCanvas
+	m_scoreCanvas.SetParent(&m_scoreAndHighScoreCanvas);
+	m_highScoreCanvas.SetParent(&m_scoreAndHighScoreCanvas);
+
+	//canvasの位置を設定。
+	m_scoreAndHighScoreCanvas.SetPosition({ 180, 30 });
+	m_scoreCanvas.SetPosition({ 0, 0 });
+	m_highScoreCanvas.SetPosition({ 160, 0 });
+
 	//スコア。
-	m_scoreMassage.Init("Score", 15, 3);
-	m_scoreMassage.SetPosition({ 360, 30 });
-	
-	m_scoreValueFont.Init("00", 15, 3);
-	m_scoreValueFont.SetParent(&m_scoreMassage);
-	m_scoreValueFont.SetPosition({ 40, 20 });
-
+	m_scoreMassage.Init("Score", 15, 3, &m_scoreCanvas);
+	m_scoreValueFont.Init("00", 15, 3, &m_scoreCanvas);
 	//ハイスコア。
-	m_highScoreMassage.Init("Score", 15, 3);
-	m_highScoreMassage.SetParent(&m_scoreMassage);
-	m_highScoreMassage.SetPosition({ 170, 0 });
+	m_highScoreMassage.Init("Score", 15, 3, &m_highScoreCanvas);
+	m_highScoreValueFont.Init("Score", 15, 3, &m_highScoreCanvas);
 
-	m_highScoreValueFont.Init("Score", 15, 3);
-	m_highScoreValueFont.SetParent(&m_highScoreMassage);
-	m_highScoreValueFont.SetPosition({ 30, 20 });
+	m_scoreAndHighScoreCanvas.SetPosition({ 360, 30 });
+
+	//font.
+	m_scoreMassage.SetPosition({ 0,0 });
+	m_scoreValueFont.SetPosition({ 20, 20 });
+	m_highScoreMassage.SetPosition({ 0, 0 });
+	m_highScoreValueFont.SetPosition({ 20, 20 });
 
 	for (auto& sprite : m_sprites)
 	{

@@ -13,9 +13,13 @@ private:
 	int m_highScore = 10000;		//ハイスコア。
 	Sprite m_sprites[3];			//残機表示用のスプライト。
 
+	Canvas m_scoreAndHighScoreCanvas;
+
+	Canvas m_scoreCanvas;
 	Font m_scoreMassage;
 	Font m_scoreValueFont;
 
+	Canvas m_highScoreCanvas;
 	Font m_highScoreMassage;
 	Font m_highScoreValueFont;
 

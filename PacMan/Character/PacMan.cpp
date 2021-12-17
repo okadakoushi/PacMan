@@ -158,6 +158,11 @@ void PacMan::Death()
 
 bool PacMan::PlayDeadAnim()
 {
+	if (m_animationIndex == AniamtionNum + 1)
+	{
+		return true;
+	}
+
 	int wait = DEAD_ANIMATION_SPEED;
 
 	if (m_animationIndex == 0 || m_animationIndex == AniamtionNum)
@@ -182,11 +187,6 @@ bool PacMan::PlayDeadAnim()
 		}
 
 		m_animationWaitFrame = 0;
-	}
-
-	if (m_animationIndex == AniamtionNum + 1)
-	{
-		return true;
 	}
 	
 	return false;

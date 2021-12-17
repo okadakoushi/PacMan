@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Actor.cpp" />
+    <ClCompile Include="Canvas.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="StageObject\Cookie.cpp" />
     <ClCompile Include="Character\Enemy\EnemyBase.cpp" />
@@ -60,6 +61,7 @@
   <ItemGroup>
     <ClInclude Include="Actor.h" />
     <ClInclude Include="Assets\CollisionFunction.h" />
+    <ClInclude Include="Canvas.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="StageObject\Cookie.h" />
     <ClInclude Include="Character\Enemy\EnemyBase.h" />

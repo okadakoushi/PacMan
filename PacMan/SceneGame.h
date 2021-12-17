@@ -83,10 +83,11 @@ private:
 	static std::map<int, int> m_restCookieCountToFrequency;	//残りのクッキーの数から周波数を取得。
 	
 	//ゲーム進行用。
-	const float CHARACTER_SPAWN_TIME = 3.0f;					//キャラクターを生成する
-	const float START_GAME_TIME = CHARACTER_SPAWN_TIME + 1.5f;	//ゲームを開始する。
-	const float BLINKING_TIME = 1.5f;							//点滅時間。
-	const float NEXT_STAGE_TIME = BLINKING_TIME + 1.0f;			//次ステージ。
+	const double CHARACTER_SPAWN_TIME = 3.0f;					//キャラクターを生成する
+	const double START_GAME_TIME = CHARACTER_SPAWN_TIME + 1.5f;	//ゲームを開始する。
+	const double BLINKING_TIME = 1.5f;							//点滅時間。
+	const double NEXT_STAGE_TIME = BLINKING_TIME + 1.0f;			//次ステージ。
+	const double HIDDEN_STAGE_TIME = 0.25f;
 	
 	//Ready
 	Sprite m_readySprite;
@@ -101,13 +102,14 @@ private:
 	//Timer.
 	//シーン用。
 	double m_sceneStartDeltaTime = 0.0f;					//シーンが始まってからの時間。
-	double m_nextStageTimer = 0.0f;						//点滅管理
+	double m_nextStageTimer = 0.0f;							//点滅管理
+	double m_hiddenStageTimer = 0.0f;						//ステージを非表示にする時間。
 	//Ghost用。
 	double m_enemyChaseTimer = 0.0f;						//敵キャラの追跡、散開を切り替える用のタイマー。
 	double m_eatingWaitTimer = 0.0f;						//食べる演出を待った時間。
 
 	//敵のwaitTime
-	const float ENEMY_WAIT_TIME[3] = {
+	const double ENEMY_WAIT_TIME[3] = {
 		START_GAME_TIME + 1.0f,		//PINKY出撃。
 		START_GAME_TIME + 5.0f,		//INKY出撃。
 		START_GAME_TIME + 9.0f		//CLYDE出撃。

@@ -12,7 +12,7 @@ Font::~Font()
 {
 }
 
-void Font::Init(const char* dispStr, int size, int thickness)
+void Font::Init(const char* dispStr, int size, int thickness, Canvas* parent)
 {
 	//パス初期化。
 	m_fontType = FONT_DATA_PATH;
@@ -21,6 +21,7 @@ void Font::Init(const char* dispStr, int size, int thickness)
 	m_dispChar = dispStr;
 	m_size = size;
 	m_thickness = thickness;
+	m_parent = parent;
 	
 	//ハンドル作成。
 	m_fontHandle = LoadFontDataToHandle(m_fontType);
@@ -39,11 +40,16 @@ void Font::Draw(unsigned int color)
 	{
 		//parentの位置+自分の位置。
 		DrawPos = m_parent->GetPosition() + m_position;
+		m_isDraw = m_parent->IsDraw();
 	}
 	else
 	{
 		DrawPos = m_position;
 	}
 
-	DrawStringToHandle(DrawPos.x, DrawPos.y, m_dispChar, color, m_fontHandle);
+	if (m_isDraw)
+	{
+		DrawStringToHandle(DrawPos.x, DrawPos.y, m_dispChar, color, m_fontHandle);
+	}
+
 }
