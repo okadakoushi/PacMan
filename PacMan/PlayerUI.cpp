@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "PlayerUI.h"
+#include "Canvas.h"
 
 static const char* PacMan_LeftLifeSprite_FilePath = "Assets/life_char.bmp";
 
@@ -13,21 +14,24 @@ PlayerUI::~PlayerUI()
 
 void PlayerUI::Init()
 {
+	Canvas m_UICanvas;
+
 	//スコア。
 	m_scoreMassage.Init("Score", 15, 3);
-	m_scoreMassage.SetPosition({ 360, 30 });
-	
+	m_scoreMassage.SetPosition({0,0});
+	//値側。
 	m_scoreValueFont.Init("00", 15, 3);
-	m_scoreValueFont.SetParent(&m_scoreMassage);
 	m_scoreValueFont.SetPosition({ 40, 20 });
+	//スコアキャンバス。
+	Canvas m_scoreCanvas;
+	m_scoreCanvas.RegistChild(&m_scoreMassage);
+	m_scoreCanvas.SetPosition({ 360, 30 });
 
 	//ハイスコア。
 	m_highScoreMassage.Init("Score", 15, 3);
-	m_highScoreMassage.SetParent(&m_scoreMassage);
 	m_highScoreMassage.SetPosition({ 170, 0 });
 
 	m_highScoreValueFont.Init("Score", 15, 3);
-	m_highScoreValueFont.SetParent(&m_highScoreMassage);
 	m_highScoreValueFont.SetPosition({ 30, 20 });
 
 	for (auto& sprite : m_sprites)
